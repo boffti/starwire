@@ -192,19 +192,26 @@ async function readme(r) {
     }
     if (state.repo !== r.r) return // the user moved on while it loaded
     if (!md) { el.innerHTML = `<p class="muted">This repo has no README to preview.</p>`; return }
-    const html = DOMPurify.sanitize(marked.parse(md.slice(0, 15000)))
-    el.innerHTML = html
+    // fix the URLs on the sanitized fragment, before it is inserted: an inserted <img> or <picture>
+    // starts fetching at once, and a relative path would hit starwire.foo and 404
+    const frag = DOMPurify.sanitize(marked.parse(md.slice(0, 15000)), { RETURN_DOM_FRAGMENT: true })
     // relative links and images point into the repo
-    for (const a of el.querySelectorAll("a[href]")) {
+    for (const a of frag.querySelectorAll("a[href]")) {
       const h = a.getAttribute("href")
       if (!/^(https?:|mailto:|#)/.test(h)) a.href = `https://github.com/${r.r}/blob/HEAD/${h.replace(/^\.?\//, "")}`
       a.target = "_blank"; a.rel = "noopener"
     }
-    for (const img of el.querySelectorAll("img[src]")) {
-      const src = img.getAttribute("src")
-      if (!/^(https?:|data:)/.test(src)) img.src = `https://raw.githubusercontent.com/${r.r}/HEAD/${src.replace(/^\.?\//, "")}`
+    const raw = (u) => (/^(https?:|data:|\/\/)/.test(u) ? u : `https://raw.githubusercontent.com/${r.r}/HEAD/${u.replace(/^\.?\//, "")}`)
+    for (const img of frag.querySelectorAll("img[src]")) {
+      img.setAttribute("src", raw(img.getAttribute("src")))
       img.loading = "lazy"
     }
+    // <picture><source srcset> wins over the <img> inside it (dark mode READMEs use it for a dark logo), so it needs the same
+    for (const s of frag.querySelectorAll("[srcset]")) {
+      const v = s.getAttribute("srcset").trim()
+      if (v) s.setAttribute("srcset", v.split(/\s*,\s+/).map((c) => { const [u, ...d] = c.split(/\s+/); return [raw(u), ...d].join(" ") }).join(", "))
+    }
+    el.replaceChildren(frag)
     if (md.length > 15000) el.insertAdjacentHTML("beforeend", `<p><a href="https://github.com/${esc(r.r)}#readme" target="_blank" rel="noopener">Read the rest on GitHub</a></p>`)
     // long READMEs start collapsed; the panel stays the only thing that scrolls
     if (el.scrollHeight > el.clientHeight + 4) {
