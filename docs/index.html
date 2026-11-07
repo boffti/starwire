@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=15">
+<link rel="stylesheet" href="style.css?v=16">
 <link rel="alternate" type="application/rss+xml" title="starwire, new picks" href="https://starwire.foo/feed.xml">
 <script>try{const t=localStorage.getItem("starwire-theme");if(t)document.documentElement.dataset.theme=t}catch{}</script>
 </head>
@@ -32,7 +32,7 @@
     </a>
     <div class="side-scroll">
       <nav class="group" id="views" aria-label="Views"></nav>
-      <nav class="group" id="cats" aria-label="Categories"></nav>
+      <nav class="group" id="cats" aria-label="Areas"></nav>
     </div>
     <div class="side-foot">
       <details class="mini-promo" id="side-promo">
@@ -86,6 +86,9 @@
               <option value="saved">Recently saved</option>
             </select>
           </label>
+          <label class="select"><span>Form</span><select id="f-form"></select></label>
+          <label class="select"><span>Platform</span><select id="f-plat"></select></label>
+          <label class="select"><span>Works with</span><select id="f-with"></select></label>
           <label class="select"><span>Language</span><select id="lang"><option value="">Any</option></select></label>
           <div class="view" role="group" aria-label="Layout">
             <button type="button" data-view="cards" aria-label="Cards" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg></button>
@@ -104,6 +107,6 @@
 <aside class="panel" id="panel" hidden aria-label="Repo details"></aside>
 <aside class="panel settings" id="settings" hidden aria-label="Settings"></aside>
 <div class="panel-scrim" id="pscrim"></div>
-<script src="app.js?v=15" type="module"></script>
+<script src="app.js?v=16" type="module"></script>
 </body>
 </html>

@@ -11,7 +11,18 @@ const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<
 
 const data = await fetch("data.json").then((r) => r.json())
 const now = Date.parse(data.updated)
-const repos = data.repos.map((r) => ({ ...r, hay: `${r.r} ${r.l} ${r.g ?? ""} ${r.t.join(" ")}`.toLowerCase(), age: (now - Date.parse(r.p)) / 864e5 }))
+// facets (docs/plans/2026-11-07-taxonomy.md in the pipeline): area > subarea, form, platform, works with, tags, alternatives
+const TX = data.taxonomy ?? { areas: [], forms: [], platforms: [], worksWith: [] }
+const AREA = new Map(TX.areas.map((a) => [a.id, a]))
+const SUB = new Map(TX.areas.flatMap((a) => a.subs.map(([id, name]) => [`${a.id}/${id}`, name])))
+const FORM = new Map(TX.forms), PLAT = new Map(TX.platforms), WITH = new Map(TX.worksWith)
+const areaPairs = (r) => (r.a ? [`${r.a}/${r.sa}`, ...(r.mo ?? [])] : [])
+const words = (r) => [
+  r.r, r.l, r.g ?? "", r.t.join(" "), (r.tg ?? []).join(" "), (r.alt ?? []).join(" "),
+  ...areaPairs(r).map((p) => `${AREA.get(p.split("/")[0])?.name ?? ""} ${SUB.get(p) ?? ""}`),
+  ...(r.fo ?? []).map((x) => FORM.get(x)), ...(r.ww ?? []).map((x) => WITH.get(x)),
+].join(" ").toLowerCase()
+const repos = data.repos.map((r) => ({ ...r, hay: words(r), age: (now - Date.parse(r.p)) / 864e5 }))
 const byName = new Map(repos.map((r) => [r.r.toLowerCase(), r]))
 
 // ---- saved for later: repo names in localStorage, oldest first. No accounts, so saves live in this browser,
@@ -33,7 +44,7 @@ function setSaved(list) {
 // ---- settings: per-browser preferences in localStorage. They pick the defaults; a link's own parameters still win,
 // so a shared link shows the same thing for everyone. Versioned so later settings can be added without breaking old ones.
 const PREFS_KEY = "starwire-prefs"
-const DEFAULT_PREFS = { v: 1, sort: "picked", layout: "cards", topics: true, gain: true, picked: true, stardash: true }
+const DEFAULT_PREFS = { v: 1, sort: "picked", layout: "cards", topics: true, gain: true, picked: true, stardash: true, sidebar: "area", hideAI: false }
 const SORTS = ["picked", "trending", "stars", "new", "active"]
 function readPrefs() {
   let p = {}
@@ -41,7 +52,8 @@ function readPrefs() {
   const out = { ...DEFAULT_PREFS }
   if (SORTS.includes(p.sort)) out.sort = p.sort
   if (["cards", "list"].includes(p.layout)) out.layout = p.layout
-  for (const k of ["topics", "gain", "picked", "stardash"]) if (typeof p[k] === "boolean") out[k] = p[k]
+  for (const k of ["topics", "gain", "picked", "stardash", "hideAI"]) if (typeof p[k] === "boolean") out[k] = p[k]
+  if (["area", "form", "with"].includes(p.sidebar)) out.sidebar = p.sidebar
   return out
 }
 let prefs = readPrefs()
@@ -57,10 +69,22 @@ const params = new URLSearchParams(location.search)
 // a shared list opens as its own view, with a button to add it to your saves
 const shared = [...new Set((params.get("saved") ?? "").split(",").map((n) => n.trim()).filter((n) => NAME.test(n)).map(canon))].slice(0, 500)
 const sharedSet = new Set(shared)
+// links from before the new categories (?c=Developer tools) open the closest new filter
+const OLD_CATEGORY = {
+  "AI agents": { a: "ai", sa: "agents" }, "Agent skills and MCP": { form: "agent-skill" }, "LLM tooling and local models": { a: "ai", sa: "llm-tooling" },
+  "AI image, video and voice": { a: "ai", sa: "generative-media" }, "Developer tools": { a: "dev" }, "Web and frontend": { a: "web" },
+  "Apps for desktop and mobile": { form: "desktop-app" }, "Self-hosted": { form: "self-hosted" }, "Data and databases": { a: "data" },
+  "DevOps and cloud": { a: "infra" }, "Security and privacy": { a: "security" }, "Games and graphics": { a: "games" },
+  "Hardware and robotics": { a: "hardware" }, "Learning and reference": { a: "learning" }, "Everyday utilities": { a: "system" },
+}
+const old = OLD_CATEGORY[params.get("c")] ?? {}
+const pick = (k, map) => { const v = params.get(k) ?? old[k] ?? ""; return !map || map.has(v) ? v : "" }
 const state = {
-  f: params.get("f") ?? (shared.length ? "shared" : params.has("multi") ? "multi" : ""), c: params.get("c") ?? "", q: params.get("q") ?? "",
+  a: pick("a", AREA), sa: "", form: pick("form", FORM), plat: pick("plat", PLAT), with: pick("with", WITH),
+  f: params.get("f") ?? (shared.length ? "shared" : params.has("multi") ? "multi" : ""), q: params.get("q") ?? "",
   repo: params.get("repo") ?? "", sort: params.get("sort") ?? (params.get("f") === "saved" ? "saved" : params.get("f") === "trending" ? "trending" : prefs.sort), lang: params.get("lang") ?? "", view: params.get("view") ?? prefs.layout, shown: PAGE,
 }
+{ const sa = params.get("sa") ?? old.sa; if (state.a && SUB.has(`${state.a}/${sa}`)) state.sa = sa }
 const isNew = (r) => (now - Date.parse(r.f)) / 864e5 <= 7
 const VIEWS = [
   { f: "", label: "All repos", test: () => true },
@@ -93,11 +117,31 @@ const I = {
 I.trending = '<path d="M22 7l-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/>'
 I.new = '<path d="M12 3l1.8 4.7 4.7 1.8-4.7 1.8L12 16l-1.8-4.7-4.7-1.8 4.7-1.8z"/><path d="M5 19h.01M19 5h.01"/>'
 I.saved = '<path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/>'
+// area icons: the old category icons where they fit, new ones for the rest
+Object.assign(I, {
+  ai: I["AI agents"], dev: I["Developer tools"], web: I["Web and frontend"], infra: I["DevOps and cloud"], data: I["Data and databases"],
+  security: I["Security and privacy"], media: I["AI image, video and voice"], games: I["Games and graphics"], hardware: I["Hardware and robotics"],
+  system: I["Apps for desktop and mobile"], learning: I["Learning and reference"],
+  productivity: '<path d="M9 6h11M9 12h11M9 18h11M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/>',
+  communication: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+  science: '<path d="M9 3h6M10 3v6L4.5 19a1.5 1.5 0 0 0 1.3 2.2h12.4a1.5 1.5 0 0 0 1.3-2.2L14 9V3"/><path d="M7 15h10"/>',
+  finance: '<circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.7 0-3 .9-3 2s1.3 1.7 3 2 3 .9 3 2-1.3 2-3 2c-1.4 0-2.5-.5-3-1.5M12 6v2M12 16v2"/>',
+})
 I.multi = '<path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/>'
 const item = (attr, key, label, count) =>
   `<button type="button" class="cat" data-${attr}="${esc(key)}" aria-current="false"><svg viewBox="0 0 24 24" aria-hidden="true">${I[key] ?? I[""]}</svg><span>${esc(label)}</span><span class="n">${count.toLocaleString("en-US")}</span></button>`
 $("#views").innerHTML = "<h2>Browse</h2>" + VIEWS.filter((v) => !v.hidden).map((v) => item("f", v.f, v.label, v.f === "saved" ? saved.length : repos.filter(v.test).length)).join("")
-$("#cats").innerHTML = "<h2>Categories</h2>" + [...data.categories].sort((a, b) => b.count - a.count).map((c) => item("c", c.name, c.name, c.count)).join("")
+const visible = (r) => !(prefs.hideAI && r.ai > 0) // "Hide AI repos" in settings
+function renderSidebar() {
+  const pool = repos.filter(visible), count = (test) => pool.filter(test).length
+  let html
+  if (prefs.sidebar === "form") html = "<h2>Forms</h2>" + TX.forms.map(([id, name]) => [id, name, count((r) => r.fo?.includes(id))]).filter((x) => x[2]).sort((a, b) => b[2] - a[2]).map(([id, name, n]) => item("form", id, name, n)).join("")
+  else if (prefs.sidebar === "with") html = "<h2>Works with</h2>" + TX.worksWith.map(([id, name]) => [id, name, count((r) => r.ww?.includes(id))]).filter((x) => x[2]).sort((a, b) => b[2] - a[2]).map(([id, name, n]) => item("with", id, name, n)).join("")
+  else html = "<h2>Areas</h2>" + TX.areas.filter((a) => !(prefs.hideAI && a.id === "ai")).map((a) => [a, count((r) => areaPairs(r).some((p) => p.startsWith(a.id + "/")))]).filter((x) => x[1]).sort((x, y) => y[1] - x[1]).map(([a, n]) =>
+    item("a", a.id, a.name, n) + (a.id === state.a ? `<div class="subs">${a.subs.map(([id, name]) => [id, name, count((r) => areaPairs(r).includes(`${a.id}/${id}`))]).filter((x) => x[2]).sort((x, y) => y[2] - x[2]).map(([id, name, k]) => `<button type="button" class="cat sub" data-sa="${esc(id)}" aria-current="false"><span>${esc(name)}</span><span class="n">${k.toLocaleString("en-US")}</span></button>`).join("")}</div>` : "")).join("")
+  $("#cats").innerHTML = html
+}
+renderSidebar()
 
 const langs = Object.entries(repos.reduce((a, r) => (r.g && (a[r.g] = (a[r.g] ?? 0) + 1), a), {})).sort((a, b) => b[1] - a[1])
 $("#lang").innerHTML += langs.map(([l, n]) => `<option value="${esc(l)}">${esc(l)} (${n})</option>`).join("")
@@ -141,14 +185,19 @@ const sorters = {
 // StarDash card: a random row (4th to 8th) and a random column, picked once per visit so it stays put while filtering
 const PROMO_ROW = 3 + Math.floor(Math.random() * 5), PROMO_COL = Math.random()
 
+const facetMatch = (r) =>
+  (!state.a || areaPairs(r).some((p) => (state.sa ? p === `${state.a}/${state.sa}` : p.startsWith(state.a + "/")))) &&
+  (!state.form || r.fo?.includes(state.form)) && (!state.plat || r.pl?.includes(state.plat)) && (!state.with || r.ww?.includes(state.with))
+const anyFacet = () => state.a || state.form || state.plat || state.with
+
 function render() {
   const words = state.q.toLowerCase().split(/\s+/).filter(Boolean)
   const view = VIEWS.find((v) => v.f === state.f) ?? VIEWS[0]
   const list = repos
-    .filter((r) => view.test(r) && (!state.c || r.c === state.c) && (!state.lang || r.g === state.lang) && words.every((w) => r.hay.includes(w)))
+    .filter((r) => visible(r) && view.test(r) && facetMatch(r) && (!state.lang || r.g === state.lang) && words.every((w) => r.hay.includes(w)))
     .sort(sorters[state.sort] ?? sorters.picked)
   // saved repos that dropped off the list stay, at the end, so a save is never lost silently
-  const gone = state.f === "saved" && !state.c && !state.lang && !words.length ? saved.filter((n) => !byName.has(n.toLowerCase())) : []
+  const gone = state.f === "saved" && !anyFacet() && !state.lang && !words.length ? saved.filter((n) => !byName.has(n.toLowerCase())) : []
   const page = list.slice(0, state.shown).map(card)
   if (list.length <= state.shown) page.push(...gone.map((n) => `<div class="repo gone"><div class="head"><div class="name"><strong>${esc(n.split("/")[1])}</strong><span>${esc(n.split("/")[0])}</span></div>${saveBtn(n)}</div><p class="line">No longer on the list. <a href="https://github.com/${esc(n)}" target="_blank" rel="noopener">Open on GitHub</a></p></div>`))
   const el = $("#results")
@@ -158,24 +207,32 @@ function render() {
   if (state.view === "cards" && page.length > spot && !state.q && !["saved", "shared"].includes(state.f)) page.splice(spot, 0, promo)
   const empty = state.f === "saved" && !saved.length
     ? `<div class="empty">Nothing saved yet. Use the bookmark on any repo to keep it here.<br>Saves stay in this browser.</div>`
-    : `<div class="empty">No repos match that yet. Try fewer words or another category.<br><button type="button" id="reset">Clear filters</button></div>`
+    : `<div class="empty">No repos match that yet. Try fewer words or another filter.<br><button type="button" id="reset">Clear filters</button></div>`
   el.innerHTML = page.length ? page.join("") : empty
   savedBar(list.length + gone.length)
-  $("#title").textContent = state.c || view.label
+  $("#title").textContent = state.sa ? SUB.get(`${state.a}/${state.sa}`) : state.a ? AREA.get(state.a).name
+    : prefs.sidebar === "form" && state.form ? FORM.get(state.form) : prefs.sidebar === "with" && state.with ? WITH.get(state.with) : view.label
   const total = list.length + gone.length
   const parts = [`${total.toLocaleString("en-US")} ${total === 1 ? "repo" : "repos"}`]
-  if (state.c && state.f) parts.push(view.label.toLowerCase())
+  if (anyFacet() && state.f) parts.push(view.label.toLowerCase())
+  if (state.sa) parts.push(`in ${AREA.get(state.a).name}`)
+  if (state.form && !(prefs.sidebar === "form" && !state.a)) parts.push(FORM.get(state.form).toLowerCase())
+  if (state.plat) parts.push(`on ${PLAT.get(state.plat)}`)
+  if (state.with && !(prefs.sidebar === "with" && !state.a)) parts.push(`works with ${WITH.get(state.with)}`)
   if (state.lang) parts.push(`in ${state.lang}`)
-  if (!state.c && !state.f && !state.lang && !state.q) parts.push(`updated ${new Date(now).toLocaleDateString("en-US", { month: "long", day: "numeric" })}`)
+  if (prefs.hideAI) parts.push("AI repos hidden")
+  if (!anyFacet() && !state.f && !state.lang && !state.q) parts.push(`updated ${new Date(now).toLocaleDateString("en-US", { month: "long", day: "numeric" })}`)
   $("#sub").textContent = parts.join(", ")
   $("#more").hidden = list.length <= state.shown
   $("#more").textContent = `Show more (${(list.length - state.shown).toLocaleString("en-US")} left)`
-  document.querySelectorAll("[data-f]").forEach((n) => n.setAttribute("aria-current", String(!state.c && n.dataset.f === state.f)))
-  document.querySelectorAll("[data-c]").forEach((n) => n.setAttribute("aria-current", String(n.dataset.c === state.c)))
+  const group = prefs.sidebar === "form" ? state.form : prefs.sidebar === "with" ? state.with : state.a
+  document.querySelectorAll("[data-f]").forEach((n) => n.setAttribute("aria-current", String(!group && n.dataset.f === state.f)))
+  for (const k of ["a", "form", "with"]) document.querySelectorAll(`[data-${k}]`).forEach((n) => n.setAttribute("aria-current", String(n.dataset[k] === state[k] && !(k === "a" && state.sa))))
+  document.querySelectorAll("[data-sa]").forEach((n) => n.setAttribute("aria-current", String(n.dataset.sa === state.sa)))
   document.querySelectorAll(".view button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.view === state.view)))
-  $("#reset")?.addEventListener("click", () => set({ f: "", c: "", q: "", lang: "" }, true))
+  $("#reset")?.addEventListener("click", () => set({ f: "", a: "", sa: "", form: "", plat: "", with: "", q: "", lang: "" }, true))
   const p = new URLSearchParams()
-  for (const k of ["f", "c", "q", "lang", "repo"]) if (state[k] && !(k === "f" && state.f === "shared")) p.set(k, state[k])
+  for (const k of ["f", "a", "sa", "form", "plat", "with", "q", "lang", "repo"]) if (state[k] && !(k === "f" && state.f === "shared")) p.set(k, state[k])
   if (state.f === "shared") p.set("saved", shared.join(","))
   if (state.sort !== "picked") p.set("sort", state.sort)
   if (state.view !== "cards") p.set("view", state.view)
@@ -184,7 +241,8 @@ function render() {
 
 function set(patch, syncInputs) {
   Object.assign(state, patch, "shown" in patch ? {} : { shown: PAGE })
-  if (syncInputs) { $("#q").value = state.q; $("#lang").value = state.lang; $("#sort").value = state.sort }
+  if (syncInputs) { $("#q").value = state.q; $("#lang").value = state.lang; $("#sort").value = state.sort; for (const k of ["form", "plat", "with"]) $(`#f-${k}`).value = state[k] }
+  renderSidebar()
   render()
 }
 
@@ -196,13 +254,26 @@ let t
 $("#q").addEventListener("input", (e) => { clearTimeout(t); t = setTimeout(() => set({ q: e.target.value.trim() }), 120) })
 $("#sort").addEventListener("change", (e) => set({ sort: e.target.value }))
 $("#lang").addEventListener("change", (e) => set({ lang: e.target.value }))
+// Form, Platform and Works with dropdowns next to Language, with counts
+for (const [k, label, map, has] of [["form", "Form", TX.forms, (r, id) => r.fo?.includes(id)], ["plat", "Platform", TX.platforms, (r, id) => r.pl?.includes(id)], ["with", "Works with", TX.worksWith, (r, id) => r.ww?.includes(id)]]) {
+  const el = $(`#f-${k}`)
+  el.innerHTML = `<option value="">Any</option>` + map.map(([id, name]) => [id, name, repos.filter((r) => has(r, id)).length]).filter((x) => x[2]).sort((a, b) => b[2] - a[2]).map(([id, name, n]) => `<option value="${esc(id)}">${esc(name)} (${n})</option>`).join("")
+  el.value = state[k]
+  el.addEventListener("change", (e) => set({ [k]: e.target.value }))
+}
 $("#sidebar").addEventListener("click", (e) => {
   const n = e.target.closest(".cat")
   if (!n) return
-  // views and categories are one choice: picking either clears the other, and clicking the selected category again goes back to all repos
+  // views and sidebar groups are one choice: picking either clears the other; clicking the selected one again goes back
   const f = "f" in n.dataset ? n.dataset.f : ""
   const sort = f === "trending" || f === "saved" ? f : ["trending", "saved"].includes(state.sort) ? prefs.sort : state.sort
-  set("f" in n.dataset ? { f, c: "", sort } : { c: n.dataset.c === state.c ? "" : n.dataset.c, f: "", sort }, true)
+  const d = n.dataset
+  if ("sa" in d) set({ sa: d.sa === state.sa ? "" : d.sa })
+  else if ("a" in d) set({ a: d.a === state.a && !state.sa ? "" : d.a, sa: "", f: "", sort }, true)
+  else if ("form" in d) set({ form: d.form === state.form ? "" : d.form, f: "", sort }, true)
+  else if ("with" in d) set({ with: d.with === state.with ? "" : d.with, f: "", sort }, true)
+  else set({ f, a: "", sa: "", [prefs.sidebar === "form" ? "form" : prefs.sidebar === "with" ? "with" : "a"]: "", sort }, true)
+  if ("a" in d && state.a) return // on phones, keep the menu open so the area's subareas can be picked
   scrollTo({ top: 0 })
   closeMenu()
 })
@@ -276,6 +347,8 @@ function openSettings() {
   <div class="p-head"><div class="name"><strong>Settings</strong><span>Saved in this browser</span></div>
     <button class="icon-btn s-close" type="button" aria-label="Close settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
   <form class="p-body s-body">
+    ${seg("sidebar", "Sidebar shows", prefs.sidebar, [["area", "Areas"], ["form", "Forms"], ["with", "Works with"]])}
+    <fieldset class="s-row"><legend>Repos</legend>${check("hideAI", "Hide AI repos (AI tools, agents and anything built around AI)")}</fieldset>
     ${seg("sort", "Default sort", prefs.sort, [["picked", "Most picked"], ["trending", "Trending"], ["stars", "Most stars"], ["new", "Newest"]])}
     ${seg("layout", "Default layout", prefs.layout, [["cards", "Cards"], ["list", "List"]])}
     ${seg("theme", "Theme", themeNow(), [["system", "System"], ["light", "Light"], ["dark", "Dark"]])}
@@ -302,7 +375,7 @@ $("#open-settings").addEventListener("click", openSettings)
 settings.addEventListener("click", (e) => {
   if (e.target.closest(".s-close")) return closeSettings()
   if (e.target.closest("#s-reset")) {
-    prefs = { ...DEFAULT_PREFS }; savePrefs(); applyLook(); setTheme("system")
+    prefs = { ...DEFAULT_PREFS }; savePrefs(); applyLook(); setTheme("system"); renderSidebar()
     set({ sort: ["trending", "saved"].includes(state.f) ? state.sort : prefs.sort, view: prefs.layout }, true)
     openSettings()
   }
@@ -315,6 +388,8 @@ settings.addEventListener("change", (e) => {
   // a new default sort or layout applies to what's on screen now too, except in Trending and Saved, which keep their own order
   if (name === "sort" && !["trending", "saved"].includes(state.f)) set({ sort: value }, true)
   if (name === "layout") set({ view: value, shown: state.shown })
+  if (name === "sidebar") set({ a: "", sa: "", form: "", with: "" }, true)
+  if (name === "hideAI") set({}, true)
 })
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeSettings() })
 
@@ -351,10 +426,17 @@ function followTheme(root) {
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => followTheme(panel))
 
 function similar(r) {
-  const tags = new Set(r.t)
+  // same subarea counts most, then same area, shared tags, shared tools and forms; stars break ties
+  const pairs = areaPairs(r), tags = new Set([...(r.tg ?? []), ...r.t]), ww = new Set(r.ww ?? []), fo = new Set(r.fo ?? [])
   return repos
-    .filter((x) => x !== r && x.c === r.c)
-    .map((x) => [x, x.t.filter((t) => tags.has(t)).length * 3 + x.k + Math.log10(x.s + 1)])
+    .filter((x) => x !== r && visible(x))
+    .map((x) => {
+      const xp = areaPairs(x)
+      const place = xp[0] && xp[0] === pairs[0] ? 6 : xp.some((p) => pairs.includes(p)) ? 4 : xp.some((p) => pairs.some((q) => q.split("/")[0] === p.split("/")[0])) ? 2 : 0
+      const shared = [...(x.tg ?? []), ...x.t].filter((t) => tags.has(t)).length * 2 + (x.ww ?? []).filter((w) => ww.has(w)).length + (x.fo ?? []).filter((f) => fo.has(f)).length * 0.5
+      return [x, place ? place + shared + x.k * 0.3 + Math.log10(x.s + 1) : 0]
+    })
+    .filter(([, sc]) => sc > 0)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 6)
     .map(([x]) => x)
@@ -426,6 +508,20 @@ async function readme(r) {
   }
 }
 
+// the repo's facets in the panel; each chip filters the list to repos like it
+function labels(r) {
+  if (!r.a) return ""
+  const chip = (attrs, text) => `<button type="button" class="lab" ${attrs}>${esc(text)}</button>`
+  const place = areaPairs(r).map((p) => { const [a, sa] = p.split("/"); return chip(`data-go-a="${esc(a)}" data-go-sa="${esc(sa)}"`, `${AREA.get(a)?.name} › ${SUB.get(p)}`) })
+  const rows = [
+    ["Area", place.join("")],
+    ["Form", (r.fo ?? []).map((x) => chip(`data-go-form="${esc(x)}"`, FORM.get(x))).join("")],
+    ["Runs on", (r.pl ?? []).map((x) => chip(`data-go-plat="${esc(x)}"`, PLAT.get(x))).join("")],
+    ["Works with", (r.ww ?? []).map((x) => chip(`data-go-with="${esc(x)}"`, WITH.get(x))).join("")],
+  ].filter(([, v]) => v)
+  return `<div class="p-labels">${rows.map(([k, v]) => `<div><span class="k">${k}</span><span class="v">${v}</span></div>`).join("")}${r.alt?.length ? `<p class="p-alt">Open source alternative to ${r.alt.map(esc).join(", ")}</p>` : ""}${r.ai ? `<p class="p-alt">${r.ai === 2 ? "AI tool" : "Uses AI"}</p>` : ""}</div>`
+}
+
 function openPanel(name, push = true) {
   const r = byName.get(name.toLowerCase())
   if (!r) return closePanel()
@@ -455,10 +551,11 @@ function openPanel(name, push = true) {
       <button class="btn" type="button" data-copy="git clone https://github.com/${esc(r.r)}.git">Copy git clone</button>
     </div>
     <dl class="p-facts">${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("")}<div><dt>Activity</dt><dd><span class="fresh" style="--f:${fc}">${ft}</span></dd></div></dl>
+    ${labels(r)}
     ${r.t.length ? `<div class="topics">${r.t.map((t) => `<span>${esc(t)}</span>`).join("")}</div>` : ""}
     <section><h3>Stars over time</h3>${trend(r.hs ?? [])}</section>
     <section><h3>README</h3><div class="readme"><p class="muted">Loading README…</p></div></section>
-    <section><h3>Similar in ${esc(r.c)}</h3><div class="p-similar">${similar(r).map((x) => `<button type="button" class="sim" data-r="${esc(x.r)}"><img src="${esc(avatar(x.r.split("/")[0], 40))}" alt="" width="20" height="20" loading="lazy" decoding="async"><span><strong>${esc(x.r.split("/")[1])}</strong><small>${esc(x.l)}</small></span><em>${STAR}${num(x.s)}</em></button>`).join("")}</div></section>
+    <section><h3>Similar${r.a ? ` in ${esc(SUB.get(`${r.a}/${r.sa}`))}` : ""}</h3><div class="p-similar">${similar(r).map((x) => `<button type="button" class="sim" data-r="${esc(x.r)}"><img src="${esc(avatar(x.r.split("/")[0], 40))}" alt="" width="20" height="20" loading="lazy" decoding="async"><span><strong>${esc(x.r.split("/")[1])}</strong><small>${esc(x.l)}</small></span><em>${STAR}${num(x.s)}</em></button>`).join("")}</div></section>
     <a class="p-promo" href="https://github.com/boffti/stardash" target="_blank" rel="noopener">Starring this? <strong>StarDash</strong> keeps your GitHub stars organized and tells you when they ship breaking changes. Free, open source and self-hosted.</a>
   </div>`
   panel.hidden = false
@@ -501,6 +598,13 @@ panel.addEventListener("click", async (e) => {
   if (e.target.closest(".p-close")) return closePanel()
   const sv = e.target.closest("[data-save]")
   if (sv) return toggleSave(sv.dataset.save)
+  const go = e.target.closest(".lab")
+  if (go) {
+    const d = go.dataset
+    closePanel()
+    set({ f: "", a: d.goA ?? "", sa: d.goSa ?? "", form: d.goForm ?? "", plat: d.goPlat ?? "", with: d.goWith ?? "" }, true)
+    return scrollTo({ top: 0 })
+  }
   const sim = e.target.closest(".sim")
   if (sim) return openPanel(sim.dataset.r)
   const more = e.target.closest(".more-readme")
