@@ -223,6 +223,9 @@ function render() {
   if (prefs.hideAI) parts.push("AI repos hidden")
   if (!anyFacet() && !state.f && !state.lang && !state.q) parts.push(`updated ${new Date(now).toLocaleDateString("en-US", { month: "long", day: "numeric" })}`)
   $("#sub").textContent = parts.join(", ")
+  // phones keep the filters behind one button; it shows how many are on
+  const on = ["form", "plat", "with", "lang"].filter((k) => state[k]).length
+  $("#filters-n").hidden = !on; $("#filters-n").textContent = on
   $("#more").hidden = list.length <= state.shown
   $("#more").textContent = `Show more (${(list.length - state.shown).toLocaleString("en-US")} left)`
   const group = prefs.sidebar === "form" ? state.form : prefs.sidebar === "with" ? state.with : state.a
@@ -276,6 +279,10 @@ $("#sidebar").addEventListener("click", (e) => {
   if ("a" in d && state.a) return // on phones, keep the menu open so the area's subareas can be picked
   scrollTo({ top: 0 })
   closeMenu()
+})
+$("#filters-btn").addEventListener("click", (e) => {
+  const open = $("#filters").classList.toggle("open")
+  e.currentTarget.setAttribute("aria-expanded", String(open))
 })
 $("#menu").addEventListener("click", () => $("#app").classList.add("open"))
 $("#scrim").addEventListener("click", closeMenu)

@@ -86,10 +86,13 @@
               <option value="saved">Recently saved</option>
             </select>
           </label>
-          <label class="select"><span>Form</span><select id="f-form"></select></label>
-          <label class="select"><span>Platform</span><select id="f-plat"></select></label>
-          <label class="select"><span>Works with</span><select id="f-with"></select></label>
-          <label class="select"><span>Language</span><select id="lang"><option value="">Any</option></select></label>
+          <button type="button" class="filters-btn" id="filters-btn" aria-expanded="false" aria-controls="filters"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filters<span class="badge" id="filters-n" hidden></span></button>
+          <div class="filters" id="filters">
+            <label class="select"><span>Form</span><select id="f-form"></select></label>
+            <label class="select"><span>Platform</span><select id="f-plat"></select></label>
+            <label class="select"><span>Works with</span><select id="f-with"></select></label>
+            <label class="select"><span>Language</span><select id="lang"><option value="">Any</option></select></label>
+          </div>
           <div class="view" role="group" aria-label="Layout">
             <button type="button" data-view="cards" aria-label="Cards" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg></button>
             <button type="button" data-view="list" aria-label="List" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
