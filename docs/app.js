@@ -9,6 +9,8 @@ const num = (n) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k` : S
 const avatar = (owner, size) => `https://avatars.githubusercontent.com/${encodeURIComponent(owner)}?s=${size}`
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c])
 
+import { makeIndex, fieldsFor } from "./search.js?v=3"
+
 const data = await fetch("data.json").then((r) => r.json())
 const now = Date.parse(data.updated)
 // facets (docs/plans/2026-11-07-taxonomy.md in the pipeline): area > subarea, form, platform, works with, tags, alternatives
@@ -17,12 +19,10 @@ const AREA = new Map(TX.areas.map((a) => [a.id, a]))
 const SUB = new Map(TX.areas.flatMap((a) => a.subs.map(([id, name]) => [`${a.id}/${id}`, name])))
 const FORM = new Map(TX.forms), PLAT = new Map(TX.platforms), WITH = new Map(TX.worksWith)
 const areaPairs = (r) => (r.a ? [`${r.a}/${r.sa}`, ...(r.mo ?? [])] : [])
-const words = (r) => [
-  r.r, r.l, r.g ?? "", r.t.join(" "), (r.tg ?? []).join(" "), (r.alt ?? []).join(" "),
-  ...areaPairs(r).map((p) => `${AREA.get(p.split("/")[0])?.name ?? ""} ${SUB.get(p) ?? ""}`),
-  ...(r.fo ?? []).map((x) => FORM.get(x)), ...(r.ww ?? []).map((x) => WITH.get(x)),
-].join(" ").toLowerCase()
-const repos = data.repos.map((r) => ({ ...r, hay: words(r), age: (now - Date.parse(r.p)) / 864e5 }))
+const repos = data.repos.map((r) => ({ ...r, age: (now - Date.parse(r.p)) / 864e5 }))
+// ranked search, scored against a test set in the pipeline; the index is built on the first search, not on page load
+let index
+const search = (q, pool) => (q.trim() ? (index ??= makeIndex(repos, fieldsFor(TX)))(q, pool) : null)
 const byName = new Map(repos.map((r) => [r.r.toLowerCase(), r]))
 
 // ---- saved for later: repo names in localStorage, oldest first. No accounts, so saves live in this browser,
@@ -82,7 +82,7 @@ const pick = (k, map) => { const v = params.get(k) ?? old[k] ?? ""; return !map 
 const state = {
   a: pick("a", AREA), sa: "", form: pick("form", FORM), plat: pick("plat", PLAT), with: pick("with", WITH),
   f: params.get("f") ?? (shared.length ? "shared" : params.has("multi") ? "multi" : ""), q: params.get("q") ?? "",
-  repo: params.get("repo") ?? "", sort: params.get("sort") ?? (params.get("f") === "saved" ? "saved" : params.get("f") === "trending" ? "trending" : prefs.sort), lang: params.get("lang") ?? "", view: params.get("view") ?? prefs.layout, shown: PAGE,
+  repo: params.get("repo") ?? "", sort: params.get("sort") ?? (params.get("q") ? "match" : params.get("f") === "saved" ? "saved" : params.get("f") === "trending" ? "trending" : prefs.sort), lang: params.get("lang") ?? "", view: params.get("view") ?? prefs.layout, shown: PAGE,
 }
 { const sa = params.get("sa") ?? old.sa; if (state.a && SUB.has(`${state.a}/${sa}`)) state.sa = sa }
 const isNew = (r) => (now - Date.parse(r.f)) / 864e5 <= 7
@@ -198,13 +198,19 @@ const PHONE = matchMedia("(max-width: 760px)")
 PHONE.addEventListener("change", () => render())
 
 function render() {
-  const words = state.q.toLowerCase().split(/\s+/).filter(Boolean)
   const view = VIEWS.find((v) => v.f === state.f) ?? VIEWS[0]
-  const list = repos
-    .filter((r) => visible(r) && view.test(r) && facetMatch(r) && (!state.lang || r.g === state.lang) && words.every((w) => r.hay.includes(w)))
-    .sort(sorters[state.sort] ?? sorters.picked)
+  let list = repos.filter((r) => visible(r) && view.test(r) && facetMatch(r) && (!state.lang || r.g === state.lang))
+  const scores = search(state.q, list)
+  if (scores) list = list.filter((r) => scores.has(r))
+  // searching inside a view, area or filter: say how many matches the rest of the list has, so an empty or short
+  // result isn't mistaken for the search failing
+  const narrowed = scores && (anyFacet() || state.f || state.lang)
+  const elsewhere = narrowed ? [...search(state.q, repos.filter(visible)).keys()].filter((r) => !scores.has(r)).length : 0
+  $("#everywhere").hidden = !elsewhere
+  $("#everywhere").textContent = `${elsewhere.toLocaleString("en-US")} more ${elsewhere === 1 ? "match" : "matches"} in all repos`
+  list.sort(scores && state.sort === "match" ? (a, b) => scores.get(b) - scores.get(a) : sorters[state.sort] ?? sorters.picked)
   // saved repos that dropped off the list stay, at the end, so a save is never lost silently
-  const gone = state.f === "saved" && !anyFacet() && !state.lang && !words.length ? saved.filter((n) => !byName.has(n.toLowerCase())) : []
+  const gone = state.f === "saved" && !anyFacet() && !state.lang && !scores ? saved.filter((n) => !byName.has(n.toLowerCase())) : []
   const page = list.slice(0, state.shown).map(card)
   if (list.length <= state.shown) page.push(...gone.map((n) => `<div class="repo gone"><div class="head"><div class="name"><strong>${esc(n.split("/")[1])}</strong><span>${esc(n.split("/")[0])}</span></div>${saveBtn(n)}</div><p class="line">No longer on the list. <a href="https://github.com/${esc(n)}" target="_blank" rel="noopener">Open on GitHub</a></p></div>`))
   const el = $("#results")
@@ -245,13 +251,18 @@ function render() {
   const p = new URLSearchParams()
   for (const k of ["f", "a", "sa", "form", "plat", "with", "q", "lang", "repo"]) if (state[k] && !(k === "f" && state.f === "shared")) p.set(k, state[k])
   if (state.f === "shared") p.set("saved", shared.join(","))
-  if (state.sort !== "picked") p.set("sort", state.sort)
+  if (state.sort !== "picked" && !(state.sort === "match" && state.q)) p.set("sort", state.sort)
   if (state.view !== "cards") p.set("view", state.view)
   history.replaceState(null, "", `${location.pathname}${p.size ? `?${p}` : ""}`)
 }
 
 function set(patch, syncInputs) {
+  const hadQ = state.q
   Object.assign(state, patch, "shown" in patch ? {} : { shown: PAGE })
+  // typing a search switches to Best match; clearing it goes back to the usual order
+  if (state.q && !hadQ && !("sort" in patch)) state.sort = "match", (syncInputs = true)
+  if (!state.q && state.sort === "match") state.sort = ["trending", "saved"].includes(state.f) ? state.f : prefs.sort, (syncInputs = true)
+  $("#sort-match").hidden = $("#sort-match").disabled = !state.q
   if (syncInputs) { $("#q").value = state.q; $("#lang").value = state.lang; $("#sort").value = state.sort; for (const k of ["form", "plat", "with"]) $(`#f-${k}`).value = state[k] }
   renderSidebar()
   render()
@@ -259,6 +270,7 @@ function set(patch, syncInputs) {
 
 const closeMenu = () => $("#app").classList.remove("open")
 $("#q").value = state.q
+$("#sort-match").hidden = $("#sort-match").disabled = !state.q
 $("#sort").value = state.sort
 $("#lang").value = state.lang
 let t
@@ -299,6 +311,7 @@ $("#filters-btn").addEventListener("click", (e) => {
 $("#menu").addEventListener("click", () => $("#app").classList.add("open"))
 $("#scrim").addEventListener("click", closeMenu)
 document.querySelector(".view").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) set({ view: b.dataset.view, shown: state.shown }) })
+$("#everywhere").addEventListener("click", () => set({ f: "", a: "", sa: "", form: "", plat: "", with: "", lang: "", sort: "match" }, true))
 $("#more").addEventListener("click", () => set({ shown: state.shown + PAGE }))
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeMenu()

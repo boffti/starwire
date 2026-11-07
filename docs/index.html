@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=16">
+<link rel="stylesheet" href="style.css?v=17">
 <link rel="alternate" type="application/rss+xml" title="starwire, new picks" href="https://starwire.foo/feed.xml">
 <script>try{const t=localStorage.getItem("starwire-theme");if(t)document.documentElement.dataset.theme=t}catch{}</script>
 </head>
@@ -74,10 +74,12 @@
         <div>
           <h1 id="title">All repos</h1>
           <p id="sub"></p>
+          <button type="button" class="everywhere" id="everywhere" hidden></button>
         </div>
         <div class="controls">
           <label class="select"><span>Sort</span>
             <select id="sort">
+              <option value="match" id="sort-match" hidden disabled>Best match</option>
               <option value="picked">Most picked</option>
               <option value="trending">Trending</option>
               <option value="stars">Most stars</option>
@@ -110,6 +112,6 @@
 <aside class="panel" id="panel" hidden aria-label="Repo details"></aside>
 <aside class="panel settings" id="settings" hidden aria-label="Settings"></aside>
 <div class="panel-scrim" id="pscrim"></div>
-<script src="app.js?v=16" type="module"></script>
+<script src="app.js?v=18" type="module"></script>
 </body>
 </html>
