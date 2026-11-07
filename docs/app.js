@@ -281,7 +281,7 @@ function openSettings() {
     ${seg("theme", "Theme", themeNow(), [["system", "System"], ["light", "Light"], ["dark", "Dark"]])}
     <fieldset class="s-row"><legend>On each repo card</legend>${check("topics", "Topics")}${check("gain", "Stars gained")}${check("picked", "How many times it was picked")}</fieldset>
     <fieldset class="s-row"><legend>StarDash</legend>${check("stardash", "Show suggestions for StarDash, our tool for organizing your own stars")}</fieldset>
-    <div class="s-foot"><button class="btn" type="button" id="s-reset">Reset to defaults</button><span>Links you open still show what the link asks for.</span></div>
+    <div class="s-foot"><button class="btn" type="button" id="s-reset">Reset to defaults</button></div>
   </form>`
   settings.hidden = false
   document.body.classList.add("has-panel")
