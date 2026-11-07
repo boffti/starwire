@@ -144,12 +144,13 @@
   <h2 id="limits">Known limits</h2>
   <ul>
     <li>Daily star counts started on November 6, 2026. Until about November 13, many repos show fewer than 7 days of gains.</li>
-    <li>Bought or fake stars aren't detected yet. A sudden jump with no forks, issues or commits to match is a warning sign. Detection is the next thing we're building.</li>
+    <li>Bought or fake stars can't be detected reliably from public data yet. Since mid-2026 GitHub no longer shows who starred a repo, and the largest study of fake stars (<a href="https://doi.org/10.1145/3744916.3764531">He et al., ICSE 2026</a>) found that even good detectors can wrongly flag honest projects. A sudden jump or few forks isn't proof either: a Hacker News launch looks the same. We're researching this internally, and nothing on starwire is ranked, hidden or labelled because of it. If you believe a listed repo bought its stars, <a href="https://github.com/boffti/starwire/issues/new">tell us</a>.</li>
     <li>Picks come from what curators and readers find, so some corners of open source are better covered than others. <a href="https://github.com/boffti/starwire/issues/new?template=submit-repo.yml">Submissions</a> help fill the gaps.</li>
   </ul>
 
   <h2 id="changes">Changes to the method</h2>
   <ul class="log">
+    <li><b>Nov 7, 2026.</b> Started researching fake-star detection internally. It doesn't affect the list or the ranking.</li>
     <li><b>Nov 7, 2026.</b> Trending uses only measured star gains. Before, a repo's lifetime average was projected forward, which made big repos look like they were still at their launch pace.</li>
     <li><b>Nov 7, 2026.</b> Stars and repo facts refresh every day instead of every two days.</li>
     <li><b>Nov 7, 2026.</b> Save repos for later, kept in your browser.</li>
