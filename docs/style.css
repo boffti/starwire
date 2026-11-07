@@ -65,13 +65,18 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .cat[aria-current="true"] svg { color: var(--accent); }
 .cat[aria-current="true"] .n { color: var(--accent); background: var(--green-soft); border-radius: 999px; padding: 0 7px; }
 .side-foot { padding: 10px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; }
-.mini-promo {
-  display: block; padding: 12px; border-radius: 8px; text-decoration: none; border: 1px solid var(--line);
-  background: radial-gradient(120% 120% at 100% 0%, var(--green-soft), transparent 65%), var(--panel);
-}
-.mini-promo strong { display: block; font-size: 13.5px; }
-.mini-promo span { display: block; font-size: 12.5px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+/* StarDash card: a one-line, closed-by-default disclosure, so it never takes over the sidebar */
+.mini-promo { border-radius: 8px; border: 1px solid var(--line); background: radial-gradient(120% 120% at 100% 0%, var(--green-soft), transparent 65%), var(--panel); }
+.mini-promo summary { display: flex; align-items: center; gap: 8px; padding: 9px 12px; cursor: pointer; list-style: none; border-radius: 8px; }
+.mini-promo summary::-webkit-details-marker { display: none; }
+.mini-promo summary:hover strong { color: var(--text); }
+.mini-promo strong { font-size: 13px; font-weight: 600; color: color-mix(in srgb, var(--text) 85%, var(--muted)); }
+.mini-promo summary svg { width: 14px; height: 14px; margin-left: auto; flex: none; color: var(--muted); fill: none; stroke: currentColor; stroke-width: 2; transition: transform 0.15s ease; }
+.mini-promo[open] summary svg { transform: rotate(180deg); }
+.mini-promo a { display: block; padding: 0 12px 12px; text-decoration: none; }
+.mini-promo span { display: block; font-size: 12.5px; color: var(--muted); line-height: 1.4; }
 .mini-promo em { display: block; font-style: normal; font-size: 12.5px; font-weight: 600; color: var(--accent); margin-top: 8px; }
+@media (prefers-reduced-motion: reduce) { .mini-promo summary svg { transition: none; } }
 .side-link { display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-radius: 6px; font-size: 14px; color: var(--muted); text-decoration: none; }
 .side-link svg { width: 16px; height: 16px; }
 .side-link:hover { background: var(--raise); color: var(--text); }
@@ -221,6 +226,7 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .repo.gone { cursor: default; opacity: 0.75; }
 .repo.gone .line a { color: var(--accent); }
 .saved-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin: -4px 0 16px; padding: 10px 12px 10px 16px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); font-size: 13.5px; color: var(--muted); }
+.saved-bar[hidden] { display: none; } /* display: flex above would otherwise beat the hidden attribute */
 .saved-bar .btn { height: 32px; font-size: 13.5px; }
 @media (pointer: coarse) { .save, .jump { padding: 9px; margin-top: -5px; opacity: 1; } .save + .jump { margin-right: -5px; } }
 
