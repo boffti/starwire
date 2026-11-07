@@ -30,13 +30,36 @@ function setSaved(list) {
   try { localStorage.setItem(SAVED_KEY, JSON.stringify(saved)) } catch {}
 }
 
+// ---- settings: per-browser preferences in localStorage. They pick the defaults; a link's own parameters still win,
+// so a shared link shows the same thing for everyone. Versioned so later settings can be added without breaking old ones.
+const PREFS_KEY = "starwire-prefs"
+const DEFAULT_PREFS = { v: 1, sort: "picked", layout: "cards", topics: true, gain: true, picked: true, stardash: true }
+const SORTS = ["picked", "trending", "stars", "new", "active"]
+function readPrefs() {
+  let p = {}
+  try { p = JSON.parse(localStorage.getItem(PREFS_KEY) ?? "{}") ?? {} } catch {}
+  const out = { ...DEFAULT_PREFS }
+  if (SORTS.includes(p.sort)) out.sort = p.sort
+  if (["cards", "list"].includes(p.layout)) out.layout = p.layout
+  for (const k of ["topics", "gain", "picked", "stardash"]) if (typeof p[k] === "boolean") out[k] = p[k]
+  return out
+}
+let prefs = readPrefs()
+function savePrefs() { try { localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)) } catch {} }
+// what hides with CSS: topics, gain badge and picked count on cards, and every StarDash suggestion
+const applyLook = () => {
+  const b = document.body.classList
+  b.toggle("no-topics", !prefs.topics); b.toggle("no-gain", !prefs.gain); b.toggle("no-picked", !prefs.picked); b.toggle("no-stardash", !prefs.stardash)
+}
+applyLook()
+
 const params = new URLSearchParams(location.search)
 // a shared list opens as its own view, with a button to add it to your saves
 const shared = [...new Set((params.get("saved") ?? "").split(",").map((n) => n.trim()).filter((n) => NAME.test(n)).map(canon))].slice(0, 500)
 const sharedSet = new Set(shared)
 const state = {
   f: params.get("f") ?? (shared.length ? "shared" : params.has("multi") ? "multi" : ""), c: params.get("c") ?? "", q: params.get("q") ?? "",
-  repo: params.get("repo") ?? "", sort: params.get("sort") ?? (params.get("f") === "saved" ? "saved" : "picked"), lang: params.get("lang") ?? "", view: params.get("view") ?? "cards", shown: PAGE,
+  repo: params.get("repo") ?? "", sort: params.get("sort") ?? (params.get("f") === "saved" ? "saved" : params.get("f") === "trending" ? "trending" : prefs.sort), lang: params.get("lang") ?? "", view: params.get("view") ?? prefs.layout, shown: PAGE,
 }
 const isNew = (r) => (now - Date.parse(r.f)) / 864e5 <= 7
 const VIEWS = [
@@ -178,7 +201,7 @@ $("#sidebar").addEventListener("click", (e) => {
   if (!n) return
   // views and categories are one choice: picking either clears the other, and clicking the selected category again goes back to all repos
   const f = "f" in n.dataset ? n.dataset.f : ""
-  const sort = f === "trending" || f === "saved" ? f : ["trending", "saved"].includes(state.sort) ? "picked" : state.sort
+  const sort = f === "trending" || f === "saved" ? f : ["trending", "saved"].includes(state.sort) ? prefs.sort : state.sort
   set("f" in n.dataset ? { f, c: "", sort } : { c: n.dataset.c === state.c ? "" : n.dataset.c, f: "", sort }, true)
   scrollTo({ top: 0 })
   closeMenu()
@@ -240,6 +263,60 @@ function toggleSave(n) {
 }
 // another tab saved or removed something
 addEventListener("storage", (e) => { if (e.key !== SAVED_KEY) return; saved = []; setSaved(readSaved()); savedChanged(); if (state.f === "saved") render() })
+
+// settings panel: slides in like the repo panel, every change applies at once
+const settings = $("#settings")
+const GEAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>'
+$("#open-settings").innerHTML = GEAR
+const themeNow = () => { try { return localStorage.getItem("starwire-theme") ?? "system" } catch { return "system" } }
+const seg = (name, label, value, options) => `<fieldset class="s-row"><legend>${label}</legend><div class="seg">${options.map(([v, t]) => `<label><input type="radio" name="${name}" value="${v}"${v === value ? " checked" : ""}><span>${t}</span></label>`).join("")}</div></fieldset>`
+const check = (name, label) => `<label class="check"><input type="checkbox" name="${name}"${prefs[name] ? " checked" : ""}>${label}</label>`
+function openSettings() {
+  settings.innerHTML = `
+  <div class="p-head"><div class="name"><strong>Settings</strong><span>Saved in this browser</span></div>
+    <button class="icon-btn s-close" type="button" aria-label="Close settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+  <form class="p-body s-body">
+    ${seg("sort", "Default sort", prefs.sort, [["picked", "Most picked"], ["trending", "Trending"], ["stars", "Most stars"], ["new", "Newest"]])}
+    ${seg("layout", "Default layout", prefs.layout, [["cards", "Cards"], ["list", "List"]])}
+    ${seg("theme", "Theme", themeNow(), [["system", "System"], ["light", "Light"], ["dark", "Dark"]])}
+    <fieldset class="s-row"><legend>On each repo card</legend>${check("topics", "Topics")}${check("gain", "Stars gained")}${check("picked", "How many times it was picked")}</fieldset>
+    <fieldset class="s-row"><legend>StarDash</legend>${check("stardash", "Show suggestions for StarDash, our tool for organizing your own stars")}</fieldset>
+    <div class="s-foot"><button class="btn" type="button" id="s-reset">Reset to defaults</button><span>Links you open still show what the link asks for.</span></div>
+  </form>`
+  settings.hidden = false
+  document.body.classList.add("has-panel")
+  settings.querySelector(".s-close").focus()
+}
+function closeSettings() {
+  if (settings.hidden) return
+  settings.hidden = true
+  if (panel.hidden) document.body.classList.remove("has-panel")
+  $("#open-settings").focus()
+}
+function setTheme(t) {
+  try { t === "system" ? localStorage.removeItem("starwire-theme") : localStorage.setItem("starwire-theme", t) } catch {}
+  t === "system" ? delete document.documentElement.dataset.theme : (document.documentElement.dataset.theme = t)
+  followTheme(panel)
+}
+$("#open-settings").addEventListener("click", openSettings)
+settings.addEventListener("click", (e) => {
+  if (e.target.closest(".s-close")) return closeSettings()
+  if (e.target.closest("#s-reset")) {
+    prefs = { ...DEFAULT_PREFS }; savePrefs(); applyLook(); setTheme("system")
+    set({ sort: ["trending", "saved"].includes(state.f) ? state.sort : prefs.sort, view: prefs.layout }, true)
+    openSettings()
+  }
+})
+settings.addEventListener("change", (e) => {
+  const { name, value, checked, type } = e.target
+  if (name === "theme") return setTheme(value)
+  prefs[name] = type === "checkbox" ? checked : value
+  savePrefs(); applyLook()
+  // a new default sort or layout applies to what's on screen now too, except in Trending and Saved, which keep their own order
+  if (name === "sort" && !["trending", "saved"].includes(state.f)) set({ sort: value }, true)
+  if (name === "layout") set({ view: value, shown: state.shown })
+})
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeSettings() })
 
 render()
 
@@ -402,7 +479,7 @@ function setRepoParam(v) {
 function closePanel() {
   if (panel.hidden) return
   panel.hidden = true
-  document.body.classList.remove("has-panel")
+  if (settings.hidden) document.body.classList.remove("has-panel")
   const was = state.repo
   state.repo = ""
   setRepoParam("")
@@ -431,6 +508,7 @@ panel.addEventListener("click", async (e) => {
   const copy = e.target.closest("[data-copy]")
   if (copy) { try { await navigator.clipboard.writeText(copy.dataset.copy); copy.textContent = "Copied" } catch { copy.textContent = copy.dataset.copy } setTimeout(() => (copy.textContent = "Copy git clone"), 1600) }
 })
-$("#pscrim").addEventListener("click", closePanel)
+$("#pscrim").addEventListener("click", () => { closePanel(); closeSettings() })
 document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !panel.hidden) closePanel() })
 if (state.repo) openPanel(state.repo, false)
+if (params.has("settings")) openSettings()
