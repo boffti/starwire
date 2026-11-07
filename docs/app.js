@@ -76,6 +76,9 @@ $("#cats").innerHTML = "<h2>Categories</h2>" + [...data.categories].sort((a, b) 
 const langs = Object.entries(repos.reduce((a, r) => (r.g && (a[r.g] = (a[r.g] ?? 0) + 1), a), {})).sort((a, b) => b[1] - a[1])
 $("#lang").innerHTML += langs.map(([l, n]) => `<option value="${esc(l)}">${esc(l)} (${n})</option>`).join("")
 
+// the build says how much of the week a gain covers: "+255 in 1 day" (measured so far), "+700 a week", "~+700 a week" (estimate)
+const gain = (r) => r.wt ?? `+${num(r.w)} a week`
+const gainTitle = (r) => (gain(r).startsWith("~") ? "Estimated: the days not measured yet use the repo's average since it was created" : "Measured from our daily star counts")
 const fresh = (d) => (d < 30 ? ["var(--green)", d < 1 ? "updated today" : `updated ${Math.round(d)}d ago`] : d < 365 ? ["var(--amber)", `updated ${Math.round(d / 30)}mo ago`] : ["var(--muted)", `quiet ${Math.round(d / 365)}y`])
 
 const BOOKMARK = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${I.saved.slice(9, -3)}"/></svg>`
@@ -91,7 +94,7 @@ function card(r) {
   <div class="head"><img src="https://github.com/${esc(owner)}.png?size=56" alt="" loading="lazy" width="28" height="28"><div class="name"><strong>${esc(name)}</strong><span>${esc(owner)}</span></div>${saveBtn(r.r)}<a class="jump" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener" aria-label="Open ${esc(name)} on GitHub" title="Open on GitHub">${GH}</a></div>
   <p class="line">${esc(r.l)}</p>
   ${r.t.length ? `<div class="topics">${r.t.slice(0, 3).map((t) => `<span>${esc(t)}</span>`).join("")}</div>` : ""}
-  <div class="meta"><span class="stars">${STAR}${num(r.s)}</span>${r.g ? `<span class="dot" style="--c:${esc(r.gc ?? "")}">${esc(r.g)}</span>` : ""}${r.h > 0 ? `<span class="rise">+${num(r.w)} a week</span>` : ""}<span class="fresh" style="--f:${fc}">${ft}</span>${r.k > 1 ? `<span class="pill picked">picked ${r.k}×</span>` : ""}${isNew(r) ? '<span class="pill new">new</span>' : ""}</div>
+  <div class="meta"><span class="stars">${STAR}${num(r.s)}</span>${r.g ? `<span class="dot" style="--c:${esc(r.gc ?? "")}">${esc(r.g)}</span>` : ""}${r.h > 0 ? `<span class="rise" title="${esc(gainTitle(r))}">${esc(gain(r))}</span>` : ""}<span class="fresh" style="--f:${fc}">${ft}</span>${r.k > 1 ? `<span class="pill picked">picked ${r.k}×</span>` : ""}${isNew(r) ? '<span class="pill new">new</span>' : ""}</div>
 </div>`
 }
 
@@ -334,7 +337,7 @@ function openPanel(name, push = true) {
   const [fc, ft] = fresh(r.age)
   const facts = [
     ["Stars", num(r.s)],
-    r.h > 0 ? ["This week", `+${num(r.w)}`] : null,
+    r.h > 0 ? ["Stars gained", gain(r)] : null,
     ["Forks", num(r.fk ?? 0)],
     ["License", r.li ?? "None listed"],
     ["Language", r.g ?? "Mixed"],
