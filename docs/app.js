@@ -150,6 +150,7 @@ $("#theme").addEventListener("click", () => {
   const dark = getComputedStyle(document.documentElement).colorScheme.includes("dark")
   document.documentElement.dataset.theme = dark ? "light" : "dark"
   try { localStorage.setItem("starwire-theme", document.documentElement.dataset.theme) } catch {}
+  followTheme(panel)
 })
 render()
 
@@ -163,6 +164,20 @@ const loadLibs = () =>
       (src) => new Promise((ok, fail) => document.head.append(Object.assign(document.createElement("script"), { src, onload: ok, onerror: fail }))),
     ),
   ))
+
+// A README <picture> picks its logo with prefers-color-scheme, which is the OS setting. Follow the
+// site's theme instead, so a light site never gets the white logo. Only that one feature is swapped
+// for an always-true or always-false query, so any other condition in the media query still applies.
+const siteDark = () => getComputedStyle(document.documentElement).colorScheme.includes("dark")
+function followTheme(root) {
+  const dark = siteDark()
+  for (const s of root.querySelectorAll("source[media]")) {
+    s.dataset.media ??= s.getAttribute("media")
+    if (!/prefers-color-scheme/i.test(s.dataset.media)) continue
+    s.setAttribute("media", s.dataset.media.replace(/\(\s*prefers-color-scheme\s*:\s*(dark|light)\s*\)/gi, (_, v) => ((v.toLowerCase() === "dark") === dark ? "(min-width: 0px)" : "(min-width: 99999px)")))
+  }
+}
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => followTheme(panel))
 
 function similar(r) {
   const tags = new Set(r.t)
@@ -211,6 +226,7 @@ async function readme(r) {
       const v = s.getAttribute("srcset").trim()
       if (v) s.setAttribute("srcset", v.split(/\s*,\s+/).map((c) => { const [u, ...d] = c.split(/\s+/); return [raw(u), ...d].join(" ") }).join(", "))
     }
+    followTheme(frag)
     el.replaceChildren(frag)
     if (md.length > 15000) el.insertAdjacentHTML("beforeend", `<p><a href="https://github.com/${esc(r.r)}#readme" target="_blank" rel="noopener">Read the rest on GitHub</a></p>`)
     // long READMEs start collapsed; the panel stays the only thing that scrolls
