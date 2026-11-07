@@ -157,14 +157,17 @@ const saveBtn = (n) => {
   return `<button type="button" class="save" data-save="${esc(n)}" aria-pressed="${on}" aria-label="${on ? `Remove ${esc(name)} from saved` : `Save ${esc(name)} for later`}" title="${on ? "Saved" : "Save for later"}">${BOOKMARK}</button>`
 }
 
+// "picked 3×" and "new": at the end of the stats, or beside the name in the phone list view where the stats line is full
+const pills = (r) => `${r.k > 1 ? `<span class="pill picked">picked ${r.k}×</span>` : ""}${isNew(r) ? '<span class="pill new">new</span>' : ""}`
+
 function card(r) {
   const [owner, name] = r.r.split("/")
   const [fc, ft] = fresh(r.age)
   return `<div class="repo" role="button" tabindex="0" data-r="${esc(r.r)}" aria-label="${esc(name)} details">
-  <div class="head"><img src="${esc(avatar(owner, 56))}" alt="" loading="lazy" decoding="async" width="28" height="28"><div class="name"><strong>${esc(name)}</strong><span>${esc(owner)}</span></div>${saveBtn(r.r)}<a class="jump" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener" aria-label="Open ${esc(name)} on GitHub" title="Open on GitHub">${GH}</a></div>
+  <div class="head"><img src="${esc(avatar(owner, 56))}" alt="" loading="lazy" decoding="async" width="28" height="28"><div class="name"><strong>${esc(name)}</strong><span>${esc(owner)}</span></div>${pills(r) ? `<span class="head-pills">${pills(r)}</span>` : ""}${saveBtn(r.r)}<a class="jump" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener" aria-label="Open ${esc(name)} on GitHub" title="Open on GitHub">${GH}</a></div>
   <p class="line">${esc(r.l)}</p>
   ${r.t.length ? `<div class="topics">${r.t.slice(0, 3).map((t) => `<span>${esc(t)}</span>`).join("")}</div>` : ""}
-  <div class="meta"><span class="stars">${STAR}${num(r.s)}</span>${r.g ? `<span class="dot" style="--c:${esc(r.gc ?? "")}">${esc(r.g)}</span>` : ""}${r.h > 0 ? `<span class="rise" title="${esc(gainTitle(r))}">${esc(gain(r))}</span>` : ""}<span class="fresh" style="--f:${fc}">${ft}</span>${r.k > 1 ? `<span class="pill picked">picked ${r.k}×</span>` : ""}${isNew(r) ? '<span class="pill new">new</span>' : ""}</div>
+  <div class="meta"><span class="stars">${STAR}${num(r.s)}</span>${r.g ? `<span class="dot" style="--c:${esc(r.gc ?? "")}">${esc(r.g)}</span>` : ""}${r.h > 0 ? `<span class="rise" title="${esc(gainTitle(r))}">${esc(gain(r))}</span>` : ""}<span class="fresh" style="--f:${fc}">${ft}</span>${pills(r)}</div>
 </div>`
 }
 

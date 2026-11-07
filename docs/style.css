@@ -350,3 +350,11 @@ html { scrollbar-gutter: stable; }
   .filters .select span { font-size: 12px; }
   .filters .select select { max-width: none; width: 100%; }
 }
+
+/* the pills beside the name only show in the phone list view; everywhere else they stay at the end of the stats */
+.head-pills { display: none; }
+@media (max-width: 900px) {
+  .list .head-pills { display: flex; gap: 6px; margin-left: auto; align-self: flex-start; flex: none; }
+  .list .head-pills + .save { margin-left: 0; }
+  .list .meta .pill { display: none; }
+}
