@@ -132,13 +132,14 @@ const item = (attr, key, label, count) =>
   `<button type="button" class="cat" data-${attr}="${esc(key)}" aria-current="false"><svg viewBox="0 0 24 24" aria-hidden="true">${I[key] ?? I[""]}</svg><span>${esc(label)}</span><span class="n">${count.toLocaleString("en-US")}</span></button>`
 $("#views").innerHTML = "<h2>Browse</h2>" + VIEWS.filter((v) => !v.hidden).map((v) => item("f", v.f, v.label, v.f === "saved" ? saved.length : repos.filter(v.test).length)).join("")
 const visible = (r) => !(prefs.hideAI && r.ai > 0) // "Hide AI repos" in settings
+let collapsed = false // the selected area's subareas are folded away; the area itself stays selected
 function renderSidebar() {
   const pool = repos.filter(visible), count = (test) => pool.filter(test).length
   let html
   if (prefs.sidebar === "form") html = "<h2>Forms</h2>" + TX.forms.map(([id, name]) => [id, name, count((r) => r.fo?.includes(id))]).filter((x) => x[2]).sort((a, b) => b[2] - a[2]).map(([id, name, n]) => item("form", id, name, n)).join("")
   else if (prefs.sidebar === "with") html = "<h2>Works with</h2>" + TX.worksWith.map(([id, name]) => [id, name, count((r) => r.ww?.includes(id))]).filter((x) => x[2]).sort((a, b) => b[2] - a[2]).map(([id, name, n]) => item("with", id, name, n)).join("")
   else html = "<h2>Areas</h2>" + TX.areas.filter((a) => !(prefs.hideAI && a.id === "ai")).map((a) => [a, count((r) => areaPairs(r).some((p) => p.startsWith(a.id + "/")))]).filter((x) => x[1]).sort((x, y) => y[1] - x[1]).map(([a, n]) =>
-    item("a", a.id, a.name, n) + (a.id === state.a ? `<div class="subs">${a.subs.map(([id, name]) => [id, name, count((r) => areaPairs(r).includes(`${a.id}/${id}`))]).filter((x) => x[2]).sort((x, y) => y[2] - x[2]).map(([id, name, k]) => `<button type="button" class="cat sub" data-sa="${esc(id)}" aria-current="false"><span>${esc(name)}</span><span class="n">${k.toLocaleString("en-US")}</span></button>`).join("")}</div>` : "")).join("")
+    item("a", a.id, a.name, n) + (a.id === state.a && !collapsed ? `<div class="subs">${a.subs.map(([id, name]) => [id, name, count((r) => areaPairs(r).includes(`${a.id}/${id}`))]).filter((x) => x[2]).sort((x, y) => y[2] - x[2]).map(([id, name, k]) => `<button type="button" class="cat sub" data-sa="${esc(id)}" aria-current="false"><span>${esc(name)}</span><span class="n">${k.toLocaleString("en-US")}</span></button>`).join("")}</div>` : "")).join("")
   $("#cats").innerHTML = html
 }
 renderSidebar()
@@ -279,7 +280,11 @@ $("#sidebar").addEventListener("click", (e) => {
   const sort = f === "trending" || f === "saved" ? f : ["trending", "saved"].includes(state.sort) ? prefs.sort : state.sort
   const d = n.dataset
   if ("sa" in d) set({ sa: d.sa === state.sa ? "" : d.sa })
-  else if ("a" in d) set({ a: d.a === state.a && !state.sa ? "" : d.a, sa: "", f: "", sort }, true)
+  else if ("a" in d) {
+    // clicking the selected area again folds or unfolds its subareas and keeps it selected
+    collapsed = d.a === state.a && !state.sa ? !collapsed : false
+    set({ a: d.a, sa: "", f: "", sort }, true)
+  }
   else if ("form" in d) set({ form: d.form === state.form ? "" : d.form, f: "", sort }, true)
   else if ("with" in d) set({ with: d.with === state.with ? "" : d.with, f: "", sort }, true)
   else set({ f, a: "", sa: "", [prefs.sidebar === "form" ? "form" : prefs.sidebar === "with" ? "with" : "a"]: "", sort }, true)
