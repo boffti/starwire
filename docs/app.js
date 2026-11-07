@@ -9,11 +9,31 @@ const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<
 const data = await fetch("data.json").then((r) => r.json())
 const now = Date.parse(data.updated)
 const repos = data.repos.map((r) => ({ ...r, hay: `${r.r} ${r.l} ${r.g ?? ""} ${r.t.join(" ")}`.toLowerCase(), age: (now - Date.parse(r.p)) / 864e5 }))
+const byName = new Map(repos.map((r) => [r.r.toLowerCase(), r]))
+
+// ---- saved for later: repo names in localStorage, oldest first. No accounts, so saves live in this browser,
+// and a share link (?saved=a/b,c/d) carries them to another device or person ----
+const SAVED_KEY = "starwire-saved"
+const NAME = /^[\w.-]+\/[\w.-]+$/
+const canon = (n) => byName.get(n.toLowerCase())?.r ?? n
+function readSaved() {
+  try { const v = JSON.parse(localStorage.getItem(SAVED_KEY) ?? "[]"); return Array.isArray(v) ? [...new Set(v.filter((n) => typeof n === "string" && NAME.test(n)))] : [] } catch { return [] }
+}
+let saved = readSaved()
+let savedAt = new Map(saved.map((n, i) => [n, i]))
+function setSaved(list) {
+  saved = [...new Set(list)]
+  savedAt = new Map(saved.map((n, i) => [n, i]))
+  try { localStorage.setItem(SAVED_KEY, JSON.stringify(saved)) } catch {}
+}
 
 const params = new URLSearchParams(location.search)
+// a shared list opens as its own view, with a button to add it to your saves
+const shared = [...new Set((params.get("saved") ?? "").split(",").map((n) => n.trim()).filter((n) => NAME.test(n)).map(canon))].slice(0, 500)
+const sharedSet = new Set(shared)
 const state = {
-  f: params.get("f") ?? (params.has("multi") ? "multi" : ""), c: params.get("c") ?? "", q: params.get("q") ?? "",
-  repo: params.get("repo") ?? "", sort: params.get("sort") ?? "picked", lang: params.get("lang") ?? "", view: params.get("view") ?? "cards", shown: PAGE,
+  f: params.get("f") ?? (shared.length ? "shared" : params.has("multi") ? "multi" : ""), c: params.get("c") ?? "", q: params.get("q") ?? "",
+  repo: params.get("repo") ?? "", sort: params.get("sort") ?? (params.get("f") === "saved" ? "saved" : "picked"), lang: params.get("lang") ?? "", view: params.get("view") ?? "cards", shown: PAGE,
 }
 const isNew = (r) => (now - Date.parse(r.f)) / 864e5 <= 7
 const VIEWS = [
@@ -21,6 +41,8 @@ const VIEWS = [
   { f: "trending", label: "Trending", test: (r) => r.h > 0 },
   { f: "new", label: "New this week", test: isNew },
   { f: "multi", label: "Picked more than once", test: (r) => r.k > 1 },
+  { f: "saved", label: "Saved", test: (r) => savedAt.has(r.r) },
+  { f: "shared", label: "Shared list", test: (r) => sharedSet.has(r.r), hidden: true },
 ]
 
 // category sidebar with Lucide-style icons, like StarDash's collections list
@@ -44,10 +66,11 @@ const I = {
 }
 I.trending = '<path d="M22 7l-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/>'
 I.new = '<path d="M12 3l1.8 4.7 4.7 1.8-4.7 1.8L12 16l-1.8-4.7-4.7-1.8 4.7-1.8z"/><path d="M5 19h.01M19 5h.01"/>'
+I.saved = '<path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/>'
 I.multi = '<path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/>'
 const item = (attr, key, label, count) =>
   `<button type="button" class="cat" data-${attr}="${esc(key)}" aria-current="false"><svg viewBox="0 0 24 24" aria-hidden="true">${I[key] ?? I[""]}</svg><span>${esc(label)}</span><span class="n">${count.toLocaleString("en-US")}</span></button>`
-$("#views").innerHTML = "<h2>Browse</h2>" + VIEWS.map((v) => item("f", v.f, v.label, repos.filter(v.test).length)).join("")
+$("#views").innerHTML = "<h2>Browse</h2>" + VIEWS.filter((v) => !v.hidden).map((v) => item("f", v.f, v.label, v.f === "saved" ? saved.length : repos.filter(v.test).length)).join("")
 $("#cats").innerHTML = "<h2>Categories</h2>" + [...data.categories].sort((a, b) => b.count - a.count).map((c) => item("c", c.name, c.name, c.count)).join("")
 
 const langs = Object.entries(repos.reduce((a, r) => (r.g && (a[r.g] = (a[r.g] ?? 0) + 1), a), {})).sort((a, b) => b[1] - a[1])
@@ -55,11 +78,17 @@ $("#lang").innerHTML += langs.map(([l, n]) => `<option value="${esc(l)}">${esc(l
 
 const fresh = (d) => (d < 30 ? ["var(--green)", d < 1 ? "updated today" : `updated ${Math.round(d)}d ago`] : d < 365 ? ["var(--amber)", `updated ${Math.round(d / 30)}mo ago`] : ["var(--muted)", `quiet ${Math.round(d / 365)}y`])
 
+const BOOKMARK = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${I.saved.slice(9, -3)}"/></svg>`
+const saveBtn = (n) => {
+  const on = savedAt.has(n), name = n.split("/")[1]
+  return `<button type="button" class="save" data-save="${esc(n)}" aria-pressed="${on}" aria-label="${on ? `Remove ${esc(name)} from saved` : `Save ${esc(name)} for later`}" title="${on ? "Saved" : "Save for later"}">${BOOKMARK}</button>`
+}
+
 function card(r) {
   const [owner, name] = r.r.split("/")
   const [fc, ft] = fresh(r.age)
   return `<div class="repo" role="button" tabindex="0" data-r="${esc(r.r)}" aria-label="${esc(name)} details">
-  <div class="head"><img src="https://github.com/${esc(owner)}.png?size=56" alt="" loading="lazy" width="28" height="28"><div class="name"><strong>${esc(name)}</strong><span>${esc(owner)}</span></div><a class="jump" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener" aria-label="Open ${esc(name)} on GitHub" title="Open on GitHub">${GH}</a></div>
+  <div class="head"><img src="https://github.com/${esc(owner)}.png?size=56" alt="" loading="lazy" width="28" height="28"><div class="name"><strong>${esc(name)}</strong><span>${esc(owner)}</span></div>${saveBtn(r.r)}<a class="jump" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener" aria-label="Open ${esc(name)} on GitHub" title="Open on GitHub">${GH}</a></div>
   <p class="line">${esc(r.l)}</p>
   ${r.t.length ? `<div class="topics">${r.t.slice(0, 3).map((t) => `<span>${esc(t)}</span>`).join("")}</div>` : ""}
   <div class="meta"><span class="stars">${STAR}${num(r.s)}</span>${r.g ? `<span class="dot" style="--c:${esc(r.gc ?? "")}">${esc(r.g)}</span>` : ""}${r.h > 0 ? `<span class="rise">+${num(r.w)} a week</span>` : ""}<span class="fresh" style="--f:${fc}">${ft}</span>${r.k > 1 ? `<span class="pill picked">picked ${r.k}×</span>` : ""}${isNew(r) ? '<span class="pill new">new</span>' : ""}</div>
@@ -72,6 +101,7 @@ const promo = `<a class="promo" href="https://github.com/boffti/stardash" target
 </a>`
 
 const sorters = {
+  saved: (a, b) => (savedAt.get(b.r) ?? -1) - (savedAt.get(a.r) ?? -1),
   trending: (a, b) => b.h - a.h,
   picked: (a, b) => b.k - a.k || b.s - a.s,
   stars: (a, b) => b.s - a.s,
@@ -88,15 +118,23 @@ function render() {
   const list = repos
     .filter((r) => view.test(r) && (!state.c || r.c === state.c) && (!state.lang || r.g === state.lang) && words.every((w) => r.hay.includes(w)))
     .sort(sorters[state.sort] ?? sorters.picked)
+  // saved repos that dropped off the list stay, at the end, so a save is never lost silently
+  const gone = state.f === "saved" && !state.c && !state.lang && !words.length ? saved.filter((n) => !byName.has(n.toLowerCase())) : []
   const page = list.slice(0, state.shown).map(card)
+  if (list.length <= state.shown) page.push(...gone.map((n) => `<div class="repo gone"><div class="head"><div class="name"><strong>${esc(n.split("/")[1])}</strong><span>${esc(n.split("/")[0])}</span></div>${saveBtn(n)}</div><p class="line">No longer on the list. <a href="https://github.com/${esc(n)}" target="_blank" rel="noopener">Open on GitHub</a></p></div>`))
   const el = $("#results")
   el.className = state.view === "list" ? "list" : "cards"
   const cols = getComputedStyle(el).gridTemplateColumns.split(" ").length
   const spot = PROMO_ROW * cols + Math.floor(PROMO_COL * cols)
-  if (state.view === "cards" && page.length > spot && !state.q) page.splice(spot, 0, promo)
-  el.innerHTML = page.length ? page.join("") : `<div class="empty">No repos match that yet. Try fewer words or another category.<br><button type="button" id="reset">Clear filters</button></div>`
+  if (state.view === "cards" && page.length > spot && !state.q && !["saved", "shared"].includes(state.f)) page.splice(spot, 0, promo)
+  const empty = state.f === "saved" && !saved.length
+    ? `<div class="empty">Nothing saved yet. Use the bookmark on any repo to keep it here.<br>Saves stay in this browser.</div>`
+    : `<div class="empty">No repos match that yet. Try fewer words or another category.<br><button type="button" id="reset">Clear filters</button></div>`
+  el.innerHTML = page.length ? page.join("") : empty
+  savedBar(list.length + gone.length)
   $("#title").textContent = state.c || view.label
-  const parts = [`${list.length.toLocaleString("en-US")} ${list.length === 1 ? "repo" : "repos"}`]
+  const total = list.length + gone.length
+  const parts = [`${total.toLocaleString("en-US")} ${total === 1 ? "repo" : "repos"}`]
   if (state.c && state.f) parts.push(view.label.toLowerCase())
   if (state.lang) parts.push(`in ${state.lang}`)
   if (!state.c && !state.f && !state.lang && !state.q) parts.push(`updated ${new Date(now).toLocaleDateString("en-US", { month: "long", day: "numeric" })}`)
@@ -108,7 +146,8 @@ function render() {
   document.querySelectorAll(".view button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.view === state.view)))
   $("#reset")?.addEventListener("click", () => set({ f: "", c: "", q: "", lang: "" }, true))
   const p = new URLSearchParams()
-  for (const k of ["f", "c", "q", "lang", "repo"]) if (state[k]) p.set(k, state[k])
+  for (const k of ["f", "c", "q", "lang", "repo"]) if (state[k] && !(k === "f" && state.f === "shared")) p.set(k, state[k])
+  if (state.f === "shared") p.set("saved", shared.join(","))
   if (state.sort !== "picked") p.set("sort", state.sort)
   if (state.view !== "cards") p.set("view", state.view)
   history.replaceState(null, "", `${location.pathname}${p.size ? `?${p}` : ""}`)
@@ -133,7 +172,7 @@ $("#sidebar").addEventListener("click", (e) => {
   if (!n) return
   // views and categories are one choice: picking either clears the other, and clicking the selected category again goes back to all repos
   const f = "f" in n.dataset ? n.dataset.f : ""
-  const sort = f === "trending" ? "trending" : state.sort === "trending" ? "picked" : state.sort
+  const sort = f === "trending" || f === "saved" ? f : ["trending", "saved"].includes(state.sort) ? "picked" : state.sort
   set("f" in n.dataset ? { f, c: "", sort } : { c: n.dataset.c === state.c ? "" : n.dataset.c, f: "", sort }, true)
   scrollTo({ top: 0 })
   closeMenu()
@@ -152,10 +191,53 @@ $("#theme").addEventListener("click", () => {
   try { localStorage.setItem("starwire-theme", document.documentElement.dataset.theme) } catch {}
   followTheme(panel)
 })
+// the line under the title in Saved and in a shared list: share your saves, or add a shared list to them
+function savedBar(count) {
+  const bar = $("#savedbar")
+  if (state.f === "saved" && saved.length) {
+    bar.innerHTML = `<span>Saves stay in this browser. A link carries them to another device.</span><button type="button" class="btn" id="share-saved">Copy share link</button>`
+  } else if (state.f === "shared") {
+    const add = shared.filter((n) => !savedAt.has(n)).length
+    bar.innerHTML = add
+      ? `<span>Someone shared ${shared.length === 1 ? "this repo" : `these ${shared.length} repos`} with you.</span><button type="button" class="btn primary" id="add-shared">Save ${add === shared.length ? (add === 1 ? "it" : `all ${add}`) : `the ${add} new`}</button>`
+      : `<span>All of these are in your saved list.</span><button type="button" class="btn" id="go-saved">Go to saved</button>`
+  } else return void (bar.hidden = true)
+  bar.hidden = false
+  if (!count && state.f === "shared") bar.querySelector("span").textContent = "None of the shared repos are on the list anymore."
+}
+$("#savedbar").addEventListener("click", async (e) => {
+  const b = e.target.closest("button")
+  if (!b) return
+  if (b.id === "share-saved") {
+    const url = `${location.origin}${location.pathname}?saved=${saved.join(",")}`
+    try { await navigator.clipboard.writeText(url); b.textContent = "Link copied" } catch { prompt("Copy this link", url) }
+    setTimeout(() => (b.textContent = "Copy share link"), 1600)
+  }
+  if (b.id === "add-shared") { setSaved([...saved, ...shared]); savedChanged() }
+  if (b.id === "add-shared" || b.id === "go-saved") set({ f: "saved", c: "", sort: "saved" }, true)
+})
+
+function savedChanged() {
+  for (const b of document.querySelectorAll("[data-save]")) {
+    const on = savedAt.has(b.dataset.save), name = b.dataset.save.split("/")[1]
+    b.setAttribute("aria-pressed", String(on))
+    if (b.classList.contains("btn")) b.lastChild.textContent = on ? "Saved" : "Save"
+    else { b.title = on ? "Saved" : "Save for later"; b.setAttribute("aria-label", on ? `Remove ${name} from saved` : `Save ${name} for later`) }
+  }
+  const n = document.querySelector('[data-f="saved"] .n')
+  if (n) n.textContent = saved.length.toLocaleString("en-US")
+}
+function toggleSave(n) {
+  setSaved(savedAt.has(n) ? saved.filter((x) => x !== n) : [...saved, n])
+  savedChanged()
+  if (state.f === "saved" || state.f === "shared") render() // keeps the page size, so the list doesn't jump back to the top
+}
+// another tab saved or removed something
+addEventListener("storage", (e) => { if (e.key !== SAVED_KEY) return; saved = []; setSaved(readSaved()); savedChanged(); if (state.f === "saved") render() })
+
 render()
 
 // ---- repo panel: README preview, facts, star trend, similar repos ----
-const byName = new Map(repos.map((r) => [r.r.toLowerCase(), r]))
 const panel = $("#panel")
 let libs
 const loadLibs = () =>
@@ -270,6 +352,7 @@ function openPanel(name, push = true) {
     <div class="p-actions">
       <a class="btn primary" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener">${GH}Open on GitHub</a>
       ${r.hp ? `<a class="btn" href="${esc(r.hp)}" target="_blank" rel="noopener">Website</a>` : ""}
+      <button class="btn save-btn" type="button" data-save="${esc(r.r)}" aria-pressed="${savedAt.has(r.r)}">${BOOKMARK}${savedAt.has(r.r) ? "Saved" : "Save"}</button>
       <button class="btn" type="button" data-copy="git clone https://github.com/${esc(r.r)}.git">Copy git clone</button>
     </div>
     <dl class="p-facts">${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("")}<div><dt>Activity</dt><dd><span class="fresh" style="--f:${fc}">${ft}</span></dd></div></dl>
@@ -305,16 +388,20 @@ function closePanel() {
 }
 
 $("#results").addEventListener("click", (e) => {
-  if (e.target.closest(".jump")) return // the GitHub icon opens GitHub
+  if (e.target.closest(".jump") || e.target.closest(".gone a")) return // the GitHub icon opens GitHub
+  const sv = e.target.closest("[data-save]")
+  if (sv) return toggleSave(sv.dataset.save)
   const c = e.target.closest(".repo[data-r]")
   if (!c) return
   if (e.metaKey || e.ctrlKey) return void window.open(`https://github.com/${c.dataset.r}`, "_blank", "noopener")
   openPanel(c.dataset.r)
 })
-$("#results").addEventListener("auxclick", (e) => { const c = e.target.closest(".repo[data-r]"); if (c && e.button === 1 && !e.target.closest(".jump")) window.open(`https://github.com/${c.dataset.r}`, "_blank", "noopener") })
+$("#results").addEventListener("auxclick", (e) => { const c = e.target.closest(".repo[data-r]"); if (c && e.button === 1 && !e.target.closest(".jump, [data-save]")) window.open(`https://github.com/${c.dataset.r}`, "_blank", "noopener") })
 $("#results").addEventListener("keydown", (e) => { const c = e.target.closest(".repo[data-r]"); if (c && (e.key === "Enter" || e.key === " ") && e.target === c) { e.preventDefault(); openPanel(c.dataset.r) } })
 panel.addEventListener("click", async (e) => {
   if (e.target.closest(".p-close")) return closePanel()
+  const sv = e.target.closest("[data-save]")
+  if (sv) return toggleSave(sv.dataset.save)
   const sim = e.target.closest(".sim")
   if (sim) return openPanel(sim.dataset.r)
   const more = e.target.closest(".more-readme")

@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=10">
+<link rel="stylesheet" href="style.css?v=11">
 <link rel="alternate" type="application/rss+xml" title="starwire, new picks" href="https://starwire.foo/feed.xml">
 <script>try{const t=localStorage.getItem("starwire-theme");if(t)document.documentElement.dataset.theme=t}catch{}</script>
 </head>
@@ -75,6 +75,7 @@
               <option value="stars">Most stars</option>
               <option value="new">Newest picks</option>
               <option value="active">Recently updated</option>
+              <option value="saved">Recently saved</option>
             </select>
           </label>
           <label class="select"><span>Language</span><select id="lang"><option value="">Any</option></select></label>
@@ -85,6 +86,7 @@
         </div>
       </div>
 
+      <div class="saved-bar" id="savedbar" hidden></div>
       <section id="results" class="cards" aria-label="Repos" aria-live="polite"></section>
       <div class="more-wrap"><button id="more" type="button" class="more" hidden>Show more</button></div>
       <p class="foot">Updated every two days. <a href="https://github.com/boffti/starwire/blob/main/data/repos.json">Data</a> <a href="feed.xml">RSS</a></p>
@@ -93,6 +95,6 @@
 </div>
 <aside class="panel" id="panel" hidden aria-label="Repo details"></aside>
 <div class="panel-scrim" id="pscrim"></div>
-<script src="app.js?v=10" type="module"></script>
+<script src="app.js?v=11" type="module"></script>
 </body>
 </html>
