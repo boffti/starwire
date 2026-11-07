@@ -4,6 +4,9 @@ const PAGE = 60
 const STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 20.9l1.6-7L2 9.2l7.1-.6z"/></svg>'
 const GH = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>'
 const num = (n) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k` : String(n))
+// avatars straight from GitHub's image CDN: github.com/<owner>.png is a no-cache redirect, so every re-render of the
+// grid went back to github.com for each card and got rate limited; the CDN answers directly and can be cached
+const avatar = (owner, size) => `https://avatars.githubusercontent.com/${encodeURIComponent(owner)}?s=${size}`
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c])
 
 const data = await fetch("data.json").then((r) => r.json())
@@ -91,7 +94,7 @@ function card(r) {
   const [owner, name] = r.r.split("/")
   const [fc, ft] = fresh(r.age)
   return `<div class="repo" role="button" tabindex="0" data-r="${esc(r.r)}" aria-label="${esc(name)} details">
-  <div class="head"><img src="https://github.com/${esc(owner)}.png?size=56" alt="" loading="lazy" width="28" height="28"><div class="name"><strong>${esc(name)}</strong><span>${esc(owner)}</span></div>${saveBtn(r.r)}<a class="jump" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener" aria-label="Open ${esc(name)} on GitHub" title="Open on GitHub">${GH}</a></div>
+  <div class="head"><img src="${esc(avatar(owner, 56))}" alt="" loading="lazy" decoding="async" width="28" height="28"><div class="name"><strong>${esc(name)}</strong><span>${esc(owner)}</span></div>${saveBtn(r.r)}<a class="jump" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener" aria-label="Open ${esc(name)} on GitHub" title="Open on GitHub">${GH}</a></div>
   <p class="line">${esc(r.l)}</p>
   ${r.t.length ? `<div class="topics">${r.t.slice(0, 3).map((t) => `<span>${esc(t)}</span>`).join("")}</div>` : ""}
   <div class="meta"><span class="stars">${STAR}${num(r.s)}</span>${r.g ? `<span class="dot" style="--c:${esc(r.gc ?? "")}">${esc(r.g)}</span>` : ""}${r.h > 0 ? `<span class="rise" title="${esc(gainTitle(r))}">${esc(gain(r))}</span>` : ""}<span class="fresh" style="--f:${fc}">${ft}</span>${r.k > 1 ? `<span class="pill picked">picked ${r.k}×</span>` : ""}${isNew(r) ? '<span class="pill new">new</span>' : ""}</div>
@@ -287,15 +290,31 @@ function trend(hs) {
   return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-label="Stars from ${num(lo)} to ${num(hi)}"><polyline points="${pts}"/></svg><p class="muted">${num(lo)} to ${num(hi)} stars, ${esc(hs[0][0])} to ${esc(hs.at(-1)[0])}</p>`
 }
 
+// READMEs are kept for a day in the browser's Cache Storage, and so is "no README", so reopening a repo
+// (or flicking between similar ones) doesn't go back to GitHub, or probe five file names again
+const README_DAY = 864e5
+async function readmeText(repo) {
+  const key = `${location.origin}/__readme/${repo}`
+  let cache
+  try { cache = await caches.open("starwire-readme-v1") } catch {} // no Cache Storage (old browser, private mode): just fetch
+  const hit = await cache?.match(key).catch(() => null)
+  if (hit && Date.now() - Number(hit.headers.get("x-saved")) < README_DAY) return hit.status === 204 ? "" : hit.text()
+  let md = ""
+  for (const f of ["README.md", "readme.md", "Readme.md", "README.MD", "README"]) {
+    const res = await fetch(`https://raw.githubusercontent.com/${repo}/HEAD/${f}`)
+    if (res.ok) { md = await res.text(); break }
+    if (res.status !== 404) throw new Error(`README ${res.status}`) // rate limited or down: don't remember that as "no README"
+  }
+  // only what the preview uses (it shows 15000 characters and a "read the rest" link past that)
+  cache?.put(key, new Response(md ? md.slice(0, 15001) : null, { status: md ? 200 : 204, headers: { "x-saved": String(Date.now()) } })).catch(() => {})
+  return md
+}
+
 async function readme(r) {
   const el = panel.querySelector(".readme")
   try {
     await loadLibs()
-    let md
-    for (const f of ["README.md", "readme.md", "Readme.md", "README.MD", "README"]) {
-      const res = await fetch(`https://raw.githubusercontent.com/${r.r}/HEAD/${f}`)
-      if (res.ok) { md = await res.text(); break }
-    }
+    const md = await readmeText(r.r)
     if (state.repo !== r.r) return // the user moved on while it loaded
     if (!md) { el.innerHTML = `<p class="muted">This repo has no README to preview.</p>`; return }
     // fix the URLs on the sanitized fragment, before it is inserted: an inserted <img> or <picture>
@@ -346,7 +365,7 @@ function openPanel(name, push = true) {
   ].filter(Boolean)
   panel.innerHTML = `
   <div class="p-head">
-    <img src="https://github.com/${esc(owner)}.png?size=80" alt="" width="40" height="40">
+    <img src="${esc(avatar(owner, 80))}" alt="" width="40" height="40">
     <div class="name"><strong>${esc(repo)}</strong><span>${esc(owner)}</span></div>
     <button class="icon-btn p-close" type="button" aria-label="Close details"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
   </div>
@@ -362,7 +381,7 @@ function openPanel(name, push = true) {
     ${r.t.length ? `<div class="topics">${r.t.map((t) => `<span>${esc(t)}</span>`).join("")}</div>` : ""}
     <section><h3>Stars over time</h3>${trend(r.hs ?? [])}</section>
     <section><h3>README</h3><div class="readme"><p class="muted">Loading README…</p></div></section>
-    <section><h3>Similar in ${esc(r.c)}</h3><div class="p-similar">${similar(r).map((x) => `<button type="button" class="sim" data-r="${esc(x.r)}"><img src="https://github.com/${esc(x.r.split("/")[0])}.png?size=40" alt="" width="20" height="20" loading="lazy"><span><strong>${esc(x.r.split("/")[1])}</strong><small>${esc(x.l)}</small></span><em>${STAR}${num(x.s)}</em></button>`).join("")}</div></section>
+    <section><h3>Similar in ${esc(r.c)}</h3><div class="p-similar">${similar(r).map((x) => `<button type="button" class="sim" data-r="${esc(x.r)}"><img src="${esc(avatar(x.r.split("/")[0], 40))}" alt="" width="20" height="20" loading="lazy" decoding="async"><span><strong>${esc(x.r.split("/")[1])}</strong><small>${esc(x.l)}</small></span><em>${STAR}${num(x.s)}</em></button>`).join("")}</div></section>
     <a class="p-promo" href="https://github.com/boffti/stardash" target="_blank" rel="noopener">Starring this? <strong>StarDash</strong> keeps your GitHub stars organized and tells you when they ship breaking changes. Free, open source and self-hosted.</a>
   </div>`
   panel.hidden = false
