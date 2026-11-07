@@ -160,8 +160,14 @@ const panel = $("#panel")
 let libs
 const loadLibs = () =>
   (libs ??= Promise.all(
-    ["https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js", "https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"].map(
-      (src) => new Promise((ok, fail) => document.head.append(Object.assign(document.createElement("script"), { src, onload: ok, onerror: fail }))),
+    // pinned versions with Subresource Integrity: the browser refuses a file that doesn't match its hash,
+    // so a tampered CDN copy can't replace DOMPurify, which is what keeps README previews safe.
+    // Hashes are the ones cdnjs publishes for these versions; update both when a version changes.
+    [
+      ["https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js", "sha512-xeUh+KxNyTufZOje++oQHstlMQ8/rpyzPuM+gjMFYK3z5ILJGE7l2NvYL+XfliKURMpBIKKp1XoPN/qswlSMFA=="],
+      ["https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js", "sha512-jB0TkTBeQC9ZSkBqDhdmfTv1qdfbWpGE72yJ/01Srq6hEzZIz2xkz1e57p9ai7IeHMwEG7HpzG6NdptChif5Pg=="],
+    ].map(
+      ([src, integrity]) => new Promise((ok, fail) => document.head.append(Object.assign(document.createElement("script"), { src, integrity, crossOrigin: "anonymous", referrerPolicy: "no-referrer", onload: ok, onerror: fail }))),
     ),
   ))
 

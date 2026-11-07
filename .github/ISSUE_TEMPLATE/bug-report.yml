@@ -1,0 +1,46 @@
+name: Report a site bug
+description: Something on starwire.foo looks wrong or doesn't work
+title: "Bug: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: For a wrong category or description on a listed repo, a plain issue with the repo link is enough. For a security problem, please use private reporting instead (see SECURITY.md).
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you saw, and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: A link helps, like https://starwire.foo/?repo=owner%2Fname
+      placeholder: |
+        1. Open ...
+        2. Click ...
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and OS
+      placeholder: Chrome 140 on macOS
+  - type: dropdown
+    id: scheme
+    attributes:
+      label: Light or dark mode
+      description: Some bugs only show up with one of them.
+      options:
+        - Not sure
+        - OS light, site light
+        - OS light, site dark
+        - OS dark, site light
+        - OS dark, site dark
+  - type: textarea
+    id: extra
+    attributes:
+      label: Screenshots or console errors
+      description: Optional.
