@@ -358,3 +358,6 @@ html { scrollbar-gutter: stable; }
   .list .head-pills + .save { margin-left: 0; }
   .list .meta .pill { display: none; }
 }
+
+/* phones always show the list, so the layout toggle and its setting go away there */
+@media (max-width: 760px) { .controls .view, .s-layout { display: none; } }

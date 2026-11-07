@@ -193,6 +193,9 @@ const facetMatch = (r) =>
   (!state.form || r.fo?.includes(state.form)) && (!state.plat || r.pl?.includes(state.plat)) && (!state.with || r.ww?.includes(state.with))
 const anyFacet = () => state.a || state.form || state.plat || state.with
 
+const PHONE = matchMedia("(max-width: 760px)")
+PHONE.addEventListener("change", () => render())
+
 function render() {
   const words = state.q.toLowerCase().split(/\s+/).filter(Boolean)
   const view = VIEWS.find((v) => v.f === state.f) ?? VIEWS[0]
@@ -204,10 +207,11 @@ function render() {
   const page = list.slice(0, state.shown).map(card)
   if (list.length <= state.shown) page.push(...gone.map((n) => `<div class="repo gone"><div class="head"><div class="name"><strong>${esc(n.split("/")[1])}</strong><span>${esc(n.split("/")[0])}</span></div>${saveBtn(n)}</div><p class="line">No longer on the list. <a href="https://github.com/${esc(n)}" target="_blank" rel="noopener">Open on GitHub</a></p></div>`))
   const el = $("#results")
-  el.className = state.view === "list" ? "list" : "cards"
+  const layout = PHONE.matches ? "list" : state.view // phones always get the list; cards add nothing on a narrow screen
+  el.className = layout === "list" ? "list" : "cards"
   const cols = getComputedStyle(el).gridTemplateColumns.split(" ").length
   const spot = PROMO_ROW * cols + Math.floor(PROMO_COL * cols)
-  if (state.view === "cards" && page.length > spot && !state.q && !["saved", "shared"].includes(state.f)) page.splice(spot, 0, promo)
+  if (layout === "cards" && page.length > spot && !state.q && !["saved", "shared"].includes(state.f)) page.splice(spot, 0, promo)
   const empty = state.f === "saved" && !saved.length
     ? `<div class="empty">Nothing saved yet. Use the bookmark on any repo to keep it here.<br>Saves stay in this browser.</div>`
     : `<div class="empty">No repos match that yet. Try fewer words or another filter.<br><button type="button" id="reset">Clear filters</button></div>`
@@ -360,7 +364,7 @@ function openSettings() {
     ${seg("sidebar", "Sidebar shows", prefs.sidebar, [["area", "Areas"], ["form", "Forms"], ["with", "Works with"]])}
     <fieldset class="s-row"><legend>Repos</legend>${check("hideAI", "Hide AI repos (AI tools, agents and anything built around AI)")}</fieldset>
     ${seg("sort", "Default sort", prefs.sort, [["picked", "Most picked"], ["trending", "Trending"], ["stars", "Most stars"], ["new", "Newest"]])}
-    ${seg("layout", "Default layout", prefs.layout, [["cards", "Cards"], ["list", "List"]])}
+    <div class="s-layout">${seg("layout", "Default layout", prefs.layout, [["cards", "Cards"], ["list", "List"]])}</div>
     ${seg("theme", "Theme", themeNow(), [["system", "System"], ["light", "Light"], ["dark", "Dark"]])}
     <fieldset class="s-row"><legend>On each repo card</legend>${check("topics", "Topics")}${check("gain", "Stars gained")}${check("picked", "How many times it was picked")}</fieldset>
     <fieldset class="s-row"><legend>StarDash</legend>${check("stardash", "Show suggestions for StarDash, our tool for organizing your own stars")}</fieldset>
