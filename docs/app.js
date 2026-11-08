@@ -25,6 +25,20 @@ let index
 const search = (q, pool) => (q.trim() ? (index ??= makeIndex(repos, fieldsFor(TX)))(q, pool) : null)
 const byName = new Map(repos.map((r) => [r.r.toLowerCase(), r]))
 
+// ---- usage counts, so the next feature rests on what people actually do: GoatCounter, no cookies, no personal data,
+// skips localhost. Counts the page load, searches (marked when nothing matched), the view or area picked, saves,
+// repos opened in the panel and clicks through to GitHub. Events wait in a queue until the script has loaded ----
+const queued = []
+const count = (path, title = path) => (window.goatcounter?.count ? window.goatcounter.count({ path, title, event: true }) : queued.push([path, title]))
+{
+  const gc = Object.assign(document.createElement("script"), { async: true, src: "https://gc.zgo.at/count.js" })
+  gc.dataset.goatcounter = "https://starwire.goatcounter.com/count"
+  gc.dataset.goatcounterSettings = '{"no_onload":true}' // the URL can carry a saved list; count the bare page instead
+  gc.onload = () => { window.goatcounter.count?.({ path: location.pathname }); queued.splice(0).forEach(([p, t]) => count(p, t)) }
+  document.head.append(gc)
+}
+document.addEventListener("click", (e) => { const a = e.target.closest('a[href^="https://github.com/"]'); if (a) count(`github: ${new URL(a.href).pathname.split("/").slice(1, 3).join("/")}`) })
+
 // ---- saved for later: repo names in localStorage, oldest first. No accounts, so saves live in this browser,
 // and a share link (?saved=a/b,c/d) carries them to another device or person ----
 const SAVED_KEY = "starwire-saved"
@@ -254,7 +268,14 @@ function render() {
   if (state.sort !== "picked" && !(state.sort === "match" && state.q)) p.set("sort", state.sort)
   if (state.view !== "cards") p.set("view", state.view)
   history.replaceState(null, "", `${location.pathname}${p.size ? `?${p}` : ""}`)
+  const place = state.sa ? `area: ${state.a}/${state.sa}` : state.a ? `area: ${state.a}` : `view: ${state.f || "all"}`
+  if (place !== counted.place) count((counted.place = place))
+  // a search counts once the typing stops, so "pdf editor" isn't also counted as "pd" and "pdf e"
+  clearTimeout(counted.t)
+  const q = state.q.toLowerCase().slice(0, 60)
+  if (q && q !== counted.q) counted.t = setTimeout(() => count(`search: ${(counted.q = q)}`, total ? "search" : "search, no results"), 2000)
 }
+const counted = { place: "", q: "", t: 0 }
 
 function set(patch, syncInputs) {
   const hadQ = state.q
@@ -360,6 +381,7 @@ function savedChanged() {
   if (n) n.textContent = saved.length.toLocaleString("en-US")
 }
 function toggleSave(n) {
+  if (!savedAt.has(n)) count(`save: ${n}`)
   setSaved(savedAt.has(n) ? saved.filter((x) => x !== n) : [...saved, n])
   savedChanged()
   if (state.f === "saved" || state.f === "shared") render() // keeps the page size, so the list doesn't jump back to the top
@@ -557,6 +579,7 @@ function labels(r) {
 function openPanel(name, push = true) {
   const r = byName.get(name.toLowerCase())
   if (!r) return closePanel()
+  count(`repo: ${r.r}`)
   const [owner, repo] = r.r.split("/")
   const [fc, ft] = fresh(r.age)
   const facts = [
