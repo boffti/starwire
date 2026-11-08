@@ -54,7 +54,7 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .group { display: flex; flex-direction: column; gap: 1px; padding: 4px 0 10px; }
 .group h2 { margin: 6px 8px 6px; font-size: 12px; font-weight: 500; color: var(--muted); }
 .cat {
-  display: flex; align-items: center; gap: 10px; width: 100%; min-height: 32px; padding: 6px 8px; border: 0; border-radius: 6px;
+  position: relative; display: flex; align-items: center; gap: 10px; width: 100%; min-height: 32px; padding: 6px 8px; border: 0; border-radius: 6px;
   background: none; color: color-mix(in srgb, var(--text) 80%, var(--muted)); font: inherit; font-size: 14px; text-align: left; cursor: pointer;
 }
 .cat svg { width: 16px; height: 16px; flex: none; color: var(--muted); }
@@ -188,7 +188,7 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .more:hover, .empty button:hover { border-color: var(--muted); }
 
 
-.cards { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+.cards { grid-template-columns: repeat(auto-fill, minmax(var(--card-min, 300px), 1fr)); }
 .foot { margin: 0; text-align: center; font-size: 12.5px; color: var(--muted); }
 .foot a { color: var(--text); margin-left: 10px; }
 
@@ -468,3 +468,24 @@ html { scrollbar-gutter: stable; }
 .rp .rp-crumbs a { color: var(--muted); }
 .rp .rp-crumbs a:hover { color: var(--text); }
 .rp .rp-missing { color: var(--muted); padding: 48px 0; }
+
+/* collapsed sidebar (desktop only): icons in a strip, labels kept for screen readers and shown as tooltips. The cards'
+   minimum width drops a little so the room it frees becomes one more column (5 at about 1600px instead of 1700px) */
+.rail-btn { width: 100%; border: 0; background: none; font: inherit; cursor: pointer; text-align: left; }
+.rail-btn svg { fill: none; stroke: currentColor; stroke-width: 2; }
+@media (max-width: 900px) { .rail-btn { display: none; } } /* phones and tablets get the slide-out drawer instead */
+@media (min-width: 901px) {
+  .rail { --card-min: 272px; }
+  .rail .app { grid-template-columns: 4.25rem minmax(0, 1fr); }
+  .rail .brand { justify-content: center; padding: 12px 0; }
+  .rail .brand > span:last-child { display: none; }
+  .rail .side-scroll { padding: 8px 10px; }
+  .rail .group h2 { height: 1px; margin: 4px 6px 8px; overflow: hidden; color: transparent; background: var(--line); }
+  .rail .group:first-child h2 { display: none; }
+  .rail .cat, .rail .side-link { justify-content: center; padding: 9px 0; }
+  .rail .cat svg { width: 18px; height: 18px; }
+  .rail .cat > span, .rail .side-link span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .rail .subs, .rail .mini-promo { display: none; }
+  .rail .side-foot { padding: 10px 8px; }
+  .rail .rail-btn svg { transform: scaleX(-1); }
+}

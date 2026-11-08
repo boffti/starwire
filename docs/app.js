@@ -135,7 +135,7 @@ Object.assign(I, {
 })
 I.multi = '<path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/>'
 const item = (attr, key, label, count) =>
-  `<button type="button" class="cat" data-${attr}="${esc(key)}" aria-current="false"><svg viewBox="0 0 24 24" aria-hidden="true">${I[key] ?? I[""]}</svg><span>${esc(label)}</span><span class="n">${count.toLocaleString("en-US")}</span></button>`
+  `<button type="button" class="cat" data-${attr}="${esc(key)}" aria-current="false" title="${esc(label)}"><svg viewBox="0 0 24 24" aria-hidden="true">${I[key] ?? I[""]}</svg><span>${esc(label)}</span><span class="n">${count.toLocaleString("en-US")}</span></button>`
 $("#views").innerHTML = "<h2>Browse</h2>" + VIEWS.filter((v) => !v.hidden).map((v) => item("f", v.f, v.label, v.f === "saved" ? saved.length : repos.filter(v.test).length)).join("")
 const visible = (r) => !(prefs.hideAI && r.ai > 0) // "Hide AI repos" in settings
 let collapsed = false // the selected area's subareas are folded away; the area itself stays selected
@@ -372,6 +372,26 @@ $("#more").addEventListener("click", () => set({ shown: state.shown + PAGE }))
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeMenu()
   if (e.key === "/" && document.activeElement !== $("#q")) { e.preventDefault(); $("#q").focus() }
+})
+// collapsed sidebar: an icon strip, so the grid gets room for another column; remembered in this browser
+function setRail(on) {
+  document.documentElement.classList.toggle("rail", on)
+  $("#rail").setAttribute("aria-pressed", String(on))
+  $("#rail").setAttribute("aria-label", on ? "Expand sidebar" : "Collapse sidebar")
+  $("#rail").title = `${on ? "Expand" : "Collapse"} sidebar (${MAC ? "⌘B" : "Ctrl+B"})`
+  $("#rail span").textContent = on ? "Expand sidebar" : "Collapse sidebar"
+  try { on ? localStorage.setItem("starwire-rail", "1") : localStorage.removeItem("starwire-rail") } catch {}
+}
+const MAC = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)
+const toggleRail = () => { setRail(!document.documentElement.classList.contains("rail")); if (!state.page) render() }
+setRail(document.documentElement.classList.contains("rail"))
+$("#rail").addEventListener("click", toggleRail)
+// Cmd+B on a Mac, Ctrl+B elsewhere; only where the strip exists (desktop widths), and never while editing rich text
+document.addEventListener("keydown", (e) => {
+  if (e.key.toLowerCase() !== "b" || e.shiftKey || e.altKey || !(MAC ? e.metaKey && !e.ctrlKey : e.ctrlKey && !e.metaKey)) return
+  if (!matchMedia("(min-width: 901px)").matches || e.target.closest?.("textarea, [contenteditable]")) return
+  e.preventDefault()
+  toggleRail()
 })
 $("#theme").addEventListener("click", () => {
   const dark = getComputedStyle(document.documentElement).colorScheme.includes("dark")
