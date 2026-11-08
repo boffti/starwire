@@ -137,9 +137,19 @@
   <ul>
     <li>No one can pay to be listed or ranked higher.</li>
     <li>The StarDash card in the list and in repo panels is our own project, made by the same person who makes starwire. It's always labelled and never changes the order.</li>
-    <li>There are no accounts, no analytics and no tracking scripts. Your saves stay in your browser.</li>
+    <li>There are no accounts and no ads. Your saves stay in your browser.</li>
+    <li>Visit counts (below) don't change the ranking. If they ever do, it will be listed under changes first.</li>
     <li>The README previews load from GitHub, and the two libraries that render them load from cdnjs with integrity checks, so a tampered copy is refused.</li>
   </ul>
+
+  <h2 id="counts">What we count</h2>
+  <p>starwire counts visits with <a href="https://www.goatcounter.com">GoatCounter</a> to learn what's useful: no cookies, nothing stored in your browser, no IP addresses kept, no way to follow you to other sites. <a href="https://starwire.goatcounter.com">The numbers are public</a>, so you see exactly what we see.</p>
+  <ul>
+    <li>Page visits, without the link's settings or saved lists.</li>
+    <li>Searches, once you stop typing, and whether anything matched. This shows where search falls short.</li>
+    <li>The view or area you open, repos you open or save, and clicks through to GitHub. This shows which repos people actually look at.</li>
+  </ul>
+  <p>If your browser sends Do Not Track or Global Privacy Control, nothing is counted and the counting script isn't loaded at all.</p>
 
   <h2 id="limits">Known limits</h2>
   <ul>
@@ -150,6 +160,7 @@
 
   <h2 id="changes">Changes to the method</h2>
   <ul class="log">
+    <li><b>Nov 7, 2026.</b> Started counting visits, searches and repo opens without cookies. <a href="#counts">What we count</a>.</li>
     <li><b>Nov 7, 2026.</b> Started researching fake-star detection internally. It doesn't affect the list or the ranking.</li>
     <li><b>Nov 7, 2026.</b> Trending uses only measured star gains. Before, a repo's lifetime average was projected forward, which made big repos look like they were still at their launch pace.</li>
     <li><b>Nov 7, 2026.</b> Stars and repo facts refresh every day instead of every two days.</li>

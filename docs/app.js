@@ -26,11 +26,13 @@ const search = (q, pool) => (q.trim() ? (index ??= makeIndex(repos, fieldsFor(TX
 const byName = new Map(repos.map((r) => [r.r.toLowerCase(), r]))
 
 // ---- usage counts, so the next feature rests on what people actually do: GoatCounter, no cookies, no personal data,
-// skips localhost. Counts the page load, searches (marked when nothing matched), the view or area picked, saves,
-// repos opened in the panel and clicks through to GitHub. Events wait in a queue until the script has loaded ----
+// skips localhost and does nothing at all under Do Not Track or Global Privacy Control. Counts the page load, searches
+// (marked when nothing matched), the view or area picked, saves, repos opened in the panel and clicks through to
+// GitHub; how.html#counts tells visitors the same. Events wait in a queue until the script has loaded ----
 const queued = []
-const count = (path, title = path) => (window.goatcounter?.count ? window.goatcounter.count({ path, title, event: true }) : queued.push([path, title]))
-{
+const optOut = navigator.doNotTrack === "1" || navigator.globalPrivacyControl === true
+const count = (path, title = path) => optOut ? 0 : window.goatcounter?.count ? window.goatcounter.count({ path, title, event: true }) : queued.push([path, title])
+if (!optOut) {
   const gc = Object.assign(document.createElement("script"), { async: true, src: "https://gc.zgo.at/count.js" })
   gc.dataset.goatcounter = "https://starwire.goatcounter.com/count"
   gc.dataset.goatcounterSettings = '{"no_onload":true}' // the URL can carry a saved list; count the bare page instead
