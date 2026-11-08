@@ -111,13 +111,15 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .page-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; margin-bottom: 16px; }
 .page-head h1 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
 .page-head p { margin: 2px 0 0; font-size: 13.5px; color: var(--muted); }
-.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.controls { flex: 1 1 auto; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.controls .view { margin-left: auto; } /* the layout toggle sits at the right edge, the sort and filters on the left */
 .select { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
 .select select {
   max-width: 190px; height: 34px; font: inherit; font-size: 13.5px; color: var(--text); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 0 28px 0 10px;
   appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
   background-position: right 13px center, right 9px center; background-size: 4px 4px; background-repeat: no-repeat; cursor: pointer;
 }
+.filters .select select { max-width: 140px; } /* the four filters stay narrow so Sort, filters and the layout toggle fit one row */
 .view { display: flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; height: 34px; }
 .view button { background: var(--panel); border: 0; color: var(--muted); padding: 0 9px; cursor: pointer; display: grid; place-items: center; }
 .view button + button { border-left: 1px solid var(--line); }
@@ -252,10 +254,11 @@ body.has-panel .panel-scrim { display: block; position: fixed; inset: 0; z-index
 .p-body { padding: 18px 20px 28px; display: flex; flex-direction: column; gap: 20px; }
 .p-line { margin: 0; font-size: 15.5px; line-height: 1.5; }
 .p-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.p-actions .btn { flex: 1 1 auto; justify-content: center; }
 .btn { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--raise); color: var(--text); font: inherit; font-size: 14px; font-weight: 500; text-decoration: none; cursor: pointer; }
 .btn svg { width: 15px; height: 15px; }
 .btn:hover { border-color: var(--muted); }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: oklch(0.13 0 0); }
+.btn.primary { background: var(--text); border-color: var(--text); color: var(--ink); }
 .btn.primary:hover { opacity: 0.92; }
 .p-facts { margin: 0; display: flex; flex-wrap: wrap; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
 .p-facts div { flex: 1 1 120px; background: var(--panel); padding: 10px 12px; }
@@ -342,16 +345,20 @@ html { scrollbar-gutter: stable; }
 .filters-btn[aria-expanded="true"] { background: var(--raise); }
 .filters-btn .badge { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: var(--accent); color: oklch(0.13 0 0); font-size: 11.5px; font-weight: 600; display: inline-grid; place-items: center; }
 .filters-btn .badge[hidden] { display: none; }
-@media (max-width: 760px) {
-  .controls { width: 100%; }
-  .controls > .select:first-child { flex: 1; min-width: 0; }
-  .controls > .select:first-child select { max-width: none; width: 100%; }
+/* below the width where Sort, all four filters and the layout toggle fit one row, the filters fold behind a button */
+@media (max-width: 1499px) {
   .filters-btn { display: inline-flex; }
-  .filters { display: none; order: 9; width: 100%; grid-template-columns: 1fr 1fr; gap: 10px 12px; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+  .filters { display: none; order: 9; width: 100%; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); gap: 10px 12px; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
   .filters.open { display: grid; }
   .filters .select { flex-direction: column; align-items: stretch; gap: 4px; min-width: 0; }
   .filters .select span { font-size: 12px; }
   .filters .select select { max-width: none; width: 100%; }
+}
+@media (max-width: 760px) {
+  .controls { width: 100%; }
+  .controls > .select:first-child { flex: 1; min-width: 0; }
+  .controls > .select:first-child select { max-width: none; width: 100%; }
+  .filters { grid-template-columns: 1fr 1fr; }
 }
 
 /* the pills beside the name only show in the phone list view; everywhere else they stay at the end of the stats */
@@ -364,3 +371,13 @@ html { scrollbar-gutter: stable; }
 
 /* phones always show the list, so the layout toggle and its setting go away there */
 @media (max-width: 760px) { .controls .view, .s-layout { display: none; } }
+.p-vitals { margin: 8px 0 0; font-size: 13px; color: var(--muted); display: flex; gap: 8px; align-items: baseline; }
+.p-vitals::before { content: ""; flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--green); transform: translateY(-1px); }
+.p-vitals.low::before { background: var(--amber); }
+.p-vitals[hidden] { display: none; } /* display:flex above would otherwise beat the hidden attribute */
+.clone { display: flex; align-items: center; gap: 10px; width: 100%; margin-top: 10px; padding: 0 6px 0 12px; height: 40px; border: 1px solid var(--line); border-radius: 8px; background: var(--ink); color: var(--muted); font: 13px ui-monospace, SFMono-Regular, Menlo, monospace; cursor: pointer; text-align: left; }
+.clone:hover { border-color: var(--muted); color: var(--text); }
+.clone code { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: inherit; }
+.clone-ico { flex: none; display: grid; place-items: center; min-width: 28px; height: 28px; padding: 0 4px; border-radius: 6px; font: 500 12px/1 "Geist", sans-serif; color: var(--text); }
+.clone:hover .clone-ico { background: var(--raise); }
+.clone-ico svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; }

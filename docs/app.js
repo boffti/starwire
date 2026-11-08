@@ -2,6 +2,7 @@
 const $ = (s) => document.querySelector(s)
 const PAGE = 60
 const STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 20.9l1.6-7L2 9.2l7.1-.6z"/></svg>'
+const COPY = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>'
 const GH = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>'
 const num = (n) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k` : String(n))
 // avatars straight from GitHub's image CDN: github.com/<owner>.png is a no-cache redirect, so every re-render of the
@@ -10,6 +11,9 @@ const avatar = (owner, size) => `https://avatars.githubusercontent.com/${encodeU
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c])
 
 import { makeIndex, fieldsFor } from "./search.js?v=3"
+import { readmeFragment, followTheme } from "./readme.js?v=1"
+import { count } from "./count.js?v=2"
+import { signs, summary } from "./vitals.js?v=1"
 
 const data = await fetch("data.json").then((r) => r.json())
 const now = Date.parse(data.updated)
@@ -24,22 +28,6 @@ const repos = data.repos.map((r) => ({ ...r, age: (now - Date.parse(r.p)) / 864e
 let index
 const search = (q, pool) => (q.trim() ? (index ??= makeIndex(repos, fieldsFor(TX)))(q, pool) : null)
 const byName = new Map(repos.map((r) => [r.r.toLowerCase(), r]))
-
-// ---- usage counts, so the next feature rests on what people actually do: GoatCounter, no cookies, no personal data,
-// skips localhost and does nothing at all under Do Not Track or Global Privacy Control. Counts the page load, searches
-// (marked when nothing matched), the view or area picked, saves, repos opened in the panel and clicks through to
-// GitHub; how.html#counts tells visitors the same. Events wait in a queue until the script has loaded ----
-const queued = []
-const optOut = navigator.doNotTrack === "1" || navigator.globalPrivacyControl === true
-const count = (path, title = path) => optOut ? 0 : window.goatcounter?.count ? window.goatcounter.count({ path, title, event: true }) : queued.push([path, title])
-if (!optOut) {
-  const gc = Object.assign(document.createElement("script"), { async: true, src: "https://gc.zgo.at/count.js" })
-  gc.dataset.goatcounter = "https://starwire.goatcounter.com/count"
-  gc.dataset.goatcounterSettings = '{"no_onload":true}' // the URL can carry a saved list; count the bare page instead
-  gc.onload = () => { window.goatcounter.count?.({ path: location.pathname }); queued.splice(0).forEach(([p, t]) => count(p, t)) }
-  document.head.append(gc)
-}
-document.addEventListener("click", (e) => { const a = e.target.closest('a[href^="https://github.com/"]'); if (a) count(`github: ${new URL(a.href).pathname.split("/").slice(1, 3).join("/")}`) })
 
 // ---- saved for later: repo names in localStorage, oldest first. No accounts, so saves live in this browser,
 // and a share link (?saved=a/b,c/d) carries them to another device or person ----
@@ -227,14 +215,17 @@ function render() {
   list.sort(scores && state.sort === "match" ? (a, b) => scores.get(b) - scores.get(a) : sorters[state.sort] ?? sorters.picked)
   // saved repos that dropped off the list stay, at the end, so a save is never lost silently
   const gone = state.f === "saved" && !anyFacet() && !state.lang && !scores ? saved.filter((n) => !byName.has(n.toLowerCase())) : []
-  const page = list.slice(0, state.shown).map(card)
-  if (list.length <= state.shown) page.push(...gone.map((n) => `<div class="repo gone"><div class="head"><div class="name"><strong>${esc(n.split("/")[1])}</strong><span>${esc(n.split("/")[0])}</span></div>${saveBtn(n)}</div><p class="line">No longer on the list. <a href="https://github.com/${esc(n)}" target="_blank" rel="noopener">Open on GitHub</a></p></div>`))
   const el = $("#results")
   const layout = PHONE.matches ? "list" : state.view // phones always get the list; cards add nothing on a narrow screen
   el.className = layout === "list" ? "list" : "cards"
   const cols = getComputedStyle(el).gridTemplateColumns.split(" ").length
   const spot = PROMO_ROW * cols + Math.floor(PROMO_COL * cols)
-  if (layout === "cards" && page.length > spot && !state.q && !["saved", "shared"].includes(state.f)) page.splice(spot, 0, promo)
+  // the StarDash card takes one repo's place, so a full page is 60 cells: whole rows at 3, 4, 5 or 6 columns
+  const promoted = layout === "cards" && !state.q && !["saved", "shared"].includes(state.f) && Math.min(list.length, state.shown) > spot
+  const shown = state.shown - (promoted ? 1 : 0)
+  const page = list.slice(0, shown).map(card)
+  if (list.length <= shown) page.push(...gone.map((n) => `<div class="repo gone"><div class="head"><div class="name"><strong>${esc(n.split("/")[1])}</strong><span>${esc(n.split("/")[0])}</span></div>${saveBtn(n)}</div><p class="line">No longer on the list. <a href="https://github.com/${esc(n)}" target="_blank" rel="noopener">Open on GitHub</a></p></div>`))
+  if (promoted) page.splice(spot, 0, promo)
   const empty = state.f === "saved" && !saved.length
     ? `<div class="empty">Nothing saved yet. Use the bookmark on any repo to keep it here.<br>Saves stay in this browser.</div>`
     : `<div class="empty">No repos match that yet. Try fewer words or another filter.<br><button type="button" id="reset">Clear filters</button></div>`
@@ -256,8 +247,8 @@ function render() {
   // phones keep the filters behind one button; it shows how many are on
   const on = ["form", "plat", "with", "lang"].filter((k) => state[k]).length
   $("#filters-n").hidden = !on; $("#filters-n").textContent = on
-  $("#more").hidden = list.length <= state.shown
-  $("#more").textContent = `Show more (${(list.length - state.shown).toLocaleString("en-US")} left)`
+  $("#more").hidden = list.length <= shown
+  $("#more").textContent = `Show more (${(list.length - shown).toLocaleString("en-US")} left)`
   const group = prefs.sidebar === "form" ? state.form : prefs.sidebar === "with" ? state.with : state.a
   document.querySelectorAll("[data-f]").forEach((n) => n.setAttribute("aria-current", String(!group && n.dataset.f === state.f)))
   for (const k of ["a", "form", "with"]) document.querySelectorAll(`[data-${k}]`).forEach((n) => n.setAttribute("aria-current", String(n.dataset[k] === state[k] && !(k === "a" && state.sa))))
@@ -270,12 +261,12 @@ function render() {
   if (state.sort !== "picked" && !(state.sort === "match" && state.q)) p.set("sort", state.sort)
   if (state.view !== "cards") p.set("view", state.view)
   history.replaceState(null, "", `${location.pathname}${p.size ? `?${p}` : ""}`)
-  const place = state.sa ? `area: ${state.a}/${state.sa}` : state.a ? `area: ${state.a}` : `view: ${state.f || "all"}`
-  if (place !== counted.place) count((counted.place = place))
+  const place = state.a ? `area/${state.a}${state.sa ? `/${state.sa}` : ""}` : `view/${state.f || "all"}`
+  if (place !== counted.place) count((counted.place = place), state.a ? "Area" : "View")
   // a search counts once the typing stops, so "pdf editor" isn't also counted as "pd" and "pdf e"
   clearTimeout(counted.t)
   const q = state.q.toLowerCase().slice(0, 60)
-  if (q && q !== counted.q) counted.t = setTimeout(() => count(`search: ${(counted.q = q)}`, total ? "search" : "search, no results"), 2000)
+  if (q && q !== counted.q) counted.t = setTimeout(() => count(`search/${(counted.q = q)}`, total ? "Search" : "Search, no results"), 2000)
 }
 const counted = { place: "", q: "", t: 0 }
 
@@ -383,7 +374,7 @@ function savedChanged() {
   if (n) n.textContent = saved.length.toLocaleString("en-US")
 }
 function toggleSave(n) {
-  if (!savedAt.has(n)) count(`save: ${n}`)
+  if (!savedAt.has(n)) count(`save/${n}`, "Saved")
   setSaved(savedAt.has(n) ? saved.filter((x) => x !== n) : [...saved, n])
   savedChanged()
   if (state.f === "saved" || state.f === "shared") render() // keeps the page size, so the list doesn't jump back to the top
@@ -453,32 +444,6 @@ render()
 
 // ---- repo panel: README preview, facts, star trend, similar repos ----
 const panel = $("#panel")
-let libs
-const loadLibs = () =>
-  (libs ??= Promise.all(
-    // pinned versions with Subresource Integrity: the browser refuses a file that doesn't match its hash,
-    // so a tampered CDN copy can't replace DOMPurify, which is what keeps README previews safe.
-    // Hashes are the ones cdnjs publishes for these versions; update both when a version changes.
-    [
-      ["https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js", "sha512-xeUh+KxNyTufZOje++oQHstlMQ8/rpyzPuM+gjMFYK3z5ILJGE7l2NvYL+XfliKURMpBIKKp1XoPN/qswlSMFA=="],
-      ["https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js", "sha512-jB0TkTBeQC9ZSkBqDhdmfTv1qdfbWpGE72yJ/01Srq6hEzZIz2xkz1e57p9ai7IeHMwEG7HpzG6NdptChif5Pg=="],
-    ].map(
-      ([src, integrity]) => new Promise((ok, fail) => document.head.append(Object.assign(document.createElement("script"), { src, integrity, crossOrigin: "anonymous", referrerPolicy: "no-referrer", onload: ok, onerror: fail }))),
-    ),
-  ))
-
-// A README <picture> picks its logo with prefers-color-scheme, which is the OS setting. Follow the
-// site's theme instead, so a light site never gets the white logo. Only that one feature is swapped
-// for an always-true or always-false query, so any other condition in the media query still applies.
-const siteDark = () => getComputedStyle(document.documentElement).colorScheme.includes("dark")
-function followTheme(root) {
-  const dark = siteDark()
-  for (const s of root.querySelectorAll("source[media]")) {
-    s.dataset.media ??= s.getAttribute("media")
-    if (!/prefers-color-scheme/i.test(s.dataset.media)) continue
-    s.setAttribute("media", s.dataset.media.replace(/\(\s*prefers-color-scheme\s*:\s*(dark|light)\s*\)/gi, (_, v) => ((v.toLowerCase() === "dark") === dark ? "(min-width: 0px)" : "(min-width: 99999px)")))
-  }
-}
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => followTheme(panel))
 
 function similar(r) {
@@ -505,53 +470,12 @@ function trend(hs) {
   return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-label="Stars from ${num(lo)} to ${num(hi)}"><polyline points="${pts}"/></svg><p class="muted">${num(lo)} to ${num(hi)} stars, ${esc(hs[0][0])} to ${esc(hs.at(-1)[0])}</p>`
 }
 
-// READMEs are kept for a day in the browser's Cache Storage, and so is "no README", so reopening a repo
-// (or flicking between similar ones) doesn't go back to GitHub, or probe five file names again
-const README_DAY = 864e5
-async function readmeText(repo) {
-  const key = `${location.origin}/__readme/${repo}`
-  let cache
-  try { cache = await caches.open("starwire-readme-v1") } catch {} // no Cache Storage (old browser, private mode): just fetch
-  const hit = await cache?.match(key).catch(() => null)
-  if (hit && Date.now() - Number(hit.headers.get("x-saved")) < README_DAY) return hit.status === 204 ? "" : hit.text()
-  let md = ""
-  for (const f of ["README.md", "readme.md", "Readme.md", "README.MD", "README"]) {
-    const res = await fetch(`https://raw.githubusercontent.com/${repo}/HEAD/${f}`)
-    if (res.ok) { md = await res.text(); break }
-    if (res.status !== 404) throw new Error(`README ${res.status}`) // rate limited or down: don't remember that as "no README"
-  }
-  // only what the preview uses (it shows 15000 characters and a "read the rest" link past that)
-  cache?.put(key, new Response(md ? md.slice(0, 15001) : null, { status: md ? 200 : 204, headers: { "x-saved": String(Date.now()) } })).catch(() => {})
-  return md
-}
-
 async function readme(r) {
   const el = panel.querySelector(".readme")
   try {
-    await loadLibs()
-    const md = await readmeText(r.r)
+    const { md, frag } = await readmeFragment(r.r)
     if (state.repo !== r.r) return // the user moved on while it loaded
     if (!md) { el.innerHTML = `<p class="muted">This repo has no README to preview.</p>`; return }
-    // fix the URLs on the sanitized fragment, before it is inserted: an inserted <img> or <picture>
-    // starts fetching at once, and a relative path would hit starwire.foo and 404
-    const frag = DOMPurify.sanitize(marked.parse(md.slice(0, 15000)), { RETURN_DOM_FRAGMENT: true })
-    // relative links and images point into the repo
-    for (const a of frag.querySelectorAll("a[href]")) {
-      const h = a.getAttribute("href")
-      if (!/^(https?:|mailto:|#)/.test(h)) a.href = `https://github.com/${r.r}/blob/HEAD/${h.replace(/^\.?\//, "")}`
-      a.target = "_blank"; a.rel = "noopener"
-    }
-    const raw = (u) => (/^(https?:|data:|\/\/)/.test(u) ? u : `https://raw.githubusercontent.com/${r.r}/HEAD/${u.replace(/^\.?\//, "")}`)
-    for (const img of frag.querySelectorAll("img[src]")) {
-      img.setAttribute("src", raw(img.getAttribute("src")))
-      img.loading = "lazy"
-    }
-    // <picture><source srcset> wins over the <img> inside it (dark mode READMEs use it for a dark logo), so it needs the same
-    for (const s of frag.querySelectorAll("[srcset]")) {
-      const v = s.getAttribute("srcset").trim()
-      if (v) s.setAttribute("srcset", v.split(/\s*,\s+/).map((c) => { const [u, ...d] = c.split(/\s+/); return [raw(u), ...d].join(" ") }).join(", "))
-    }
-    followTheme(frag)
     el.replaceChildren(frag)
     if (md.length > 15000) el.insertAdjacentHTML("beforeend", `<p><a href="https://github.com/${esc(r.r)}#readme" target="_blank" rel="noopener">Read the rest on GitHub</a></p>`)
     // long READMEs start collapsed; the panel stays the only thing that scrolls
@@ -581,7 +505,7 @@ function labels(r) {
 function openPanel(name, push = true) {
   const r = byName.get(name.toLowerCase())
   if (!r) return closePanel()
-  count(`repo: ${r.r}`)
+  count(`repo/${r.r}`, "Repo panel")
   const [owner, repo] = r.r.split("/")
   const [fc, ft] = fresh(r.age)
   const facts = [
@@ -601,12 +525,14 @@ function openPanel(name, push = true) {
   </div>
   <div class="p-body">
     <p class="p-line">${esc(r.l)}</p>
+    <p class="p-vitals" hidden></p>
     <div class="p-actions">
       <a class="btn primary" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener">${GH}Open on GitHub</a>
+      <a class="btn" href="repo.html?r=${encodeURIComponent(r.r)}">Full page</a>
       ${r.hp ? `<a class="btn" href="${esc(r.hp)}" target="_blank" rel="noopener">Website</a>` : ""}
       <button class="btn save-btn" type="button" data-save="${esc(r.r)}" aria-pressed="${savedAt.has(r.r)}">${BOOKMARK}${savedAt.has(r.r) ? "Saved" : "Save"}</button>
-      <button class="btn" type="button" data-copy="git clone https://github.com/${esc(r.r)}.git">Copy git clone</button>
     </div>
+    <button class="clone" type="button" data-copy="git clone https://github.com/${esc(r.r)}.git" aria-label="Copy the git clone command"><code>git clone https://github.com/${esc(r.r)}.git</code><span class="clone-ico">${COPY}</span></button>
     <dl class="p-facts">${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("")}<div><dt>Activity</dt><dd><span class="fresh" style="--f:${fc}">${ft}</span></dd></div></dl>
     ${labels(r)}
     ${r.t.length ? `<div class="topics">${r.t.map((t) => `<span>${esc(t)}</span>`).join("")}</div>` : ""}
@@ -621,6 +547,19 @@ function openPanel(name, push = true) {
   state.repo = r.r
   if (push) setRepoParam(r.r)
   readme(r)
+  panelVitals(r)
+}
+
+// the vital signs in one plain line; vitals.json loads on the first panel opened, not with the list
+let vitals
+async function panelVitals(r) {
+  vitals ??= fetch("vitals.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
+  const v = (await vitals)[r.r], el = panel.querySelector(".p-vitals")
+  if (!v || state.repo !== r.r || !el) return
+  const s = signs(v, data.updated.slice(0, 10))
+  el.textContent = `${summary(s)}.`
+  el.classList.toggle("low", [s.activity, s.release, s.issues].some((x) => x.level === "low")) // amber dot, same rule as the page
+  el.hidden = false
 }
 
 // only the repo param changes, so the grid isn't re-rendered under the panel
@@ -667,7 +606,11 @@ panel.addEventListener("click", async (e) => {
   const more = e.target.closest(".more-readme")
   if (more) { panel.querySelector(".readme").classList.add("open"); more.remove(); return }
   const copy = e.target.closest("[data-copy]")
-  if (copy) { try { await navigator.clipboard.writeText(copy.dataset.copy); copy.textContent = "Copied" } catch { copy.textContent = copy.dataset.copy } setTimeout(() => (copy.textContent = "Copy git clone"), 1600) }
+  if (copy) {
+    const ico = copy.querySelector(".clone-ico")
+    try { await navigator.clipboard.writeText(copy.dataset.copy); ico.textContent = "Copied" } catch { return } // no clipboard: the command is right there to select
+    setTimeout(() => (ico.innerHTML = COPY), 1600)
+  }
 })
 $("#pscrim").addEventListener("click", () => { closePanel(); closeSettings() })
 document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !panel.hidden) closePanel() })

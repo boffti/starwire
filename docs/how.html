@@ -55,7 +55,7 @@
 <main class="doc">
   <h1>How starwire works</h1>
   <p class="lede">Where the repos come from, how they're checked, and exactly how every list is ranked. If something here doesn't match what you see, <a href="https://github.com/boffti/starwire/issues/new?template=bug-report.yml">tell us</a>.</p>
-  <p class="stamp">Last changed November 7, 2026. Every change to the method is listed at the bottom.</p>
+  <p class="stamp">Last changed November 8, 2026. Every change to the method is listed at the bottom.</p>
   <ul class="toc">
     <li><a href="#sources">Where repos come from</a></li>
     <li><a href="#checks">What gets listed</a></li>
@@ -64,6 +64,8 @@
     <li><a href="#trending">How Trending works</a></li>
     <li><a href="#sorts">The other sorts and labels</a></li>
     <li><a href="#neutral">What never affects ranking</a></li>
+    <li><a href="#vitals">Vital signs on repo pages</a></li>
+    <li><a href="#counts">What we count</a></li>
     <li><a href="#limits">Known limits</a></li>
     <li><a href="#changes">Changes to the method</a></li>
   </ul>
@@ -142,6 +144,19 @@
     <li>The README previews load from GitHub, and the two libraries that render them load from cdnjs with integrity checks, so a tampered copy is refused.</li>
   </ul>
 
+  <h2 id="vitals">Vital signs on repo pages</h2>
+  <p>Each repo page shows four signs, measured from GitHub about once a week. They describe the project's recent activity; they aren't a rating of its quality, and they never change the order of any list.</p>
+  <table>
+    <thead><tr><th>Sign</th><th>What it shows</th><th>Green when</th><th>Amber when</th></tr></thead>
+    <tbody>
+      <tr><td>Momentum</td><td>Its place among repos in the same subarea, by stars gained this week</td><td>In the top quarter</td><td>Below the top 60%</td></tr>
+      <tr><td>Activity</td><td>Commits to the main branch in each of the last 12 weeks</td><td>Commits in at least 6 of the 12 weeks</td><td>No commits in 12 weeks</td></tr>
+      <tr><td>Releases</td><td>Time since the latest GitHub release</td><td>Within 90 days</td><td>Over a year ago</td></tr>
+      <tr><td>Issues</td><td>Issues closed in the last 90 days, as a share of issues opened (capped at 100%)</td><td>60% or more</td><td>Under 30%</td></tr>
+    </tbody>
+  </table>
+  <p>Anything between is shown in a softer green. Some signs are left out instead of judged: no releases (many projects never use GitHub releases), fewer than 5 issues opened and closed in 90 days, or a repo with no measured star gain. "How it compares" puts the same numbers next to repos that replace the same tools, or its closest neighbours in its subarea.</p>
+
   <h2 id="counts">What we count</h2>
   <p>starwire counts visits with <a href="https://www.goatcounter.com">GoatCounter</a> to learn what's useful: no cookies, nothing stored in your browser, no IP addresses kept, no way to follow you to other sites. <a href="https://starwire.goatcounter.com">The numbers are public</a>, so you see exactly what we see.</p>
   <ul>
@@ -160,6 +175,7 @@
 
   <h2 id="changes">Changes to the method</h2>
   <ul class="log">
+    <li><b>Nov 8, 2026.</b> Repo pages with vital signs, how a repo compares with its alternatives, and how to get started. <a href="#vitals">How the signs are read</a>.</li>
     <li><b>Nov 7, 2026.</b> Started counting visits, searches and repo opens without cookies. <a href="#counts">What we count</a>.</li>
     <li><b>Nov 7, 2026.</b> Started researching fake-star detection internally. It doesn't affect the list or the ranking.</li>
     <li><b>Nov 7, 2026.</b> Trending uses only measured star gains. Before, a repo's lifetime average was projected forward, which made big repos look like they were still at their launch pace.</li>
