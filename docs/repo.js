@@ -1,10 +1,8 @@
-// starwire repo page (repo.html?r=owner/name): vital signs, how it compares with its alternatives, what it replaces and
-// how to start. One page for every repo, drawn from data.json and vitals.json, so nothing is generated per repo.
+// The repo page, shown inside the main app (?page=owner/name): vital signs, how it compares with its alternatives,
+// what it replaces and how to start. app.js owns the URL, saves and counting; this module only draws the page.
 import { signs, momentum } from "./vitals.js?v=1"
 import { readmeFragment } from "./readme.js?v=1"
-import { count } from "./count.js?v=2"
 
-const $ = (s) => document.querySelector(s)
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c])
 const num = (n) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k` : String(n))
 const avatar = (owner, size) => `https://avatars.githubusercontent.com/${encodeURIComponent(owner)}?s=${size}`
@@ -28,28 +26,23 @@ const I = {
 }
 const GH = '<svg viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;stroke:none"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.4-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>'
 
-const [data, vitals] = await Promise.all([
-  fetch("data.json").then((r) => r.json()),
-  fetch("vitals.json").then((r) => (r.ok ? r.json() : {})).catch(() => ({})), // no vitals yet: the page still works
-])
-const today = data.updated.slice(0, 10)
-const TX = data.taxonomy, repos = data.repos
-const AREA = new Map(TX.areas.map((a) => [a.id, a.name])), SUB = new Map(TX.areas.flatMap((a) => a.subs.map(([id, n]) => [`${a.id}/${id}`, n])))
-const FORM = new Map(TX.forms), PLAT = new Map(TX.platforms)
-const want = new URLSearchParams(location.search).get("r") ?? ""
-const r = repos.find((x) => x.r.toLowerCase() === want.toLowerCase())
-const page = $("#page")
+let r, repos, vitals, today, AREA, SUB, FORM, PLAT
 
-// ---- saves: the same list the main page keeps in this browser ----
-const SAVED_KEY = "starwire-saved"
-function savedList() { try { return JSON.parse(localStorage.getItem(SAVED_KEY)) ?? [] } catch { return [] } }
+// repo + { repos, vitals, today, TX, saved } -> the page's HTML
+export function repoPage(repo, ctx) {
+  r = repo; ({ repos, vitals, today } = ctx)
+  AREA = new Map(ctx.TX.areas.map((a) => [a.id, a.name])); SUB = new Map(ctx.TX.areas.flatMap((a) => a.subs.map(([id, n]) => [`${a.id}/${id}`, n])))
+  FORM = new Map(ctx.TX.forms); PLAT = new Map(ctx.TX.platforms)
+  return render(ctx.saved)
+}
 
-function render() {
+const BACK = `<button type="button" class="rp-back" data-back>${svg('<path d="m15 18-6-6 6-6"/>').replace("<svg", '<svg style="fill:none;stroke:currentColor;stroke-width:2"')}Back to the list</button>`
+export const missingPage = (name) => `<div class="rp-top">${BACK}</div><p class="rp-missing">${name ? `${esc(name)} isn't on starwire.` : "No repo picked."} <a href="https://github.com/boffti/starwire/issues/new?template=submit-repo.yml" target="_blank" rel="noopener">Submit it</a> if it should be.</p>`
+
+function render(saved) {
   const [owner, name] = r.r.split("/")
-  document.title = `${name}: ${r.l || "open source repo"} | starwire`
-  if (r.a) $("#crumbs").innerHTML = `<span class="sep">/</span> <a class="crumb" href="./?a=${esc(r.a)}">${esc(AREA.get(r.a))}</a> <span class="sep">/</span> <a class="crumb" href="./?a=${esc(r.a)}&amp;sa=${esc(r.sa)}">${esc(SUB.get(`${r.a}/${r.sa}`))}</a>`
   const v = vitals[r.r], s = v ? signs(v, today) : null, m = momentum(r, repos)
-  const saved = savedList().includes(r.r)
+  const crumbs = r.a ? `<nav class="rp-crumbs" aria-label="Where it sits"><a href="?a=${esc(r.a)}">${esc(AREA.get(r.a))}</a><span aria-hidden="true">/</span><a href="?a=${esc(r.a)}&amp;sa=${esc(r.sa)}">${esc(SUB.get(`${r.a}/${r.sa}`))}</a></nav>` : ""
 
   const stats = [
     `<li class="star">${svg(I.star)}<span><b>${num(r.s)}</b> stars</span></li>`,
@@ -60,7 +53,7 @@ function render() {
     r.pl?.length ? `<li>${svg(I.screen)}${r.pl.map((p) => esc(PLAT.get(p))).join(", ")}</li>` : "",
   ].join("")
 
-  page.innerHTML = `
+  return `<div class="rp-top">${BACK}${crumbs}</div>
   <section class="hero">
     <img src="${esc(avatar(owner, 144))}" alt="" width="72" height="72">
     <div class="who">
@@ -71,7 +64,7 @@ function render() {
     <div class="acts">
       <a class="btn primary" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener">${GH}GitHub</a>
       ${r.hp ? `<a class="btn" href="${esc(r.hp)}" target="_blank" rel="noopener">Website</a>` : ""}
-      <button type="button" class="btn icon" id="save" aria-pressed="${saved}" aria-label="${saved ? "Remove from saved" : "Save for later"}" title="${saved ? "Saved" : "Save for later"}">${svg(I.save).replace("<svg", '<svg style="fill:none;stroke:currentColor;stroke-width:2"')}</button>
+      <button type="button" class="btn icon" data-save="${esc(r.r)}" aria-pressed="${saved}" aria-label="${saved ? "Remove from saved" : "Save for later"}" title="${saved ? "Saved" : "Save for later"}">${svg(I.save).replace("<svg", '<svg style="fill:none;stroke:currentColor;stroke-width:2"')}</button>
     </div>
   </section>
   ${vitalsSection(s, m, v)}
@@ -79,9 +72,9 @@ function render() {
   <div class="pair">${swapCard()}${startCard(v)}</div>
   <div class="tail">
     <div class="topics">${r.t.map((t) => `<span>${esc(t)}</span>`).join("")}</div>
-    <button type="button" class="btn" id="show-readme" style="height:44px">${svg(I.doc).replace("<svg", '<svg style="fill:none;stroke:currentColor;stroke-width:2"')}Show README</button>
+    <button type="button" class="btn" data-readme style="height:44px">${svg(I.doc).replace("<svg", '<svg style="fill:none;stroke:currentColor;stroke-width:2"')}Show README</button>
   </div>
-  <section id="readme-sec" hidden><h2>README</h2><div class="readme" style="margin-top:14px"></div></section>`
+  <section class="rp-readme" hidden><h2>README</h2><div class="readme" style="margin-top:14px"></div></section>`
 }
 
 function vitalsSection(s, m, v) {
@@ -130,7 +123,7 @@ function compareSection() {
   return `<section aria-labelledby="cmp"><h2 id="cmp">How it compares</h2><div class="cmp"><table>
     <thead><tr><th scope="col">Repo</th><th scope="col">Stars</th><th scope="col" style="width:14rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody>${rows.map((x) => { const c = commits(x); return `<tr class="${x === r ? "me" : ""}">
-      <th scope="row">${x === r ? `${esc(x.r.split("/")[1])}<small>this repo</small>` : `<a class="rp-name" href="repo.html?r=${encodeURIComponent(x.r)}">${esc(x.r.split("/")[1])}</a>`}</th>
+      <th scope="row">${x === r ? `${esc(x.r.split("/")[1])}<small>this repo</small>` : `<a class="rp-name" href="?page=${encodeURIComponent(x.r)}">${esc(x.r.split("/")[1])}</a>`}</th>
       <td>${num(x.s)}</td>
       <td>${c == null ? "Not measured" : `<div class="bar"><span style="width:${(c / max) * 9}rem"></span>${c.toLocaleString("en-US")}</div>`}</td>
       <td>${rel(x)}</td>
@@ -142,48 +135,33 @@ function swapCard() {
   if (!r.alt?.length) return ""
   const first = r.alt[0], n = repos.filter((x) => (x.alt ?? []).some((a) => a.toLowerCase() === first.toLowerCase())).length
   return `<section class="card" aria-labelledby="swap"><h2 id="swap">Swap out</h2>
-    <div class="swap">${r.alt.slice(0, 3).map((a) => `<a href="./?q=${encodeURIComponent(`${a} alternative`)}">${esc(a)}</a>`).join("")}${svg(I.arrow)}<span class="to">${esc(r.r.split("/")[1])}</span></div>
-    ${n > 1 ? `<p style="margin:14px 0 0;font-size:14px"><a href="./?q=${encodeURIComponent(`${first} alternative`)}">All ${n} ${esc(first)} alternatives</a></p>` : ""}</section>`
+    <div class="swap">${r.alt.slice(0, 3).map((a) => `<a href="?q=${encodeURIComponent(`${a} alternative`)}">${esc(a)}</a>`).join("")}${svg(I.arrow)}<span class="to">${esc(r.r.split("/")[1])}</span></div>
+    ${n > 1 ? `<p style="margin:14px 0 0;font-size:14px"><a href="?q=${encodeURIComponent(`${first} alternative`)}">All ${n} ${esc(first)} alternatives</a></p>` : ""}</section>`
 }
 
 function startCard(v) {
   const icon = (d) => svg(d).replace("<svg", '<svg style="fill:none;stroke:currentColor;stroke-width:2"')
   return `<section class="card" aria-labelledby="start"><h2 id="start">Get started</h2><div class="start">
     ${v?.release ? `<a href="https://github.com/${esc(r.r)}/releases/latest" target="_blank" rel="noopener">${icon(I.down)}Download</a>` : ""}
-    <button type="button" id="clone">${icon(I.copy)}<span>Copy clone</span></button>
+    <button type="button" data-clone>${icon(I.copy)}<span>Copy clone</span></button>
     <a href="https://github.com/${esc(r.r)}/contribute" target="_blank" rel="noopener">${icon(I.hand)}<span>${v?.gfi ? `<b>${v.gfi}</b> first ${v.gfi === 1 ? "issue" : "issues"}` : "Contribute"}</span></a>
   </div></section>`
 }
 
-page.addEventListener("click", async (e) => {
-  const b = e.target.closest("button")
-  if (!b || !r) return
-  if (b.id === "save") {
-    const list = savedList(), on = list.includes(r.r), next = on ? list.filter((n) => n !== r.r) : [...list, r.r]
-    try { localStorage.setItem(SAVED_KEY, JSON.stringify(next)) } catch {}
-    if (!on) count(`save/${r.r}`, "Saved")
-    b.setAttribute("aria-pressed", String(!on)); b.title = on ? "Save for later" : "Saved"; b.setAttribute("aria-label", on ? "Save for later" : "Remove from saved")
-  }
-  if (b.id === "clone") {
-    const label = b.querySelector("span"), cmd = `git clone https://github.com/${r.r}.git`
-    try { await navigator.clipboard.writeText(cmd); label.textContent = "Copied" } catch { label.textContent = cmd }
-    setTimeout(() => (label.textContent = "Copy clone"), 1600)
-  }
-  if (b.id === "show-readme") {
-    const sec = $("#readme-sec"), el = sec.querySelector(".readme")
-    sec.hidden = false; b.remove()
-    el.innerHTML = `<p class="muted">Loading README…</p>`
-    try {
-      const { md, frag } = await readmeFragment(r.r)
-      if (!md) el.innerHTML = `<p class="muted">This repo has no README.</p>`
-      else { el.replaceChildren(frag); if (md.length > 15000) el.insertAdjacentHTML("beforeend", `<p><a href="https://github.com/${esc(r.r)}#readme" target="_blank" rel="noopener">Read the rest on GitHub</a></p>`) }
-    } catch { el.innerHTML = `<p class="muted">Couldn't load the README. <a href="https://github.com/${esc(r.r)}#readme" target="_blank" rel="noopener">Read it on GitHub</a>.</p>` }
-  }
-})
+export async function copyClone(b) {
+  const label = b.querySelector("span"), cmd = `git clone https://github.com/${r.r}.git`
+  try { await navigator.clipboard.writeText(cmd); label.textContent = "Copied" } catch { label.textContent = cmd }
+  setTimeout(() => (label.textContent = "Copy clone"), 1600)
+}
 
-if (!r) {
-  page.innerHTML = `<p class="missing">${want ? `${esc(want)} isn't on starwire.` : "No repo picked."} <a href="./">Browse the list</a> or <a href="https://github.com/boffti/starwire/issues/new?template=submit-repo.yml">submit it</a>.</p>`
-} else {
-  count(`page/${r.r}`, "Repo page")
-  render()
+export async function showReadme(root, b) {
+  const sec = root.querySelector(".rp-readme"), el = sec.querySelector(".readme"), repo = r.r
+  sec.hidden = false; b.remove()
+  el.innerHTML = `<p class="muted">Loading README…</p>`
+  try {
+    const { md, frag } = await readmeFragment(repo)
+    if (repo !== r?.r) return // moved to another repo while it loaded
+    if (!md) el.innerHTML = `<p class="muted">This repo has no README.</p>`
+    else { el.replaceChildren(frag); if (md.length > 15000) el.insertAdjacentHTML("beforeend", `<p><a href="https://github.com/${esc(repo)}#readme" target="_blank" rel="noopener">Read the rest on GitHub</a></p>`) }
+  } catch { el.innerHTML = `<p class="muted">Couldn't load the README. <a href="https://github.com/${esc(repo)}#readme" target="_blank" rel="noopener">Read it on GitHub</a>.</p>` }
 }

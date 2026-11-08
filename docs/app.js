@@ -14,6 +14,7 @@ import { makeIndex, fieldsFor } from "./search.js?v=3"
 import { readmeFragment, followTheme } from "./readme.js?v=1"
 import { count } from "./count.js?v=2"
 import { signs, summary } from "./vitals.js?v=1"
+import { repoPage, missingPage, showReadme, copyClone } from "./repo.js?v=2"
 
 const data = await fetch("data.json").then((r) => r.json())
 const now = Date.parse(data.updated)
@@ -86,7 +87,7 @@ const pick = (k, map) => { const v = params.get(k) ?? old[k] ?? ""; return !map 
 const state = {
   a: pick("a", AREA), sa: "", form: pick("form", FORM), plat: pick("plat", PLAT), with: pick("with", WITH),
   f: params.get("f") ?? (shared.length ? "shared" : params.has("multi") ? "multi" : ""), q: params.get("q") ?? "",
-  repo: params.get("repo") ?? "", sort: params.get("sort") ?? (params.get("q") ? "match" : params.get("f") === "saved" ? "saved" : params.get("f") === "trending" ? "trending" : prefs.sort), lang: params.get("lang") ?? "", view: params.get("view") ?? prefs.layout, shown: PAGE,
+  repo: params.get("repo") ?? "", page: params.get("page") ?? "", sort: params.get("sort") ?? (params.get("q") ? "match" : params.get("f") === "saved" ? "saved" : params.get("f") === "trending" ? "trending" : prefs.sort), lang: params.get("lang") ?? "", view: params.get("view") ?? prefs.layout, shown: PAGE,
 }
 { const sa = params.get("sa") ?? old.sa; if (state.a && SUB.has(`${state.a}/${sa}`)) state.sa = sa }
 const isNew = (r) => (now - Date.parse(r.f)) / 864e5 <= 7
@@ -202,6 +203,11 @@ const PHONE = matchMedia("(max-width: 760px)")
 PHONE.addEventListener("change", () => render())
 
 function render() {
+  const onPage = !!state.page
+  $("#repo-page").hidden = !onPage
+  for (const el of document.querySelectorAll(".page > :not(#repo-page)")) el.hidden = onPage
+  if (onPage) return showPage(), syncURL()
+  if (shownPage) { shownPage = ""; document.title = TITLE }
   const view = VIEWS.find((v) => v.f === state.f) ?? VIEWS[0]
   let list = repos.filter((r) => visible(r) && view.test(r) && facetMatch(r) && (!state.lang || r.g === state.lang))
   const scores = search(state.q, list)
@@ -255,12 +261,7 @@ function render() {
   document.querySelectorAll("[data-sa]").forEach((n) => n.setAttribute("aria-current", String(n.dataset.sa === state.sa)))
   document.querySelectorAll(".view button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.view === state.view)))
   $("#reset")?.addEventListener("click", () => set({ f: "", a: "", sa: "", form: "", plat: "", with: "", q: "", lang: "" }, true))
-  const p = new URLSearchParams()
-  for (const k of ["f", "a", "sa", "form", "plat", "with", "q", "lang", "repo"]) if (state[k] && !(k === "f" && state.f === "shared")) p.set(k, state[k])
-  if (state.f === "shared") p.set("saved", shared.join(","))
-  if (state.sort !== "picked" && !(state.sort === "match" && state.q)) p.set("sort", state.sort)
-  if (state.view !== "cards") p.set("view", state.view)
-  history.replaceState(null, "", `${location.pathname}${p.size ? `?${p}` : ""}`)
+  syncURL()
   const place = state.a ? `area/${state.a}${state.sa ? `/${state.sa}` : ""}` : `view/${state.f || "all"}`
   if (place !== counted.place) count((counted.place = place), state.a ? "Area" : "View")
   // a search counts once the typing stops, so "pdf editor" isn't also counted as "pd" and "pdf e"
@@ -270,8 +271,48 @@ function render() {
 }
 const counted = { place: "", q: "", t: 0 }
 
+function syncURL() {
+  const p = new URLSearchParams()
+  for (const k of ["f", "a", "sa", "form", "plat", "with", "q", "lang", "repo", "page"]) if (state[k] && !(k === "f" && state.f === "shared")) p.set(k, state[k])
+  if (state.f === "shared") p.set("saved", shared.join(","))
+  if (state.sort !== "picked" && !(state.sort === "match" && state.q)) p.set("sort", state.sort)
+  if (state.view !== "cards") p.set("view", state.view)
+  history.replaceState(null, "", `${location.pathname}${p.size ? `?${p}` : ""}`)
+}
+
+// ---- repo page: ?page=owner/name shows the repo in the main column, sidebar and search stay ----
+const TITLE = document.title
+let shownPage = "", vitals
+async function showPage() {
+  if (shownPage === state.page) return // already drawn: keep its README and scroll position
+  shownPage = state.page
+  const r = byName.get(state.page.toLowerCase()), el = $("#repo-page")
+  if (!r) { el.innerHTML = missingPage(state.page); document.title = TITLE; return }
+  vitals ??= fetch("vitals.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
+  const want = state.page, v = await vitals
+  if (state.page !== want) return // moved on while vitals loaded
+  el.innerHTML = repoPage(r, { repos, vitals: v, today: data.updated.slice(0, 10), TX, saved: savedAt.has(r.r) })
+  document.title = `${r.r.split("/")[1]}: ${r.l || "open source repo"} | starwire`
+  count(`page/${r.r}`, "Repo page")
+}
+// links inside the app (?page=, ?q=, ?a=) move within it and get a history entry, so Back returns
+let moved = false
+function navigate(href) {
+  history.pushState(null, "", `${location.pathname}${href}`)
+  moved = true
+  fromURL()
+}
+function fromURL() {
+  const p = new URLSearchParams(location.search)
+  set(Object.fromEntries(["f", "a", "sa", "form", "plat", "with", "q", "lang", "page"].map((k) => [k, p.get(k) ?? ""])), true)
+  scrollTo({ top: 0 })
+}
+addEventListener("popstate", fromURL)
+const inApp = (e) => { const a = e.target.closest('a[href^="?"]'); return a && !e.metaKey && !e.ctrlKey && !e.shiftKey && e.button === 0 ? a : null }
+
 function set(patch, syncInputs) {
   const hadQ = state.q
+  if (!("page" in patch)) patch = { ...patch, page: "" } // any change to the list leaves the repo page
   Object.assign(state, patch, "shown" in patch ? {} : { shown: PAGE })
   // typing a search switches to Best match; clearing it goes back to the usual order
   if (state.q && !hadQ && !("sort" in patch)) state.sort = "match", (syncInputs = true)
@@ -367,7 +408,7 @@ function savedChanged() {
   for (const b of document.querySelectorAll("[data-save]")) {
     const on = savedAt.has(b.dataset.save), name = b.dataset.save.split("/")[1]
     b.setAttribute("aria-pressed", String(on))
-    if (b.classList.contains("btn")) b.lastChild.textContent = on ? "Saved" : "Save"
+    if (b.classList.contains("btn") && !b.classList.contains("icon")) b.lastChild.textContent = on ? "Saved" : "Save" // icon-only buttons keep their icon
     else { b.title = on ? "Saved" : "Save for later"; b.setAttribute("aria-label", on ? `Remove ${name} from saved` : `Save ${name} for later`) }
   }
   const n = document.querySelector('[data-f="saved"] .n')
@@ -528,7 +569,7 @@ function openPanel(name, push = true) {
     <p class="p-vitals" hidden></p>
     <div class="p-actions">
       <a class="btn primary" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener">${GH}Open on GitHub</a>
-      <a class="btn" href="repo.html?r=${encodeURIComponent(r.r)}">Full page</a>
+      <a class="btn" href="?page=${encodeURIComponent(r.r)}">Full page</a>
       ${r.hp ? `<a class="btn" href="${esc(r.hp)}" target="_blank" rel="noopener">Website</a>` : ""}
       <button class="btn save-btn" type="button" data-save="${esc(r.r)}" aria-pressed="${savedAt.has(r.r)}">${BOOKMARK}${savedAt.has(r.r) ? "Saved" : "Save"}</button>
     </div>
@@ -550,8 +591,7 @@ function openPanel(name, push = true) {
   panelVitals(r)
 }
 
-// the vital signs in one plain line; vitals.json loads on the first panel opened, not with the list
-let vitals
+// the vital signs in one plain line; vitals.json loads on the first panel or page opened, not with the list
 async function panelVitals(r) {
   vitals ??= fetch("vitals.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
   const v = (await vitals)[r.r], el = panel.querySelector(".p-vitals")
@@ -591,6 +631,8 @@ $("#results").addEventListener("click", (e) => {
 $("#results").addEventListener("auxclick", (e) => { const c = e.target.closest(".repo[data-r]"); if (c && e.button === 1 && !e.target.closest(".jump, [data-save]")) window.open(`https://github.com/${c.dataset.r}`, "_blank", "noopener") })
 $("#results").addEventListener("keydown", (e) => { const c = e.target.closest(".repo[data-r]"); if (c && (e.key === "Enter" || e.key === " ") && e.target === c) { e.preventDefault(); openPanel(c.dataset.r) } })
 panel.addEventListener("click", async (e) => {
+  const full = inApp(e)
+  if (full) { e.preventDefault(); closePanel(); return navigate(full.getAttribute("href")) }
   if (e.target.closest(".p-close")) return closePanel()
   const sv = e.target.closest("[data-save]")
   if (sv) return toggleSave(sv.dataset.save)
@@ -611,6 +653,16 @@ panel.addEventListener("click", async (e) => {
     try { await navigator.clipboard.writeText(copy.dataset.copy); ico.textContent = "Copied" } catch { return } // no clipboard: the command is right there to select
     setTimeout(() => (ico.innerHTML = COPY), 1600)
   }
+})
+$("#repo-page").addEventListener("click", async (e) => {
+  const a = inApp(e)
+  if (a) { e.preventDefault(); return navigate(a.getAttribute("href")) }
+  const b = e.target.closest("button")
+  if (!b) return
+  if ("back" in b.dataset) return moved ? history.back() : set({ page: "" }, true)
+  if ("save" in b.dataset) return toggleSave(b.dataset.save)
+  if ("clone" in b.dataset) return copyClone(b)
+  if ("readme" in b.dataset) return showReadme($("#repo-page"), b)
 })
 $("#pscrim").addEventListener("click", () => { closePanel(); closeSettings() })
 document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !panel.hidden) closePanel() })

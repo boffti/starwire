@@ -381,3 +381,90 @@ html { scrollbar-gutter: stable; }
 .clone-ico { flex: none; display: grid; place-items: center; min-width: 28px; height: 28px; padding: 0 4px; border-radius: 6px; font: 500 12px/1 "Geist", sans-serif; color: var(--text); }
 .clone:hover .clone-ico { background: var(--raise); }
 .clone-ico svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+/* repo page (?page=owner/name), drawn by repo.js inside the main column; everything scoped to .rp */
+.rp { max-width: 74rem; padding: 0 0 48px; display: flex; flex-direction: column; gap: 36px; }
+.rp[hidden] { display: none; }
+.rp h2 { margin: 0; font-size: 21px; font-weight: 600; letter-spacing: -0.01em; }
+.rp a:not(.btn) { color: var(--accent); text-decoration: none; }
+.rp a:not(.btn):hover { text-decoration: underline; }
+.rp .hero { display: flex; flex-wrap: wrap; gap: 20px 24px; align-items: center; }
+.rp .hero > img { width: 72px; height: 72px; border-radius: 16px; background: var(--raise); }
+.rp .hero .who { flex: 1 1 28rem; min-width: 0; }
+.rp .hero h1 { margin: 0; font-size: clamp(30px, 5vw, 40px); line-height: 1.05; font-weight: 700; letter-spacing: -0.03em; overflow-wrap: anywhere; }
+.rp .hero h1 small { font-size: 16px; font-weight: 400; letter-spacing: 0; color: var(--muted); }
+.rp .hero .line { margin: 6px 0 0; font-size: 18px; color: color-mix(in srgb, var(--text) 82%, var(--muted)); max-width: 60ch; }
+.rp .stats { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; color: color-mix(in srgb, var(--text) 82%, var(--muted)); }
+.rp .stats li { display: flex; align-items: center; gap: 6px; }
+.rp .stats svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.rp .stats .star svg { stroke: var(--amber); }
+.rp .stats .up { color: var(--green); }
+.rp .stats b { font-weight: 600; color: var(--text); }
+.rp .stats .up b { color: var(--green); }
+.rp .stats .dot { width: 10px; height: 10px; border-radius: 50%; }
+.rp .acts { display: flex; gap: 8px; }
+.rp .acts .btn { height: 44px; }
+.rp .acts .icon { width: 44px; justify-content: center; padding: 0; }
+.rp .acts .btn[aria-pressed="true"] svg { fill: currentColor; }
+.rp .sec-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 14px; }
+.rp .chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 500; background: var(--raise); color: var(--muted); }
+.rp .chip.good { background: var(--green-soft); color: var(--green); }
+.rp .chip.good::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+.rp .tiles { margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(14rem, calc(50% - 6px)), 1fr)); gap: 12px; }
+@media (max-width: 560px) { .rp .tile { padding: 14px; } .rp .tile .v { font-size: 24px; } .rp .tile .n { font-size: 12px; } .rp .ring svg { width: 48px; height: 48px; } .rp .ring { gap: 10px; } }
+.rp .tile { border: 1px solid var(--line); border-radius: 12px; padding: 18px; background: var(--panel); display: flex; flex-direction: column; gap: 12px; }
+.rp .tile .k { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 13px; }
+.rp .tile .k svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.rp .tile .v { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
+.rp .tile .v small { font-size: 15px; font-weight: 400; letter-spacing: 0; color: var(--muted); }
+.rp .tile .n { font-size: 13px; color: var(--muted); }
+.rp .tile.lvl-low .v { color: var(--amber); }
+.rp .lvl-good { --c: var(--green); } .lvl-ok { --c: color-mix(in srgb, var(--green) 45%, var(--muted)); } .lvl-low { --c: var(--amber); } .lvl-none { --c: var(--muted); }
+.rp .rankbar { position: relative; height: 8px; border-radius: 999px; background: var(--raise); }
+.rp .rankbar span { position: absolute; top: -4px; width: 4px; height: 16px; border-radius: 2px; background: var(--c); transform: translateX(-50%); }
+.rp .weeks { height: 40px; display: flex; align-items: flex-end; gap: 4px; }
+.rp .weeks span { flex: 1; min-height: 2px; border-radius: 2px; background: var(--c); opacity: 0.75; }
+.rp .weeks span:last-child { opacity: 1; }
+.rp .timeline { display: flex; align-items: center; height: 40px; gap: 8px; font-size: 12px; color: var(--muted); }
+.rp .timeline i { flex: 1; height: 2px; background: var(--line); position: relative; }
+.rp .timeline i b { position: absolute; top: -5px; width: 12px; height: 12px; border-radius: 50%; background: var(--c); transform: translateX(-50%); }
+.rp .ring { display: flex; align-items: center; gap: 16px; }
+.rp .ring svg { width: 64px; height: 64px; }
+.rp .foot-note { margin: 10px 0 0; font-size: 13px; color: var(--muted); }
+.rp .cmp { margin-top: 16px; border: 1px solid var(--line); border-radius: 12px; overflow-x: auto; background: var(--panel); }
+.rp .cmp table { width: 100%; min-width: 46rem; border-collapse: collapse; font-size: 14px; }
+.rp .cmp th, .rp .cmp td { padding: 14px 12px; text-align: left; }
+.rp .cmp th:first-child, .rp .cmp td:last-child { padding-inline: 18px; }
+.rp .cmp thead th { font-size: 13px; font-weight: 500; color: var(--muted); }
+.rp .cmp tbody tr { border-top: 1px solid var(--line); }
+.rp .cmp tbody th { font-weight: 500; }
+.rp .cmp tr.me { background: var(--green-soft); }
+.rp .cmp tr.me th { font-weight: 600; }
+.rp .cmp tr.me th small { margin-left: 6px; font-size: 12px; color: var(--green); }
+.rp .cmp .rp-name { color: var(--text); }
+.rp .cmp .bar { display: flex; align-items: center; gap: 8px; }
+.rp .cmp .bar span { height: 8px; min-width: 3px; border-radius: 999px; background: var(--muted); }
+.rp .cmp tr.me .bar span { background: var(--green); }
+.rp .pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); gap: 14px; }
+.rp .card { border: 1px solid var(--line); border-radius: 12px; padding: 20px; background: var(--panel); }
+.rp .card h2 { font-size: 17px; }
+.rp .swap { margin-top: 14px; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.rp .swap a, .rp .swap span { padding: 8px 14px; border-radius: 10px; background: var(--raise); color: var(--text); font-weight: 500; }
+.rp .swap .to { background: var(--green-soft); color: var(--green); font-weight: 600; }
+.rp .swap svg { width: 22px; height: 22px; fill: none; stroke: var(--muted); stroke-width: 2; }
+.rp .start { margin-top: 14px; display: grid; grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr)); gap: 10px; }
+.rp .start a, .rp .start button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 76px; padding: 12px 8px; border: 0; border-radius: 10px; background: var(--raise); color: var(--text) !important; font: inherit; font-size: 13px; text-align: center; cursor: pointer; text-decoration: none !important; }
+.rp .start a:hover, .rp .start button:hover { background: color-mix(in srgb, var(--raise) 70%, var(--line)); }
+.rp .start svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.rp .tail { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding-top: 16px; border-top: 1px solid var(--line); }
+.rp .topics { display: flex; flex-wrap: wrap; gap: 6px; }
+.rp .topics span { padding: 3px 9px; border-radius: 6px; background: var(--raise); font-size: 13px; color: color-mix(in srgb, var(--text) 75%, var(--muted)); }
+.rp .readme { max-height: none; }
+.rp .rp-top { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; margin-bottom: -12px; }
+.rp .rp-back { display: inline-flex; align-items: center; gap: 4px; height: 32px; padding: 0 10px 0 4px; margin-left: -4px; border: 0; border-radius: 6px; background: none; color: var(--muted); font: inherit; font-size: 14px; cursor: pointer; }
+.rp .rp-back:hover { background: var(--raise); color: var(--text); }
+.rp .rp-back svg { width: 18px; height: 18px; }
+.rp .rp-crumbs { display: flex; flex-wrap: wrap; gap: 6px; font-size: 14px; color: var(--muted); }
+.rp .rp-crumbs a { color: var(--muted); }
+.rp .rp-crumbs a:hover { color: var(--text); }
+.rp .rp-missing { color: var(--muted); padding: 48px 0; }
