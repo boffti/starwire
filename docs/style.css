@@ -384,7 +384,7 @@ html { scrollbar-gutter: stable; }
 
 /* repo page (?page=owner/name), drawn by repo.js inside the main column; everything scoped to .rp */
 .rp { max-width: 74rem; padding: 0 0 48px; display: flex; flex-direction: column; gap: 36px; }
-.rp[hidden] { display: none; }
+.rp[hidden], .page > [hidden] { display: none !important; } /* the list and the repo page swap places; their own display rules would beat hidden */
 .rp h2 { margin: 0; font-size: 21px; font-weight: 600; letter-spacing: -0.01em; }
 .rp a:not(.btn) { color: var(--accent); text-decoration: none; }
 .rp a:not(.btn):hover { text-decoration: underline; }
