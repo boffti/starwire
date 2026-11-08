@@ -90,7 +90,8 @@ const state = {
   repo: params.get("repo") ?? "", page: params.get("page") ?? "", sort: params.get("sort") ?? (params.get("q") ? "match" : params.get("f") === "saved" ? "saved" : params.get("f") === "trending" ? "trending" : prefs.sort), lang: params.get("lang") ?? "", view: params.get("view") ?? prefs.layout, shown: PAGE,
 }
 { const sa = params.get("sa") ?? old.sa; if (state.a && SUB.has(`${state.a}/${sa}`)) state.sa = sa }
-const isNew = (r) => (now - Date.parse(r.f)) / 864e5 <= 7
+// new = a new project: first picked in the last 7 days and created in the last 90 (same rule as the pipeline's README)
+const isNew = (r) => (now - Date.parse(r.f)) / 864e5 <= 7 && !!r.ca && (now - Date.parse(r.ca)) / 864e5 <= 90
 const VIEWS = [
   { f: "", label: "All repos", test: () => true },
   { f: "trending", label: "Trending", test: (r) => r.h > 0 },

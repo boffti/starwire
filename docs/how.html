@@ -129,7 +129,7 @@
   </table>
   <table>
     <tr><th>Label</th><th>Meaning</th></tr>
-    <tr><td><b>new</b></td><td>First picked in the 7 days before the latest update</td></tr>
+    <tr><td><b>new</b></td><td>A new project: first picked in the 7 days before the latest update, and created on GitHub in the last 90 days. Older repos picked for the first time join the list without this label. The same rule picks "New this week".</td></tr>
     <tr><td><b>picked 3×</b></td><td>Picked by 3 different sources</td></tr>
     <tr><td>Green dot, <b>updated 5d ago</b></td><td>Last commit under 30 days ago</td></tr>
     <tr><td>Amber dot, <b>updated 4mo ago</b></td><td>Last commit under a year ago</td></tr>
@@ -176,6 +176,7 @@
 
   <h2 id="changes">Changes to the method</h2>
   <ul class="log">
+    <li><b>Nov 8, 2026.</b> "New this week" and the new label only cover repos created in the last 90 days. Before, any repo picked for the first time counted, so long-established projects showed up as new.</li>
     <li><b>Nov 8, 2026.</b> Picks from Reddit communities where developers share projects.</li>
     <li><b>Nov 8, 2026.</b> Repo pages with vital signs, how a repo compares with its alternatives, and how to get started. <a href="#vitals">How the signs are read</a>.</li>
     <li><b>Nov 7, 2026.</b> Started counting visits, searches and repo opens without cookies. <a href="#counts">What we count</a>.</li>
