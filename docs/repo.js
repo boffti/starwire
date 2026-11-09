@@ -169,7 +169,8 @@ export function altPage(name, ctx) {
   <section class="hero alt-hero"><div class="who">
     <h1>Open source alternatives to ${esc(g.name)}</h1>
     <p class="line">${rows.length === 1 ? "One project on starwire does the same job." : `${rows.length} projects on starwire do the same job.`} ${P ? `Ranked by how much of what ${esc(g.name)} does each one covers, read from its README and website. Ties go to the healthiest.` : "The healthiest come first: steady commits, recent releases and issues getting closed."}</p>
-  </div></section>
+  </div>
+    <div class="acts"><button type="button" class="btn" data-share="instead-of/${esc(g.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""))}" aria-label="Copy a share link">${svg(I.share).replace("<svg", '<svg style="fill:none;stroke:currentColor;stroke-width:2"')}<span>Share</span></button></div></section>
   ${P ? `<section class="jobs" aria-labelledby="jobs"><h2 id="jobs">What ${esc(g.name)} does</h2><ol class="job-list">${jobs.map(([j, w]) => `<li class="${w === 2 ? "core" : ""}">${esc(j)}${w === 2 ? "<small>core</small>" : ""}</li>`).join("")}</ol><p class="foot-note">Each dot in the table is one job, in this order. Square dots are core jobs and count double. Full means yes, half means partly. Hover a dot for the line behind it. <a href="how.html#fit">How we score this</a></p></section>` : ""}
   <section aria-label="Alternatives to ${esc(g.name)}"><div class="cmp alt-table"><table>
     <thead><tr><th scope="col">Project</th>${P ? `<th scope="col">Covers</th>` : ""}<th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
