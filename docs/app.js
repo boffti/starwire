@@ -401,7 +401,6 @@ function setRail(on) {
   $("#rail").setAttribute("aria-pressed", String(on))
   $("#rail").setAttribute("aria-label", on ? "Expand sidebar" : "Collapse sidebar")
   $("#rail").title = `${on ? "Expand" : "Collapse"} sidebar (${MAC ? "⌘B" : "Ctrl+B"})`
-  $("#rail span").textContent = on ? "Expand sidebar" : "Collapse sidebar"
   try { on ? localStorage.setItem("starwire-rail", "1") : localStorage.removeItem("starwire-rail") } catch {}
 }
 const MAC = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)

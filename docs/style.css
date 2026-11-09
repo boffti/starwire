@@ -383,7 +383,7 @@ html { scrollbar-gutter: stable; }
 .clone-ico svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; }
 
 /* repo page (?page=owner/name), drawn by repo.js inside the main column; everything scoped to .rp */
-.rp { max-width: 74rem; padding: 0 0 48px; display: flex; flex-direction: column; gap: 36px; }
+.rp { max-width: 74rem; width: 100%; margin: 0 auto; padding: 0 0 48px; display: flex; flex-direction: column; gap: 36px; }
 .rp[hidden], .page > [hidden] { display: none !important; } /* the list and the repo page swap places; their own display rules would beat hidden */
 .rp h2 { margin: 0; font-size: 21px; font-weight: 600; letter-spacing: -0.01em; }
 .rp a:not(.btn) { color: var(--accent); text-decoration: none; }
@@ -518,8 +518,8 @@ html { scrollbar-gutter: stable; }
 
 /* collapsed sidebar (desktop only): icons in a strip, labels kept for screen readers and shown as tooltips. The cards'
    minimum width drops a little so the room it frees becomes one more column (5 at about 1600px instead of 1700px) */
-.rail-btn { width: 100%; border: 0; background: none; font: inherit; cursor: pointer; text-align: left; }
-.rail-btn svg { fill: none; stroke: currentColor; stroke-width: 2; }
+.rail-btn { flex: none; margin-left: -6px; }
+.rail-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 @media (max-width: 900px) { .rail-btn { display: none; } } /* phones and tablets get the slide-out drawer instead */
 @media (min-width: 901px) {
   .rail { --card-min: 272px; }
