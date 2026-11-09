@@ -468,3 +468,50 @@ html { scrollbar-gutter: stable; }
 .rp .rp-crumbs a { color: var(--muted); }
 .rp .rp-crumbs a:hover { color: var(--text); }
 .rp .rp-missing { color: var(--muted); padding: 48px 0; }
+/* alternatives pages (?alt=Product, ?alt=all), same shell as the repo page */
+.rp .alt-hero h1 { font-size: clamp(28px, 4.4vw, 38px); }
+.rp .alt-hero .line { max-width: 62ch; display: block; overflow: visible; }
+.rp .alt-table table { min-width: 52rem; }
+.rp .alt-table tbody tr:hover { background: color-mix(in srgb, var(--raise) 50%, transparent); }
+.rp .alt-name { display: flex; align-items: center; gap: 12px; color: var(--text) !important; min-width: 14rem; max-width: 24rem; }
+.rp .alt-name:hover { text-decoration: none !important; }
+.rp .alt-name:hover b { text-decoration: underline; }
+.rp .alt-name img { width: 28px; height: 28px; border-radius: 8px; background: var(--raise); flex: none; }
+.rp .alt-name span { display: flex; flex-direction: column; min-width: 0; }
+.rp .alt-name b { font-weight: 600; }
+.rp .alt-name small { font-weight: 400; font-size: 13px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rp .alt-table .s { font-weight: 600; }
+.rp .alt-table .w { display: block; color: var(--green); font-size: 12px; }
+.rp .alt-table .dot { display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%; background: var(--c); }
+.rp .alt-table .lvl-low { color: var(--amber); }
+.rp .alt-chips { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+.rp .alt-chips a { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--raise); color: var(--text); font-weight: 500; }
+.rp .alt-chips a:hover { text-decoration: none; background: color-mix(in srgb, var(--raise) 70%, var(--line)); }
+.rp .alt-chips span, .rp .alt-tile small { color: var(--muted); font-size: 13px; font-weight: 400; }
+.rp .alt-filter { width: min(100%, 26rem); height: 44px; padding: 0 14px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--text); font: inherit; }
+.rp .alt-grid { margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: 10px; }
+.rp .alt-tile { display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto; gap: 6px 10px; align-items: center; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); color: var(--text) !important; }
+.rp .alt-tile:hover { text-decoration: none !important; border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
+.rp .alt-tile b { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rp .alt-tile small { grid-column: 1; }
+.rp .alt-tile .faces { grid-row: 1 / 3; grid-column: 2; display: flex; }
+.rp .alt-tile .faces img { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--panel); background: var(--raise); margin-left: -6px; }
+.rp .alt-tile[hidden] { display: none; }
+.alt-hint { display: inline-flex; margin-top: 8px; padding: 6px 12px; border-radius: 999px; background: var(--green-soft); color: var(--green); font-size: 14px; font-weight: 500; text-decoration: none; }
+.alt-hint:hover { text-decoration: underline; }
+.alt-hint[hidden] { display: none; }
+@media (max-width: 640px) {
+  /* the table becomes one card per project, each number with its own label */
+  .rp .alt-table table { min-width: 0; }
+  .rp .alt-table thead { display: none; }
+  .rp .alt-table tbody tr { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; padding: 16px; }
+  .rp .alt-table tbody tr:first-child { border-top: 0; }
+  .rp .alt-table th, .rp .alt-table th:first-child, .rp .alt-table td, .rp .alt-table td:last-child { padding: 0; }
+  .rp .alt-table tbody th { grid-column: 1 / -1; }
+  .rp .alt-table td::before { content: attr(data-k); display: block; margin-bottom: 2px; font-size: 12px; color: var(--muted); }
+  .rp .alt-table .w { display: inline; margin-left: 6px; }
+  .rp .alt-name { max-width: none; min-width: 0; }
+  .rp .alt-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .rp .alt-tile { padding: 12px; }
+  .rp .alt-tile .faces { display: none; }
+}

@@ -1,4 +1,4 @@
-// The repo page, shown inside the main app (?page=owner/name): vital signs, how it compares with its alternatives,
+// The repo page (?page=owner/name) and the alternatives pages (?alt=Product, ?alt=all), shown inside the main app: vital signs, how it compares with its alternatives,
 // what it replaces and how to start. app.js owns the URL, saves and counting; this module only draws the page.
 import { signs, momentum } from "./vitals.js?v=1"
 import { readmeFragment } from "./readme.js?v=1"
@@ -131,12 +131,68 @@ function compareSection() {
       <td>${esc(x.li ?? "None listed")}</td></tr>` }).join("")}</tbody></table></div></section>`
 }
 
+// ---- alternatives: ?alt=Postman lists every repo that replaces it, ?alt=all lists the products ----
+const altKey = (a) => a.toLowerCase()
+export function altGroups(list) {
+  const g = new Map()
+  for (const x of list) for (const a of x.alt ?? []) { const k = altKey(a); if (!g.has(k)) g.set(k, { name: a, repos: [] }); g.get(k).repos.push(x) }
+  return g
+}
+const healthy = (x) => { const v = vitals[x.r]; if (!v) return -1; const s = signs(v, today); return [s.activity, s.release, s.issues].filter((y) => y.level === "good").length }
+
+export function altPage(name, ctx) {
+  ({ repos, vitals, today } = ctx); FORM = new Map(ctx.TX.forms)
+  const groups = altGroups(repos), g = groups.get(altKey(name))
+  const crumbs = `<nav class="rp-crumbs" aria-label="Where it sits"><a href="?alt=all">Alternatives</a></nav>`
+  if (!g) return `<div class="rp-top">${BACK}${crumbs}</div><p class="rp-missing">No open source alternatives to ${esc(name)} on starwire yet. <a href="?q=${encodeURIComponent(name)}">Search for ${esc(name)}</a> or <a href="?alt=all">see every product</a>.</p>`
+  // healthiest first, then most stars
+  const rows = [...g.repos].sort((a, b) => healthy(b) - healthy(a) || b.s - a.s)
+  const commits = (x) => vitals[x.r]?.weeks.reduce((a, b) => a + b, 0)
+  const max = Math.max(...rows.map((x) => commits(x) ?? 0), 1)
+  const cell = (x) => { const v = vitals[x.r]; if (!v) return ["Not measured", "Not measured"]; const s = signs(v, today)
+    return [s.release.ago == null ? "None" : ago(s.release.ago), s.issues.level === "none" ? "Too few" : `<span class="lvl-${s.issues.level}"><i class="dot"></i>${Math.round(s.issues.pct * 100)}%</span>`] }
+  // other products these repos also replace, for the next click
+  const near = new Map()
+  for (const x of rows) for (const a of x.alt ?? []) if (altKey(a) !== altKey(g.name)) near.set(altKey(a), groups.get(altKey(a)))
+  const related = [...near.values()].sort((a, b) => b.repos.length - a.repos.length).slice(0, 8)
+  return `<div class="rp-top">${BACK}${crumbs}</div>
+  <section class="hero alt-hero"><div class="who">
+    <h1>Open source alternatives to ${esc(g.name)}</h1>
+    <p class="line">${rows.length === 1 ? "One project on starwire does the same job." : `${rows.length} projects on starwire do the same job.`} The healthiest come first: steady commits, recent releases and issues getting closed.</p>
+  </div></section>
+  <section aria-label="Alternatives to ${esc(g.name)}"><div class="cmp alt-table"><table>
+    <thead><tr><th scope="col">Project</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
+    <tbody>${rows.map((x) => { const c = commits(x), [rel, iss] = cell(x), [owner, nm] = x.r.split("/"); return `<tr>
+      <th scope="row"><a class="alt-name" href="?page=${encodeURIComponent(x.r)}"><img src="${esc(avatar(owner, 56))}" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>${esc(nm)}</b><small>${esc(x.l || owner)}</small></span></a></th>
+      <td data-k="Stars"><span class="s">${num(x.s)}</span>${x.w > 0 ? `<small class="w">+${num(x.w)}</small>` : ""}</td>
+      <td data-k="Commits, 12 weeks">${c == null ? "Not measured" : `<div class="bar"><span style="width:${(c / max) * 7}rem"></span>${c.toLocaleString("en-US")}</div>`}</td>
+      <td data-k="Last release">${rel}</td><td data-k="Issues closed">${iss}</td>
+      <td data-k="Form">${(x.fo ?? []).map((f) => esc(FORM.get(f))).join(", ") || "Not labelled"}</td>
+      <td data-k="License">${esc(x.li ?? "None listed")}</td></tr>` }).join("")}</tbody></table></div>
+    <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a></p></section>
+  ${related.length ? `<section aria-labelledby="also"><h2 id="also">These also replace</h2><div class="alt-chips">${related.map((x) => `<a href="?alt=${encodeURIComponent(x.name)}">${esc(x.name)}<span>${x.repos.length}</span></a>`).join("")}</div></section>` : ""}`
+}
+
+export function altIndex(ctx) {
+  repos = ctx.repos
+  const all = [...altGroups(repos).values()].sort((a, b) => b.repos.length - a.repos.length || a.name.localeCompare(b.name))
+  const tile = (g) => `<a class="alt-tile" href="?alt=${encodeURIComponent(g.name)}" data-name="${esc(g.name.toLowerCase())}"><b>${esc(g.name)}</b><span class="faces">${[...g.repos].sort((a, b) => b.s - a.s).slice(0, 4).map((x) => `<img src="${esc(avatar(x.r.split("/")[0], 40))}" alt="" width="20" height="20" loading="lazy" decoding="async">`).join("")}</span><small>${g.repos.length} ${g.repos.length === 1 ? "alternative" : "alternatives"}</small></a>`
+  return `<div class="rp-top">${BACK}</div>
+  <section class="hero alt-hero"><div class="who">
+    <h1>Open source alternatives</h1>
+    <p class="line">${all.length} products you might pay for, and the open source projects on starwire that do the same job.</p>
+  </div></section>
+  <section aria-label="Products"><input type="search" class="alt-filter" placeholder="Find a product, like Notion or Postman" aria-label="Find a product" data-alt-filter>
+    <div class="alt-grid">${all.map(tile).join("")}</div>
+    <p class="rp-missing" hidden data-alt-none>No product by that name yet.</p></section>`
+}
+
 function swapCard() {
   if (!r.alt?.length) return ""
   const first = r.alt[0], n = repos.filter((x) => (x.alt ?? []).some((a) => a.toLowerCase() === first.toLowerCase())).length
   return `<section class="card" aria-labelledby="swap"><h2 id="swap">Swap out</h2>
-    <div class="swap">${r.alt.slice(0, 3).map((a) => `<a href="?q=${encodeURIComponent(`${a} alternative`)}">${esc(a)}</a>`).join("")}${svg(I.arrow)}<span class="to">${esc(r.r.split("/")[1])}</span></div>
-    ${n > 1 ? `<p style="margin:14px 0 0;font-size:14px"><a href="?q=${encodeURIComponent(`${first} alternative`)}">All ${n} ${esc(first)} alternatives</a></p>` : ""}</section>`
+    <div class="swap">${r.alt.slice(0, 3).map((a) => `<a href="?alt=${encodeURIComponent(a)}">${esc(a)}</a>`).join("")}${svg(I.arrow)}<span class="to">${esc(r.r.split("/")[1])}</span></div>
+    ${n > 1 ? `<p style="margin:14px 0 0;font-size:14px"><a href="?alt=${encodeURIComponent(first)}">All ${n} ${esc(first)} alternatives</a></p>` : ""}</section>`
 }
 
 function startCard(v) {

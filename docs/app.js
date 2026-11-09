@@ -14,7 +14,7 @@ import { makeIndex, fieldsFor } from "./search.js?v=3"
 import { readmeFragment, followTheme } from "./readme.js?v=1"
 import { count } from "./count.js?v=2"
 import { signs, summary } from "./vitals.js?v=1"
-import { repoPage, missingPage, showReadme, copyClone } from "./repo.js?v=2"
+import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups } from "./repo.js?v=5"
 
 const data = await fetch("data.json").then((r) => r.json())
 const now = Date.parse(data.updated)
@@ -87,7 +87,7 @@ const pick = (k, map) => { const v = params.get(k) ?? old[k] ?? ""; return !map 
 const state = {
   a: pick("a", AREA), sa: "", form: pick("form", FORM), plat: pick("plat", PLAT), with: pick("with", WITH),
   f: params.get("f") ?? (shared.length ? "shared" : params.has("multi") ? "multi" : ""), q: params.get("q") ?? "",
-  repo: params.get("repo") ?? "", page: params.get("page") ?? "", sort: params.get("sort") ?? (params.get("q") ? "match" : params.get("f") === "saved" ? "saved" : params.get("f") === "trending" ? "trending" : prefs.sort), lang: params.get("lang") ?? "", view: params.get("view") ?? prefs.layout, shown: PAGE,
+  repo: params.get("repo") ?? "", page: params.get("page") ?? "", alt: params.get("alt") ?? "", sort: params.get("sort") ?? (params.get("q") ? "match" : params.get("f") === "saved" ? "saved" : params.get("f") === "trending" ? "trending" : prefs.sort), lang: params.get("lang") ?? "", view: params.get("view") ?? prefs.layout, shown: PAGE,
 }
 { const sa = params.get("sa") ?? old.sa; if (state.a && SUB.has(`${state.a}/${sa}`)) state.sa = sa }
 // new = a new project: first picked in the last 7 days and created in the last 90 (same rule as the pipeline's README)
@@ -136,7 +136,10 @@ Object.assign(I, {
 I.multi = '<path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/>'
 const item = (attr, key, label, count) =>
   `<button type="button" class="cat" data-${attr}="${esc(key)}" aria-current="false"><svg viewBox="0 0 24 24" aria-hidden="true">${I[key] ?? I[""]}</svg><span>${esc(label)}</span><span class="n">${count.toLocaleString("en-US")}</span></button>`
+I.alt = '<path d="M4 7h13l-3-3M20 17H7l3 3"/>'
+const ALTS = altGroups(repos)
 $("#views").innerHTML = "<h2>Browse</h2>" + VIEWS.filter((v) => !v.hidden).map((v) => item("f", v.f, v.label, v.f === "saved" ? saved.length : repos.filter(v.test).length)).join("")
+  + item("alt", "all", "Alternatives", ALTS.size)
 const visible = (r) => !(prefs.hideAI && r.ai > 0) // "Hide AI repos" in settings
 let collapsed = false // the selected area's subareas are folded away; the area itself stays selected
 function renderSidebar() {
@@ -204,10 +207,11 @@ const PHONE = matchMedia("(max-width: 760px)")
 PHONE.addEventListener("change", () => render())
 
 function render() {
-  const onPage = !!state.page
+  const onPage = !!(state.page || state.alt)
   $("#repo-page").hidden = !onPage
   for (const el of document.querySelectorAll(".page > :not(#repo-page)")) el.hidden = onPage
-  if (onPage) return showPage(), syncURL()
+  document.querySelectorAll("[data-alt]").forEach((n) => n.setAttribute("aria-current", String(!!state.alt)))
+  if (onPage) { if (state.alt) document.querySelectorAll("[data-f]").forEach((n) => n.setAttribute("aria-current", "false")); return showPage(), syncURL() }
   if (shownPage) { shownPage = ""; document.title = TITLE }
   const view = VIEWS.find((v) => v.f === state.f) ?? VIEWS[0]
   let list = repos.filter((r) => visible(r) && view.test(r) && facetMatch(r) && (!state.lang || r.g === state.lang))
@@ -251,6 +255,11 @@ function render() {
   if (prefs.hideAI) parts.push("AI repos hidden")
   if (!anyFacet() && !state.f && !state.lang && !state.q) parts.push(`updated ${new Date(now).toLocaleDateString("en-US", { month: "long", day: "numeric" })}`)
   $("#sub").textContent = parts.join(", ")
+  // "postman alternative", "alternatives to notion" or just "figma": point at that product's alternatives page
+  const want = state.q.toLowerCase().replace(/\b(open[ -]?source|self[ -]?hosted|free|alternatives?|replacements?|to|for|like|vs)\b/g, " ").replace(/\s+/g, " ").trim()
+  const g = want && ALTS.get(want), hint = $("#alt-hint")
+  hint.hidden = !g
+  if (g) { hint.href = `?alt=${encodeURIComponent(g.name)}`; hint.textContent = `See all ${g.repos.length} open source ${g.repos.length === 1 ? "alternative" : "alternatives"} to ${g.name}` }
   // phones keep the filters behind one button; it shows how many are on
   const on = ["form", "plat", "with", "lang"].filter((k) => state[k]).length
   $("#filters-n").hidden = !on; $("#filters-n").textContent = on
@@ -274,7 +283,7 @@ const counted = { place: "", q: "", t: 0 }
 
 function syncURL() {
   const p = new URLSearchParams()
-  for (const k of ["f", "a", "sa", "form", "plat", "with", "q", "lang", "repo", "page"]) if (state[k] && !(k === "f" && state.f === "shared")) p.set(k, state[k])
+  for (const k of ["f", "a", "sa", "form", "plat", "with", "q", "lang", "repo", "page", "alt"]) if (state[k] && !(k === "f" && state.f === "shared")) p.set(k, state[k])
   if (state.f === "shared") p.set("saved", shared.join(","))
   if (state.sort !== "picked" && !(state.sort === "match" && state.q)) p.set("sort", state.sort)
   if (state.view !== "cards") p.set("view", state.view)
@@ -285,11 +294,21 @@ function syncURL() {
 const TITLE = document.title
 let shownPage = "", vitals
 async function showPage() {
-  if (shownPage === state.page) return // already drawn: keep its README and scroll position
-  shownPage = state.page
-  const r = byName.get(state.page.toLowerCase()), el = $("#repo-page")
-  if (!r) { el.innerHTML = missingPage(state.page); document.title = TITLE; return }
+  const key = state.alt ? `alt:${state.alt}` : state.page
+  if (shownPage === key) return // already drawn: keep its README and scroll position
+  shownPage = key
+  const el = $("#repo-page")
   vitals ??= fetch("vitals.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
+  if (state.alt === "all") { el.innerHTML = altIndex({ repos }); document.title = `Open source alternatives | starwire`; return count("alt/all", "Alternatives") }
+  if (state.alt) {
+    const v = await vitals
+    if (shownPage !== key) return
+    el.innerHTML = altPage(state.alt, { repos, vitals: v, today: data.updated.slice(0, 10), TX })
+    document.title = `Open source alternatives to ${state.alt} | starwire`
+    return count(`alt/${state.alt.toLowerCase()}`, "Alternatives page")
+  }
+  const r = byName.get(state.page.toLowerCase())
+  if (!r) { el.innerHTML = missingPage(state.page); document.title = TITLE; return }
   const want = state.page, v = await vitals
   if (state.page !== want) return // moved on while vitals loaded
   el.innerHTML = repoPage(r, { repos, vitals: v, today: data.updated.slice(0, 10), TX, saved: savedAt.has(r.r) })
@@ -305,7 +324,7 @@ function navigate(href) {
 }
 function fromURL() {
   const p = new URLSearchParams(location.search)
-  set(Object.fromEntries(["f", "a", "sa", "form", "plat", "with", "q", "lang", "page"].map((k) => [k, p.get(k) ?? ""])), true)
+  set(Object.fromEntries(["f", "a", "sa", "form", "plat", "with", "q", "lang", "page", "alt"].map((k) => [k, p.get(k) ?? ""])), true)
   scrollTo({ top: 0 })
 }
 addEventListener("popstate", fromURL)
@@ -313,7 +332,7 @@ const inApp = (e) => { const a = e.target.closest('a[href^="?"]'); return a && !
 
 function set(patch, syncInputs) {
   const hadQ = state.q
-  if (!("page" in patch)) patch = { ...patch, page: "" } // any change to the list leaves the repo page
+  if (!("page" in patch || "alt" in patch)) patch = { ...patch, page: "", alt: "" } // any change to the list leaves the repo page
   Object.assign(state, patch, "shown" in patch ? {} : { shown: PAGE })
   // typing a search switches to Best match; clearing it goes back to the usual order
   if (state.q && !hadQ && !("sort" in patch)) state.sort = "match", (syncInputs = true)
@@ -347,6 +366,7 @@ $("#sidebar").addEventListener("click", (e) => {
   const f = "f" in n.dataset ? n.dataset.f : ""
   const sort = f === "trending" || f === "saved" ? f : ["trending", "saved"].includes(state.sort) ? prefs.sort : state.sort
   const d = n.dataset
+  if ("alt" in d) { closeMenu(); return navigate("?alt=all") }
   if ("sa" in d) set({ sa: d.sa === state.sa ? "" : d.sa })
   else if ("a" in d) {
     // clicking the selected area again folds or unfolds its subareas and keeps it selected
@@ -655,12 +675,19 @@ panel.addEventListener("click", async (e) => {
     setTimeout(() => (ico.innerHTML = COPY), 1600)
   }
 })
+$("#alt-hint").addEventListener("click", (e) => { const a = inApp(e); if (a) { e.preventDefault(); navigate(a.getAttribute("href")) } })
+$("#repo-page").addEventListener("input", (e) => {
+  if (!("altFilter" in e.target.dataset)) return
+  const q = e.target.value.trim().toLowerCase(), tiles = $("#repo-page").querySelectorAll(".alt-tile")
+  for (const t of tiles) t.hidden = !!q && !t.dataset.name.includes(q)
+  $("#repo-page").querySelector("[data-alt-none]").hidden = [...tiles].some((t) => !t.hidden)
+})
 $("#repo-page").addEventListener("click", async (e) => {
   const a = inApp(e)
   if (a) { e.preventDefault(); return navigate(a.getAttribute("href")) }
   const b = e.target.closest("button")
   if (!b) return
-  if ("back" in b.dataset) return moved ? history.back() : set({ page: "" }, true)
+  if ("back" in b.dataset) return moved ? history.back() : set({ page: "", alt: "" }, true)
   if ("save" in b.dataset) return toggleSave(b.dataset.save)
   if ("clone" in b.dataset) return copyClone(b)
   if ("readme" in b.dataset) return showReadme($("#repo-page"), b)
