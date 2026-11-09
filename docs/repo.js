@@ -22,6 +22,7 @@ const I = {
   copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',
   hand: '<path d="M7 11V5a2 2 0 0 1 4 0v5M11 10V4a2 2 0 0 1 4 0v6M15 10V6a2 2 0 0 1 4 0v8a7 7 0 0 1-7 7h-1a7 7 0 0 1-6-3.4L3 14a2 2 0 0 1 3.4-2L7 13"/>',
   arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+  share: '<path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 3v13M7 8l5-5 5 5"/>',
   doc: '<path d="M4 4h12l4 4v12H4z"/><path d="M8 12h8M8 16h5"/>',
 }
 const GH = '<svg viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;stroke:none"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.4-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>'
@@ -64,6 +65,7 @@ function render(saved) {
     <div class="acts">
       <a class="btn primary" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener">${GH}GitHub</a>
       ${r.hp ? `<a class="btn" href="${esc(r.hp)}" target="_blank" rel="noopener">Website</a>` : ""}
+      <button type="button" class="btn icon" data-share="${esc(r.r)}" aria-label="Copy a share link" title="Share">${svg(I.share).replace("<svg", '<svg style="fill:none;stroke:currentColor;stroke-width:2"')}</button>
       <button type="button" class="btn icon" data-save="${esc(r.r)}" aria-pressed="${saved}" aria-label="${saved ? "Remove from saved" : "Save for later"}" title="${saved ? "Saved" : "Save for later"}">${svg(I.save).replace("<svg", '<svg style="fill:none;stroke:currentColor;stroke-width:2"')}</button>
     </div>
   </section>

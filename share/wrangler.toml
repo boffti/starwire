@@ -1,0 +1,6 @@
+# starwire share links: r.starwire.foo/<owner>/<name> (preview page) and .../card.png (card image)
+name = "starwire-share"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+compatibility_flags = ["nodejs_compat"]
+routes = [{ pattern = "r.starwire.foo", custom_domain = true }]

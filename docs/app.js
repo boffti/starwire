@@ -2,6 +2,8 @@
 const $ = (s) => document.querySelector(s)
 const PAGE = 60
 const STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 20.9l1.6-7L2 9.2l7.1-.6z"/></svg>'
+const SHARE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 3v13M7 8l5-5 5 5"/></svg>'
+const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>'
 const COPY = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>'
 const GH = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>'
 const num = (n) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k` : String(n))
@@ -14,7 +16,7 @@ import { makeIndex, fieldsFor } from "./search.js?v=3"
 import { readmeFragment, followTheme } from "./readme.js?v=1"
 import { count } from "./count.js?v=2"
 import { signs, summary } from "./vitals.js?v=1"
-import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups } from "./repo.js?v=5"
+import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups } from "./repo.js?v=6"
 
 const data = await fetch("data.json").then((r) => r.json())
 const now = Date.parse(data.updated)
@@ -135,7 +137,7 @@ Object.assign(I, {
 })
 I.multi = '<path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/>'
 const item = (attr, key, label, count) =>
-  `<button type="button" class="cat" data-${attr}="${esc(key)}" aria-current="false"><svg viewBox="0 0 24 24" aria-hidden="true">${I[key] ?? I[""]}</svg><span>${esc(label)}</span><span class="n">${count.toLocaleString("en-US")}</span></button>`
+  `<button type="button" class="cat" data-${attr}="${esc(key)}" aria-current="false" title="${esc(label)}"><svg viewBox="0 0 24 24" aria-hidden="true">${I[key] ?? I[""]}</svg><span>${esc(label)}</span><span class="n">${count.toLocaleString("en-US")}</span></button>`
 I.alt = '<path d="M4 7h13l-3-3M20 17H7l3 3"/>'
 const ALTS = altGroups(repos)
 $("#views").innerHTML = "<h2>Browse</h2>" + VIEWS.filter((v) => !v.hidden).map((v) => item("f", v.f, v.label, v.f === "saved" ? saved.length : repos.filter(v.test).length)).join("")
@@ -393,6 +395,26 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeMenu()
   if (e.key === "/" && document.activeElement !== $("#q")) { e.preventDefault(); $("#q").focus() }
 })
+// collapsed sidebar: an icon strip, so the grid gets room for another column; remembered in this browser
+function setRail(on) {
+  document.documentElement.classList.toggle("rail", on)
+  $("#rail").setAttribute("aria-pressed", String(on))
+  $("#rail").setAttribute("aria-label", on ? "Expand sidebar" : "Collapse sidebar")
+  $("#rail").title = `${on ? "Expand" : "Collapse"} sidebar (${MAC ? "⌘B" : "Ctrl+B"})`
+  $("#rail span").textContent = on ? "Expand sidebar" : "Collapse sidebar"
+  try { on ? localStorage.setItem("starwire-rail", "1") : localStorage.removeItem("starwire-rail") } catch {}
+}
+const MAC = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)
+const toggleRail = () => { setRail(!document.documentElement.classList.contains("rail")); if (!state.page) render() }
+setRail(document.documentElement.classList.contains("rail"))
+$("#rail").addEventListener("click", toggleRail)
+// Cmd+B on a Mac, Ctrl+B elsewhere; only where the strip exists (desktop widths), and never while editing rich text
+document.addEventListener("keydown", (e) => {
+  if (e.key.toLowerCase() !== "b" || e.shiftKey || e.altKey || !(MAC ? e.metaKey && !e.ctrlKey : e.ctrlKey && !e.metaKey)) return
+  if (!matchMedia("(min-width: 901px)").matches || e.target.closest?.("textarea, [contenteditable]")) return
+  e.preventDefault()
+  toggleRail()
+})
 $("#theme").addEventListener("click", () => {
   const dark = getComputedStyle(document.documentElement).colorScheme.includes("dark")
   document.documentElement.dataset.theme = dark ? "light" : "dark"
@@ -591,6 +613,7 @@ function openPanel(name, push = true) {
     <div class="p-actions">
       <a class="btn primary" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener">${GH}Open on GitHub</a>
       <a class="btn" href="?page=${encodeURIComponent(r.r)}">Full page</a>
+      <button class="btn" type="button" data-share="${esc(r.r)}">${SHARE}<span>Share</span></button>
       ${r.hp ? `<a class="btn" href="${esc(r.hp)}" target="_blank" rel="noopener">Website</a>` : ""}
       <button class="btn save-btn" type="button" data-save="${esc(r.r)}" aria-pressed="${savedAt.has(r.r)}">${BOOKMARK}${savedAt.has(r.r) ? "Saved" : "Save"}</button>
     </div>
@@ -610,6 +633,18 @@ function openPanel(name, push = true) {
   if (push) setRepoParam(r.r)
   readme(r)
   panelVitals(r)
+}
+
+// share link: r.starwire.foo/<owner>/<name> shows a card with the repo's picture and vital signs in chat apps and
+// sends people to the repo's page here (share/ in this repo). Phones get the share sheet, elsewhere the link is copied.
+async function share(name, b) {
+  const url = `https://r.starwire.foo/${name}`
+  count(`share/${name}`, "Shared")
+  if (navigator.share && matchMedia("(pointer: coarse)").matches) return navigator.share({ url, title: `${name.split("/")[1]} on starwire` }).catch(() => {})
+  try { await navigator.clipboard.writeText(url) } catch { return void prompt("Copy this link", url) }
+  const was = b.innerHTML
+  b.innerHTML = b.querySelector("span") ? `${CHECK}<span>Link copied</span>` : CHECK
+  setTimeout(() => (b.innerHTML = was), 1600)
 }
 
 // the vital signs in one plain line; vitals.json loads on the first panel or page opened, not with the list
@@ -668,6 +703,8 @@ panel.addEventListener("click", async (e) => {
   if (sim) return openPanel(sim.dataset.r)
   const more = e.target.closest(".more-readme")
   if (more) { panel.querySelector(".readme").classList.add("open"); more.remove(); return }
+  const sh = e.target.closest("[data-share]")
+  if (sh) return share(sh.dataset.share, sh)
   const copy = e.target.closest("[data-copy]")
   if (copy) {
     const ico = copy.querySelector(".clone-ico")
@@ -690,6 +727,7 @@ $("#repo-page").addEventListener("click", async (e) => {
   if ("back" in b.dataset) return moved ? history.back() : set({ page: "", alt: "" }, true)
   if ("save" in b.dataset) return toggleSave(b.dataset.save)
   if ("clone" in b.dataset) return copyClone(b)
+  if ("share" in b.dataset) return share(b.dataset.share, b)
   if ("readme" in b.dataset) return showReadme($("#repo-page"), b)
 })
 $("#pscrim").addEventListener("click", () => { closePanel(); closeSettings() })
