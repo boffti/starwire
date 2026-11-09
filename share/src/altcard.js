@@ -1,5 +1,5 @@
 // The share card for an alternatives page (r.starwire.foo/instead-of/<product>): "Instead of Notion", then its best
-// three replacements, ranked as the site ranks them (how much of the product's checklist each covers, docs/fit.json).
+// three replacements, ranked as the site ranks them (how much of the product's checklist each covers, docs/data/fit.json).
 // HTML that Satori can lay out: flexbox only, every container display:flex.
 
 const C = { bg: "#0b0b0b", panel: "#121212", line: "#222222", text: "#f2f2f2", soft: "#c4c4c4", muted: "#8f8f8f", green: "#75d079", amber: "#e3b341" }

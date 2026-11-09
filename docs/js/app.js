@@ -12,13 +12,13 @@ const num = (n) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k` : S
 const avatar = (owner, size) => `https://avatars.githubusercontent.com/${encodeURIComponent(owner)}?s=${size}`
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c])
 
-import { makeIndex, fieldsFor } from "./search.js?v=3"
-import { readmeFragment, followTheme } from "./readme.js?v=1"
-import { count } from "./count.js?v=2"
-import { signs, summary } from "./vitals.js?v=1"
-import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups, replacesOf } from "./repo.js?v=16"
+import { makeIndex, fieldsFor } from "./search.js"
+import { readmeFragment, followTheme } from "./readme.js"
+import { count } from "./count.js"
+import { signs, summary } from "./vitals.js"
+import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups, replacesOf } from "./repo.js"
 
-const data = await fetch("data.json").then((r) => r.json())
+const data = await fetch("data/data.json").then((r) => r.json())
 const now = Date.parse(data.updated)
 // facets (docs/plans/2026-11-07-taxonomy.md in the pipeline): area > subarea, form, platform, works with, tags, alternatives
 const TX = data.taxonomy ?? { areas: [], forms: [], platforms: [], worksWith: [] }
@@ -250,7 +250,7 @@ function lead(list) {
   </div>
   <figure class="spot-chart">${spark(hs, 480, 150, "bigspark")}<figcaption><span>${num(hs[0]?.[1] ?? r.s)} stars, ${esc(hs[0]?.[0] ?? "")}</span><span>${num(r.s)} stars, ${esc(hs.at(-1)?.[0] ?? "")}</span></figcaption></figure>`
   el.hidden = false
-  vitals ??= fetch("vitals.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
+  vitals ??= fetch("data/vitals.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
   vitals.then((v) => { const p = el.querySelector(".spot-vitals"); if (v[r.r] && p && el.contains(p)) { p.textContent = `${summary(signs(v[r.r], TODAY))}.`; p.hidden = false } })
 }
 
@@ -376,8 +376,8 @@ async function showPage() {
   shownPage = key
   const el = $("#repo-page")
   el.classList.toggle("wide", state.alt === "all")
-  vitals ??= fetch("vitals.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
-  fits ??= fetch("fit.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
+  vitals ??= fetch("data/vitals.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
+  fits ??= fetch("data/fit.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
   if (state.alt === "all") { const [v, f] = await Promise.all([vitals, fits]); if (shownPage !== key) return; el.innerHTML = altIndex({ repos, vitals: v, fit: f, today: data.updated.slice(0, 10), TX }); document.title = `Open source alternatives | starwire`; return count("alt/all", "Alternatives") }
   if (state.alt) {
     const [v, f] = await Promise.all([vitals, fits])
@@ -388,7 +388,7 @@ async function showPage() {
   }
   const r = byName.get(state.page.toLowerCase())
   if (!r) { el.innerHTML = missingPage(state.page); document.title = TITLE; return }
-  if (r.alt?.length) fits ??= fetch("fit.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
+  if (r.alt?.length) fits ??= fetch("data/fit.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
   const want = state.page, [v, f] = await Promise.all([vitals, r.alt?.length ? fits : {}])
   if (state.page !== want) return // moved on while vitals loaded
   el.innerHTML = repoPage(r, { repos, vitals: v, fit: f, today: data.updated.slice(0, 10), TX, saved: savedAt.has(r.r) })
@@ -729,8 +729,8 @@ async function share(name, b) {
 // how well it replaces each product, under the Replaces chips: "82% of Notion, #3 of 9"; fit.json loads only when needed
 async function panelFit(r) {
   if (!r.alt?.length) return
-  vitals ??= fetch("vitals.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
-  fits ??= fetch("fit.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
+  vitals ??= fetch("data/vitals.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
+  fits ??= fetch("data/fit.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
   const [v, f] = await Promise.all([vitals, fits]), el = panel.querySelector(".p-fit")
   if (state.repo !== r.r || !el) return
   const items = replacesOf(r, { repos, vitals: v, fit: f, today: data.updated.slice(0, 10) })
@@ -742,7 +742,7 @@ async function panelFit(r) {
 
 // the vital signs in one plain line; vitals.json loads on the first panel or page opened, not with the list
 async function panelVitals(r) {
-  vitals ??= fetch("vitals.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
+  vitals ??= fetch("data/vitals.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
   const v = (await vitals)[r.r], el = panel.querySelector(".p-vitals")
   if (!v || state.repo !== r.r || !el) return
   const s = signs(v, data.updated.slice(0, 10))

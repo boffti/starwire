@@ -1,6 +1,6 @@
 // Render real share cards on this machine, with the same code the Worker runs, to check them before deploying.
-// usage: node preview.mjs [out-dir] [owner/name | alt:Product ...]   (reads ../docs/data.json, and pictures and vitals from the
-// pipeline checkout next to this repo when it's there, else ../docs/vitals.json)
+// usage: node preview.mjs [out-dir] [owner/name | alt:Product ...]   (reads ../docs/data/data.json, and pictures and vitals from the
+// pipeline checkout next to this repo when it's there, else ../docs/data/vitals.json)
 import fs from "node:fs"
 import { ImageResponse, GoogleFont } from "@cf-wasm/og/node"
 import { t } from "@cf-wasm/og/html-to-react"
@@ -9,14 +9,14 @@ import { pickArt } from "./src/art.js"
 import { altCardHTML, rankAlts, altSlug } from "./src/altcard.js"
 
 const [out = "cards", ...names] = process.argv.slice(2)
-const data = JSON.parse(fs.readFileSync("../docs/data.json", "utf8"))
+const data = JSON.parse(fs.readFileSync("../docs/data/data.json", "utf8"))
 const pipe = "../../starwire-pipeline/data/vitals.json"
-const vitals = fs.existsSync(pipe) ? JSON.parse(fs.readFileSync(pipe, "utf8")).repos : JSON.parse(fs.readFileSync("../docs/vitals.json", "utf8"))
+const vitals = fs.existsSync(pipe) ? JSON.parse(fs.readFileSync(pipe, "utf8")).repos : JSON.parse(fs.readFileSync("../docs/data/vitals.json", "utf8"))
 const AREA = new Map(data.taxonomy.areas.flatMap((a) => a.subs.map(([id, n]) => [`${a.id}/${id}`, n])))
 const fonts = [400, 600, 700, 800].map((weight) => new GoogleFont("Geist", { weight }))
 fs.mkdirSync(out, { recursive: true })
 
-const fit = fs.existsSync("../docs/fit.json") ? JSON.parse(fs.readFileSync("../docs/fit.json", "utf8")) : {}
+const fit = fs.existsSync("../docs/data/fit.json") ? JSON.parse(fs.readFileSync("../docs/data/fit.json", "utf8")) : {}
 for (const name of names) {
   if (name.startsWith("alt:")) { // an alternatives card
     const product = name.slice(4), ranked = rankAlts(product, data.repos, fit)

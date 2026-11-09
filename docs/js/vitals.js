@@ -1,6 +1,6 @@
 // Vital signs: the pipeline measures them (scripts/vitals.mjs) into vitals.json; these rules turn the numbers into
 // a level per sign. good / ok / low are colours, never grades shown as words; "none" means there's nothing to judge.
-// The same rules are written out on how.html#vitals. Run `node docs/vitals.js` to check them.
+// The same rules are written out on how.html#vitals. Run `node docs/js/vitals.js` to check them.
 
 const DAY = 864e5
 export const days = (from, to) => Math.round((Date.parse(to) - Date.parse(from)) / DAY)

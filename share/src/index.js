@@ -8,7 +8,7 @@ import { t } from "@cf-wasm/og/html-to-react"
 import { cardHTML } from "./card.js"
 import { altCardHTML, rankAlts, altSlug } from "./altcard.js"
 import { pickArt } from "./art.js"
-import { signs, summary } from "../../docs/vitals.js"
+import { signs, summary } from "../../docs/js/vitals.js"
 
 const SITE = "https://starwire.foo", SELF = "https://r.starwire.foo"
 const fonts = [400, 600, 700, 800].map((weight) => new GoogleFont("Geist", { weight }))
@@ -19,7 +19,9 @@ const num = (n) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k` : S
 let memo = { at: 0 }
 async function site() {
   if (memo.data && Date.now() - memo.at < 6e5) return memo
-  const get = (f) => fetch(`${SITE}/${f}`, { cf: { cacheTtl: 600, cacheEverything: true } }).then((r) => (r.ok ? r.json() : null)).catch(() => null)
+  const one = (path) => fetch(`${SITE}/${path}`, { cf: { cacheTtl: 600, cacheEverything: true } }).then((r) => (r.ok ? r.json() : null)).catch(() => null)
+  // the site's data lives in data/; the old top-level address is the fallback while a deploy rolls out
+  const get = async (f) => (await one(`data/${f}`)) ?? one(f)
   const [data, vitals, art, fit] = await Promise.all([get("data.json"), get("vitals.json"), get("art.json"), get("fit.json")])
   if (!data) throw new Error("starwire data unavailable")
   memo = {

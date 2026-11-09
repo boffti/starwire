@@ -4,7 +4,7 @@
 //   info strip below
 // - standard: a square-ish picture (logo, icon or the owner's avatar) in a tile on the left, our info on the right
 // Only what's known is drawn: signs that don't apply, a missing gain or alternative simply aren't there.
-import { signs, momentum } from "../../docs/vitals.js"
+import { signs, momentum } from "../../docs/js/vitals.js"
 
 const C = { bg: "#0b0b0b", panel: "#121212", line: "#222222", text: "#f2f2f2", soft: "#c4c4c4", muted: "#8f8f8f", green: "#75d079", greenOk: "#73a074", amber: "#e3b341", tileLight: "#f4f4f4" }
 const DOT = { good: C.green, ok: C.greenOk, low: C.amber }
