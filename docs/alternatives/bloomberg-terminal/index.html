@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<base href="/">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open source alternatives to Bloomberg Terminal: OpenTerminal, FinceptTerminal and OpenBB | starwire</title>
+<link rel="canonical" href="https://starwire.foo/alternatives/bloomberg-terminal/">
+<meta name="description" content="3 open source projects do the same job as Bloomberg Terminal, ranked by how much of what Bloomberg Terminal does each one covers. Free, and many you can self-host.">
+<meta name="theme-color" content="#141414">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://starwire.foo/alternatives/bloomberg-terminal/">
+<meta property="og:title" content="Open source alternatives to Bloomberg Terminal: OpenTerminal, FinceptTerminal and OpenBB | starwire">
+<meta property="og:description" content="3 open source projects do the same job as Bloomberg Terminal, ranked by how much of what Bloomberg Terminal does each one covers. Free, and many you can self-host.">
+<meta property="og:image" content="https://r.starwire.foo/instead-of/bloomberg-terminal/card.png?v=2026-11-09">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://r.starwire.foo/instead-of/bloomberg-terminal/card.png?v=2026-11-09">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Open source alternatives to Bloomberg Terminal","numberOfItems":3,"itemListElement":[{"@type":"ListItem","position":1,"name":"OpenTerminal","url":"https://github.com/ErTasselli/OpenTerminal"},{"@type":"ListItem","position":2,"name":"FinceptTerminal","url":"https://github.com/Fincept-Corporation/FinceptTerminal"},{"@type":"ListItem","position":3,"name":"OpenBB","url":"https://github.com/openbq-org/OpenBB"}]}</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23e3b341' d='M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 20.9l1.6-7L2 9.2l7.1-.6z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=42">
+<link rel="alternate" type="application/rss+xml" title="starwire, new picks" href="https://starwire.foo/feed.xml">
+<script>try{const t=localStorage.getItem("starwire-theme");if(t)document.documentElement.dataset.theme=t;if(localStorage.getItem("starwire-rail")==="1")document.documentElement.classList.add("rail")}catch{}</script>
+<style>body[data-alt] .page > :not(#repo-page){display:none}</style>
+</head>
+<body data-alt="Bloomberg Terminal">
+<div class="app" id="app">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="./">
+      <span class="mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 20.9l1.6-7L2 9.2l7.1-.6z"/></svg></span>
+      <span><strong>starwire</strong><small>Repos worth a look</small></span>
+    </a>
+    <div class="side-scroll">
+      <nav class="group" id="views" aria-label="Views"></nav>
+      <nav class="group" id="cats" aria-label="Areas"></nav>
+    </div>
+    <div class="side-foot">
+      <details class="mini-promo" id="side-promo">
+        <summary><strong>Organize your own stars</strong><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <a href="https://github.com/boffti/stardash" target="_blank" rel="noopener">
+          <span>StarDash turns your GitHub stars into a searchable, tagged dashboard. Free, open source, and you host it yourself in one container.</span>
+          <em>Try StarDash for free</em>
+        </a>
+      </details>
+      <script>
+        // closed by default; remembers if you open it (this browser only)
+        try { const d = document.getElementById("side-promo"); d.open = localStorage.getItem("starwire-promo") === "open"; d.addEventListener("toggle", () => localStorage.setItem("starwire-promo", d.open ? "open" : "closed")) } catch {}
+      </script>
+      <a class="side-link" href="https://github.com/boffti/starwire/issues/new?template=submit-repo.yml">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Submit a repo</span>
+      </a>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <div class="main">
+    <header class="appbar">
+      <button class="icon-btn menu" id="menu" type="button" aria-label="Open categories"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      <button class="icon-btn rail-btn" id="rail" type="button" aria-pressed="false" aria-label="Collapse sidebar"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M16 10l-2 2 2 2"/></svg></button>
+      <label class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Search repos, topics, languages" autocomplete="off" aria-label="Search repos">
+        <kbd>/</kbd>
+      </label>
+      <nav class="bar-links">
+        <button id="open-settings" class="icon-btn" type="button" aria-label="Settings" title="Settings"></button>
+        <a class="icon-btn" href="how.html" aria-label="How starwire works" title="How starwire works"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg></a>
+        <a class="icon-btn" href="https://github.com/boffti/starwire" aria-label="starwire on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true" class="gh"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+        <button id="theme" class="icon-btn" type="button" aria-label="Switch light or dark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      </nav>
+    </header>
+
+    <main class="page">
+      <section class="rp" id="repo-page" aria-live="polite"><div class="rp-top"><button type="button" class="rp-back" data-back><svg style="fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Back to the list</button><nav class="rp-crumbs" aria-label="Where it sits"><a href="?alt=all">Alternatives</a></nav></div>
+  <section class="hero alt-hero"><div class="who">
+    <h1>Open source alternatives to Bloomberg Terminal</h1>
+    <p class="line">3 projects on starwire do the same job. Ranked by how much of what Bloomberg Terminal does each one covers, read from its README and website. Ties go to the healthiest.</p>
+  </div></section>
+  <section class="jobs" aria-labelledby="jobs"><h2 id="jobs">What Bloomberg Terminal does</h2><ol class="job-list"><li class="core">Real-time market data<small>core</small></li><li class="core">Financial news<small>core</small></li><li class="core">Security and company analytics<small>core</small></li><li class="">Charts</li><li class="">Economic data</li><li class="">Messaging with other users</li><li class="">Trading tools</li><li class="">Screeners</li></ol><p class="foot-note">Each dot in the table is one job, in this order. Square dots are core jobs and count double. Full means yes, half means partly. Hover a dot for the line behind it. <a href="how.html#fit">How we score this</a></p></section>
+  <section aria-label="Alternatives to Bloomberg Terminal"><div class="cmp alt-table"><table>
+    <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
+    <tbody><tr>
+      <th scope="row"><a class="alt-name" href="?page=ErTasselli%2FOpenTerminal"><img src="https://avatars.githubusercontent.com/ErTasselli?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>OpenTerminal</b><small>Terminal-style stock and market dashboard using free public data</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>86%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-y core" title="Real-time market data: yes. &quot;quotes and indexes refresh every second&quot;"></i><i class="m-y core" title="Financial news: yes. &quot;multiple RSS sources&quot;"></i><i class="m-y core" title="Security and company analytics: yes. &quot;market cap, P/E, EPS, dividend yield&quot;"></i><i class="m-y" title="Charts: yes. &quot;candlesticks, bars, line, area, volume&quot;"></i><i class="m-y" title="Economic data: yes. &quot;live US Treasury yield curve, VIX&quot;"></i><i class="m-n" title="Messaging with other users: not shown"></i><i class="m-p" title="Trading tools: partly. &quot;log buy/sell transactions, track average cost&quot;"></i><i class="m-y" title="Screeners: yes. &quot;filter by sector, market cap, % change, and volume&quot;"></i></span></td><td data-k="Stars"><span class="s">2.4k</span><small class="w">+37</small></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:3.9200000000000004rem"></span>28</div></td>
+      <td data-k="Last release">2 months ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>67%</span></td>
+      <td data-k="Form">Web app</td>
+      <td data-k="License">MIT</td></tr><tr>
+      <th scope="row"><a class="alt-name" href="?page=Fincept-Corporation%2FFinceptTerminal"><img src="https://avatars.githubusercontent.com/Fincept-Corporation?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>FinceptTerminal</b><small>Desktop finance terminal with market analytics and economic data tools</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>68%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-p core" title="Real-time market data: partly. &quot;Free public feeds, your own API keys&quot;"></i><i class="m-y core" title="Financial news: yes. &quot;News RSS Feeds&quot;"></i><i class="m-y core" title="Security and company analytics: yes. &quot;institutional-grade financial analytics&quot;"></i><i class="m-p" title="Charts: partly. &quot;visual trade analysis&quot;"></i><i class="m-y" title="Economic data: yes. &quot;derivatives and macro coverage&quot;"></i><i class="m-n" title="Messaging with other users: not shown"></i><i class="m-y" title="Trading tools: yes. &quot;Paper + live trading via your broker&quot;"></i><i class="m-n" title="Screeners: not shown"></i></span></td><td data-k="Stars"><span class="s">34k</span><small class="w">+153</small></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>50</div></td>
+      <td data-k="Last release">27 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>100%</span></td>
+      <td data-k="Form">Desktop app</td>
+      <td data-k="License">AGPL-3.0</td></tr><tr>
+      <th scope="row"><a class="alt-name" href="?page=openbq-org%2FOpenBB"><img src="https://avatars.githubusercontent.com/openbq-org?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>OpenBB</b><small>Python data platform for financial research, usable by analysts and agents</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>23%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-p core" title="Real-time market data: partly. &quot;obb.equity.price.historical(&quot;AAPL&quot;)&quot;"></i><i class="m-n core" title="Financial news: not shown"></i><i class="m-p core" title="Security and company analytics: partly. &quot;Connect filings, transcripts, and internal models in one view&quot;"></i><i class="m-p" title="Charts: partly. &quot;enterprise UI for analysts to visualize datasets&quot;"></i><i class="m-n" title="Economic data: not shown"></i><i class="m-n" title="Messaging with other users: not shown"></i><i class="m-n" title="Trading tools: not shown"></i><i class="m-n" title="Screeners: not shown"></i></span></td><td data-k="Stars"><span class="s">75k</span><small class="w">+142</small></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:2.52rem"></span>18</div></td>
+      <td data-k="Last release">40 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>70%</span></td>
+      <td data-k="Form">Library or framework, Web app</td>
+      <td data-k="License">None listed</td></tr></tbody></table></div>
+    <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a></p></section>
+  </section>
+      <div class="page-head">
+        <div>
+          <h1 id="title">All repos</h1>
+          <p id="sub"></p>
+          <a id="alt-hint" class="alt-hint" hidden></a>
+          <button type="button" class="everywhere" id="everywhere" hidden></button>
+        </div>
+        <div class="controls">
+          <label class="select"><span>Sort</span>
+            <select id="sort">
+              <option value="match" id="sort-match" hidden disabled>Best match</option>
+              <option value="today">Most stars today</option>
+              <option value="picked">Most picked</option>
+              <option value="trending">Trending</option>
+              <option value="stars">Most stars</option>
+              <option value="new">Newest picks</option>
+              <option value="active">Recently updated</option>
+              <option value="saved">Recently saved</option>
+            </select>
+          </label>
+          <button type="button" class="filters-btn" id="filters-btn" aria-expanded="false" aria-controls="filters"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filters<span class="badge" id="filters-n" hidden></span></button>
+          <div class="filters" id="filters">
+            <label class="select"><span>Form</span><select id="f-form"></select></label>
+            <label class="select"><span>Platform</span><select id="f-plat"></select></label>
+            <label class="select"><span>Works with</span><select id="f-with"></select></label>
+            <label class="select"><span>Language</span><select id="lang"><option value="">Any</option></select></label>
+          </div>
+          <div class="view" role="group" aria-label="Layout">
+            <button type="button" data-view="wire" aria-label="Ranked" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6h11M10 12h11M10 18h11M4 6h1M4 12h1M4 18h1"/></svg></button>
+            <button type="button" data-view="cards" aria-label="Cards" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg></button>
+            <button type="button" data-view="list" aria-label="List" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="saved-bar" id="savedbar" hidden></div>
+      <section id="lead" class="lead" hidden aria-label="Top movers"></section>
+      <section id="results" class="wire" aria-label="Repos" aria-live="polite"></section>
+      <div class="more-wrap"><button id="more" type="button" class="more" hidden>Show more</button></div>
+      <p class="foot">New repos every two days, stars refreshed daily. Visits are counted without cookies, and <a href="https://starwire.goatcounter.com">the numbers are public</a>. <a href="how.html">How it works</a> <a href="https://github.com/boffti/starwire/blob/main/data/repos.json">Data</a> <a href="feed.xml">RSS</a></p>
+    </main>
+  </div>
+</div>
+<aside class="panel" id="panel" hidden aria-label="Repo details"></aside>
+<aside class="panel settings" id="settings" hidden aria-label="Settings"></aside>
+<div class="panel-scrim" id="pscrim"></div>
+<script src="app.js?v=47" type="module"></script>
+</body>
+</html>

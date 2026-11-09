@@ -629,3 +629,14 @@ html { scrollbar-gutter: stable; }
   .rp .sw-row { grid-template-columns: 1fr; gap: 6px; padding: 12px 4px; }
   .rp .sw-use { flex-wrap: wrap; gap: 6px 14px; }
 }
+
+/* what a repo replaces: a line in the hero, a card with fit and rank, and the side panel's chips */
+.rp .stats li.alt a { color: var(--text); font-weight: 600; }
+.rp .replaces { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; }
+.rp .replaces li { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 0; }
+.rp .replaces li + li { border-top: 1px solid var(--line); }
+.rp .replaces a { display: flex; flex-direction: column; min-width: 0; color: var(--text); }
+.rp .replaces a b { font-size: 16px; font-weight: 600; }
+.rp .replaces a small { font-size: 13px; color: var(--muted); }
+.rp .replaces .fit { flex-direction: column; align-items: flex-end; gap: 0; }
+.p-fit { margin-top: 2px; }

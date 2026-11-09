@@ -22,6 +22,7 @@ const I = {
   copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',
   hand: '<path d="M7 11V5a2 2 0 0 1 4 0v5M11 10V4a2 2 0 0 1 4 0v6M15 10V6a2 2 0 0 1 4 0v8a7 7 0 0 1-7 7h-1a7 7 0 0 1-6-3.4L3 14a2 2 0 0 1 3.4-2L7 13"/>',
   arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+  swap: '<path d="M4 8h13l-3-3M20 16H7l3 3"/>',
   share: '<path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 3v13M7 8l5-5 5 5"/>',
   doc: '<path d="M4 4h12l4 4v12H4z"/><path d="M8 12h8M8 16h5"/>',
 }
@@ -29,9 +30,9 @@ const GH = '<svg viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor
 
 let r, repos, vitals, today, AREA, SUB, FORM, PLAT, fit = {}
 
-// repo + { repos, vitals, today, TX, saved } -> the page's HTML
+// repo + { repos, vitals, fit, today, TX, saved } -> the page's HTML
 export function repoPage(repo, ctx) {
-  r = repo; ({ repos, vitals, today } = ctx)
+  r = repo; ({ repos, vitals, today } = ctx); fit = ctx.fit ?? {}
   AREA = new Map(ctx.TX.areas.map((a) => [a.id, a.name])); SUB = new Map(ctx.TX.areas.flatMap((a) => a.subs.map(([id, n]) => [`${a.id}/${id}`, n])))
   FORM = new Map(ctx.TX.forms); PLAT = new Map(ctx.TX.platforms)
   return render(ctx.saved)
@@ -53,6 +54,8 @@ function render(saved) {
     r.li ? `<li>${svg(I.law)}${esc(r.li)}</li>` : "",
     r.pl?.length ? `<li>${svg(I.screen)}${r.pl.map((p) => esc(PLAT.get(p))).join(", ")}</li>` : "",
   ].join("")
+  // what it replaces sits up top: "Alternative to Notion, Confluence"
+  const alts = r.alt?.length ? `<li class="alt">${svg(I.swap)}<span>Alternative to ${r.alt.slice(0, 3).map((a) => `<a href="?alt=${encodeURIComponent(a)}">${esc(a)}</a>`).join(", ")}</span></li>` : ""
 
   return `<div class="rp-top">${BACK}${crumbs}</div>
   <section class="hero">
@@ -60,7 +63,7 @@ function render(saved) {
     <div class="who">
       <h1>${esc(name)} <small>by ${esc(owner)}</small></h1>
       ${r.l ? `<p class="line">${esc(r.l)}</p>` : ""}
-      <ul class="stats">${stats}</ul>
+      <ul class="stats">${stats}${alts}</ul>
     </div>
     <div class="acts">
       <a class="btn primary" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener">${GH}GitHub</a>
@@ -145,6 +148,13 @@ const KIND = { "drop-in": "Replaces it", part: "Covers one part", different: "Sa
 const fitOf = (g, x) => fit.pairs?.[altKey(g.name)]?.[x.r]
 const byFit = (g) => (a, b) => (fitOf(g, b)?.[0] ?? -1) - (fitOf(g, a)?.[0] ?? -1) || healthy(b) - healthy(a) || b.s - a.s
 const covered = (m) => [...m].reduce((n, c) => n + (c === "y" ? 1 : c === "p" ? 0.5 : 0), 0)
+// what a repo replaces: each product with its fit for this repo and its place among that product's alternatives
+export function replacesOf(x, ctx) {
+  ({ repos, vitals, today } = ctx); fit = ctx.fit ?? fit
+  const groups = altGroups(repos)
+  return (x.alt ?? []).map((name) => { const g = groups.get(altKey(name)); if (!g) return null
+    const order = [...g.repos].sort(byFit(g)); return { name: g.name, f: fitOf(g, x), rank: order.indexOf(x) + 1, n: order.length } }).filter(Boolean)
+}
 const healthy = (x) => { const v = vitals[x.r]; if (!v) return -1; const s = signs(v, today); return [s.activity, s.release, s.issues].filter((y) => y.level === "good").length }
 
 export function altPage(name, ctx) {
@@ -212,12 +222,14 @@ export function altIndex(ctx) {
     <p class="rp-missing" hidden data-alt-none>No product or project by that name yet.</p></section>`
 }
 
+// "Replaces": each product this repo stands in for, how much of it the repo covers and where it ranks among them
 function swapCard() {
   if (!r.alt?.length) return ""
-  const first = r.alt[0], n = repos.filter((x) => (x.alt ?? []).some((a) => a.toLowerCase() === first.toLowerCase())).length
-  return `<section class="card" aria-labelledby="swap"><h2 id="swap">Swap out</h2>
-    <div class="swap">${r.alt.slice(0, 3).map((a) => `<a href="?alt=${encodeURIComponent(a)}">${esc(a)}</a>`).join("")}${svg(I.arrow)}<span class="to">${esc(r.r.split("/")[1])}</span></div>
-    ${n > 1 ? `<p style="margin:14px 0 0;font-size:14px"><a href="?alt=${encodeURIComponent(first)}">All ${n} ${esc(first)} alternatives</a></p>` : ""}</section>`
+  const items = replacesOf(r, { repos, vitals, today, fit })
+  if (!items.length) return ""
+  return `<section class="card" aria-labelledby="swap"><h2 id="swap">Replaces</h2>
+    <ul class="replaces">${items.map(({ name, f, rank, n }) => `<li><a href="?alt=${encodeURIComponent(name)}"><b>${esc(name)}</b><small>${n > 1 ? `#${rank} of ${n} alternatives` : "The only alternative listed"}</small></a>${f ? `<span class="fit"><b>${Math.round(f[0] * 100)}%</b><small>${esc(KIND[f[1]])}</small></span>` : ""}</li>`).join("")}</ul>
+    ${items.some((x) => x.f) ? `<p class="foot-note">The share of what each product does that ${esc(r.r.split("/")[1])} covers, read from its README and website. <a href="how.html#fit">How we score this</a></p>` : ""}</section>`
 }
 
 function startCard(v) {

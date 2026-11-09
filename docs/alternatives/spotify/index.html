@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<base href="/">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open source alternatives to Spotify: Square, myspoti, spotatui and 3 more | starwire</title>
+<link rel="canonical" href="https://starwire.foo/alternatives/spotify/">
+<meta name="description" content="6 open source projects do the same job as Spotify, ranked by how much of what Spotify does each one covers. Free, and many you can self-host.">
+<meta name="theme-color" content="#141414">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://starwire.foo/alternatives/spotify/">
+<meta property="og:title" content="Open source alternatives to Spotify: Square, myspoti, spotatui and 3 more | starwire">
+<meta property="og:description" content="6 open source projects do the same job as Spotify, ranked by how much of what Spotify does each one covers. Free, and many you can self-host.">
+<meta property="og:image" content="https://r.starwire.foo/instead-of/spotify/card.png?v=2026-11-09">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://r.starwire.foo/instead-of/spotify/card.png?v=2026-11-09">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Open source alternatives to Spotify","numberOfItems":6,"itemListElement":[{"@type":"ListItem","position":1,"name":"Square","url":"https://github.com/Lelonio/Square"},{"@type":"ListItem","position":2,"name":"myspoti","url":"https://github.com/kota-zo/myspoti"},{"@type":"ListItem","position":3,"name":"spotatui","url":"https://github.com/LargeModGames/spotatui"},{"@type":"ListItem","position":4,"name":"spotifast","url":"https://github.com/crmne/spotifast"},{"@type":"ListItem","position":5,"name":"spotube","url":"https://github.com/team-spotube/spotube"},{"@type":"ListItem","position":6,"name":"sonora","url":"https://github.com/sonorahq/sonora"}]}</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23e3b341' d='M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 20.9l1.6-7L2 9.2l7.1-.6z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=42">
+<link rel="alternate" type="application/rss+xml" title="starwire, new picks" href="https://starwire.foo/feed.xml">
+<script>try{const t=localStorage.getItem("starwire-theme");if(t)document.documentElement.dataset.theme=t;if(localStorage.getItem("starwire-rail")==="1")document.documentElement.classList.add("rail")}catch{}</script>
+<style>body[data-alt] .page > :not(#repo-page){display:none}</style>
+</head>
+<body data-alt="Spotify">
+<div class="app" id="app">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="./">
+      <span class="mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 20.9l1.6-7L2 9.2l7.1-.6z"/></svg></span>
+      <span><strong>starwire</strong><small>Repos worth a look</small></span>
+    </a>
+    <div class="side-scroll">
+      <nav class="group" id="views" aria-label="Views"></nav>
+      <nav class="group" id="cats" aria-label="Areas"></nav>
+    </div>
+    <div class="side-foot">
+      <details class="mini-promo" id="side-promo">
+        <summary><strong>Organize your own stars</strong><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <a href="https://github.com/boffti/stardash" target="_blank" rel="noopener">
+          <span>StarDash turns your GitHub stars into a searchable, tagged dashboard. Free, open source, and you host it yourself in one container.</span>
+          <em>Try StarDash for free</em>
+        </a>
+      </details>
+      <script>
+        // closed by default; remembers if you open it (this browser only)
+        try { const d = document.getElementById("side-promo"); d.open = localStorage.getItem("starwire-promo") === "open"; d.addEventListener("toggle", () => localStorage.setItem("starwire-promo", d.open ? "open" : "closed")) } catch {}
+      </script>
+      <a class="side-link" href="https://github.com/boffti/starwire/issues/new?template=submit-repo.yml">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Submit a repo</span>
+      </a>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <div class="main">
+    <header class="appbar">
+      <button class="icon-btn menu" id="menu" type="button" aria-label="Open categories"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      <button class="icon-btn rail-btn" id="rail" type="button" aria-pressed="false" aria-label="Collapse sidebar"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M16 10l-2 2 2 2"/></svg></button>
+      <label class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Search repos, topics, languages" autocomplete="off" aria-label="Search repos">
+        <kbd>/</kbd>
+      </label>
+      <nav class="bar-links">
+        <button id="open-settings" class="icon-btn" type="button" aria-label="Settings" title="Settings"></button>
+        <a class="icon-btn" href="how.html" aria-label="How starwire works" title="How starwire works"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg></a>
+        <a class="icon-btn" href="https://github.com/boffti/starwire" aria-label="starwire on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true" class="gh"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+        <button id="theme" class="icon-btn" type="button" aria-label="Switch light or dark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      </nav>
+    </header>
+
+    <main class="page">
+      <section class="rp" id="repo-page" aria-live="polite"><div class="rp-top"><button type="button" class="rp-back" data-back><svg style="fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Back to the list</button><nav class="rp-crumbs" aria-label="Where it sits"><a href="?alt=all">Alternatives</a></nav></div>
+  <section class="hero alt-hero"><div class="who">
+    <h1>Open source alternatives to Spotify</h1>
+    <p class="line">6 projects on starwire do the same job. Ranked by how much of what Spotify does each one covers, read from its README and website. Ties go to the healthiest.</p>
+  </div></section>
+  <section class="jobs" aria-labelledby="jobs"><h2 id="jobs">What Spotify does</h2><ol class="job-list"><li class="core">Stream songs, albums and podcasts<small>core</small></li><li class="core">Playlists and library<small>core</small></li><li class="core">Personalized recommendations<small>core</small></li><li class="">Offline downloads</li><li class="">Play on other devices</li><li class="">Lyrics</li><li class="">Social sharing and collaborative playlists</li><li class="">Desktop, mobile and web apps</li></ol><p class="foot-note">Each dot in the table is one job, in this order. Square dots are core jobs and count double. Full means yes, half means partly. Hover a dot for the line behind it. <a href="how.html#fit">How we score this</a></p></section>
+  <section aria-label="Alternatives to Spotify"><div class="cmp alt-table"><table>
+    <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
+    <tbody><tr>
+      <th scope="row"><a class="alt-name" href="?page=Lelonio%2FSquare"><img src="https://avatars.githubusercontent.com/Lelonio?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>Square</b><small>Unofficial YouTube Music and Spotify client for Android with a Rust core</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>91%</b><small>Same job, different way</small></span><span class="fit-dots"><i class="m-y core" title="Stream songs, albums and podcasts: yes. &quot;Home, search, the library and the player work the same&quot;"></i><i class="m-y core" title="Playlists and library: yes. &quot;Playlists, albums, artists and liked songs.&quot;"></i><i class="m-y core" title="Personalized recommendations: yes. &quot;A home page of shelves made for you&quot;"></i><i class="m-y" title="Offline downloads: yes. &quot;Download playlists, albums and songs, from either source.&quot;"></i><i class="m-y" title="Play on other devices: yes. &quot;control your other devices from it&quot;"></i><i class="m-y" title="Lyrics: yes. &quot;Synced lyrics, word by word where they exist&quot;"></i><i class="m-p" title="Social sharing and collaborative playlists: partly. &quot;What your friends are listening to.&quot;"></i><i class="m-p" title="Desktop, mobile and web apps: partly. &quot;An unofficial Android music client&quot;"></i></span></td><td data-k="Stars"><span class="s">495</span><small class="w">+7</small></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:0.8635664873174481rem"></span>321</div></td>
+      <td data-k="Last release">3 days ago</td><td data-k="Issues closed"><span class="lvl-ok"><i class="dot"></i>56%</span></td>
+      <td data-k="Form">Mobile app</td>
+      <td data-k="License">GPL-3.0</td></tr><tr>
+      <th scope="row"><a class="alt-name" href="?page=kota-zo%2Fmyspoti"><img src="https://avatars.githubusercontent.com/kota-zo?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>myspoti</b><small>Native Android Spotify client written in Kotlin with Jetpack Compose</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>82%</b><small>Same job, different way</small></span><span class="fit-dots"><i class="m-y core" title="Stream songs, albums and podcasts: yes. &quot;Podcasts and audiobooks, with their own player&quot;"></i><i class="m-y core" title="Playlists and library: yes. &quot;Your Library with folders&quot;"></i><i class="m-p core" title="Personalized recommendations: partly. &quot;Add songs from a Spotify search inside the playlist, with suggestions&quot;"></i><i class="m-p" title="Offline downloads: partly. &quot;Offline downloads, through extensions&quot;"></i><i class="m-y" title="Play on other devices: yes. &quot;Spotify Connect, Jam, Bluetooth&quot;"></i><i class="m-y" title="Lyrics: yes. &quot;Synced lyrics, word by word&quot;"></i><i class="m-y" title="Social sharing and collaborative playlists: yes. &quot;invite friends with a link, see who is in&quot;"></i><i class="m-p" title="Desktop, mobile and web apps: partly. &quot;Android TV and Google TV&quot;"></i></span></td><td data-k="Stars"><span class="s">1.7k</span><small class="w">+549</small></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:1.296694850115296rem"></span>482</div></td>
+      <td data-k="Last release">4 days ago</td><td data-k="Issues closed"><span class="lvl-low"><i class="dot"></i>27%</span></td>
+      <td data-k="Form">Mobile app</td>
+      <td data-k="License">GPL-3.0</td></tr><tr>
+      <th scope="row"><a class="alt-name" href="?page=LargeModGames%2Fspotatui"><img src="https://avatars.githubusercontent.com/LargeModGames?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>spotatui</b><small>Terminal music player with native Spotify streaming plus local, radio and other sources</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>73%</b><small>Same job, different way</small></span><span class="fit-dots"><i class="m-y core" title="Stream songs, albums and podcasts: yes. &quot;Spotify through its own built-in client&quot;"></i><i class="m-y core" title="Playlists and library: yes. &quot;A CLI for playback, search and playlists.&quot;"></i><i class="m-p core" title="Personalized recommendations: partly. &quot;An AI DJ inside the app&quot;"></i><i class="m-n" title="Offline downloads: not shown"></i><i class="m-y" title="Play on other devices: yes. &quot;on any Spotify Connect device&quot;"></i><i class="m-y" title="Lyrics: yes. &quot;Synced lyrics, and a real-time audio visualizer.&quot;"></i><i class="m-p" title="Social sharing and collaborative playlists: partly. &quot;A local listening history with stats and a shareable recap.&quot;"></i><i class="m-p" title="Desktop, mobile and web apps: partly. &quot;A fast music player for the terminal and the desktop&quot;"></i></span></td><td data-k="Stars"><span class="s">1.8k</span><small class="w">+9</small></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:1.1245196003074558rem"></span>418</div></td>
+      <td data-k="Last release">2 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>94%</span></td>
+      <td data-k="Form">Command-line tool</td>
+      <td data-k="License">MIT</td></tr><tr>
+      <th scope="row"><a class="alt-name" href="?page=crmne%2Fspotifast"><img src="https://avatars.githubusercontent.com/crmne?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>spotifast</b><small>Lightweight native Spotify client with local playback and Spotify Connect</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>68%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-y core" title="Stream songs, albums and podcasts: yes. &quot;plays music through Spotify Soloist or the built-in librespot player&quot;"></i><i class="m-y core" title="Playlists and library: yes. &quot;Browse playlists, Liked Songs, albums, artists, and podcasts.&quot;"></i><i class="m-p core" title="Personalized recommendations: partly. &quot;Made for you, listening activity and Spotify lyrics&quot;"></i><i class="m-n" title="Offline downloads: not shown"></i><i class="m-y" title="Play on other devices: yes. &quot;control playback on your other devices&quot;"></i><i class="m-y" title="Lyrics: yes. &quot;Spotify lyrics when the playback session is signed in&quot;"></i><i class="m-n" title="Social sharing and collaborative playlists: not shown"></i><i class="m-p" title="Desktop, mobile and web apps: partly. &quot;A lightweight music app for Linux, macOS, and Windows.&quot;"></i></span></td><td data-k="Stars"><span class="s">10k</span><small class="w">+173</small></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:3.346656418139893rem"></span>1,244</div></td>
+      <td data-k="Last release">6 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>82%</span></td>
+      <td data-k="Form">Desktop app</td>
+      <td data-k="License">MIT</td></tr><tr>
+      <th scope="row"><a class="alt-name" href="?page=team-spotube%2Fspotube"><img src="https://avatars.githubusercontent.com/team-spotube?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>spotube</b><small>Open source music streaming client for desktop and mobile using YouTube sources</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>49%</b><small>Same job, different way</small></span><span class="fit-dots"><i class="m-y core" title="Stream songs, albums and podcasts: yes. &quot;Open source music streaming app!&quot;"></i><i class="m-p core" title="Playlists and library: partly. &quot;Bring your own music metadata/playlist/audio-source with plugins&quot;"></i><i class="m-n core" title="Personalized recommendations: not shown"></i><i class="m-y" title="Offline downloads: yes. &quot;Freely downloadable tracks with tagged **metadata**.&quot;"></i><i class="m-n" title="Play on other devices: not shown"></i><i class="m-y" title="Lyrics: yes. &quot;Time synced lyrics regardless of the plugin support.&quot;"></i><i class="m-n" title="Social sharing and collaborative playlists: not shown"></i><i class="m-p" title="Desktop, mobile and web apps: partly. &quot;Available for both desktop &amp; mobile!&quot;"></i></span></td><td data-k="Stars"><span class="s">51k</span><small class="w">+75</small></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:0.36049192928516527rem"></span>134</div></td>
+      <td data-k="Last release">10 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>100%</span></td>
+      <td data-k="Form">Desktop app, Mobile app</td>
+      <td data-k="License">AGPL-3.0</td></tr><tr>
+      <th scope="row"><a class="alt-name" href="?page=sonorahq%2Fsonora"><img src="https://avatars.githubusercontent.com/sonorahq?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>sonora</b><small>Native music streaming client that plays Spotify, YouTube and Apple Music</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>49%</b><small>Same job, different way</small></span><span class="fit-dots"><i class="m-y core" title="Stream songs, albums and podcasts: yes. &quot;Stream from your favorite services and play local files&quot;"></i><i class="m-y core" title="Playlists and library: yes. &quot;librespot — Spotify playback and library integration.&quot;"></i><i class="m-n core" title="Personalized recommendations: not shown"></i><i class="m-n" title="Offline downloads: not shown"></i><i class="m-n" title="Play on other devices: not shown"></i><i class="m-y" title="Lyrics: yes. &quot;Lyrics Synced Karaoke Background vocals&quot;"></i><i class="m-n" title="Social sharing and collaborative playlists: not shown"></i><i class="m-p" title="Desktop, mobile and web apps: partly. &quot;macOS, Linux, Windows&quot;"></i></span></td><td data-k="Stars"><span class="s">2.7k</span><small class="w">+78</small></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>2,602</div></td>
+      <td data-k="Last release">yesterday</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>73%</span></td>
+      <td data-k="Form">Desktop app</td>
+      <td data-k="License">GPL-3.0</td></tr></tbody></table></div>
+    <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a></p></section>
+  </section>
+      <div class="page-head">
+        <div>
+          <h1 id="title">All repos</h1>
+          <p id="sub"></p>
+          <a id="alt-hint" class="alt-hint" hidden></a>
+          <button type="button" class="everywhere" id="everywhere" hidden></button>
+        </div>
+        <div class="controls">
+          <label class="select"><span>Sort</span>
+            <select id="sort">
+              <option value="match" id="sort-match" hidden disabled>Best match</option>
+              <option value="today">Most stars today</option>
+              <option value="picked">Most picked</option>
+              <option value="trending">Trending</option>
+              <option value="stars">Most stars</option>
+              <option value="new">Newest picks</option>
+              <option value="active">Recently updated</option>
+              <option value="saved">Recently saved</option>
+            </select>
+          </label>
+          <button type="button" class="filters-btn" id="filters-btn" aria-expanded="false" aria-controls="filters"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filters<span class="badge" id="filters-n" hidden></span></button>
+          <div class="filters" id="filters">
+            <label class="select"><span>Form</span><select id="f-form"></select></label>
+            <label class="select"><span>Platform</span><select id="f-plat"></select></label>
+            <label class="select"><span>Works with</span><select id="f-with"></select></label>
+            <label class="select"><span>Language</span><select id="lang"><option value="">Any</option></select></label>
+          </div>
+          <div class="view" role="group" aria-label="Layout">
+            <button type="button" data-view="wire" aria-label="Ranked" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6h11M10 12h11M10 18h11M4 6h1M4 12h1M4 18h1"/></svg></button>
+            <button type="button" data-view="cards" aria-label="Cards" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg></button>
+            <button type="button" data-view="list" aria-label="List" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="saved-bar" id="savedbar" hidden></div>
+      <section id="lead" class="lead" hidden aria-label="Top movers"></section>
+      <section id="results" class="wire" aria-label="Repos" aria-live="polite"></section>
+      <div class="more-wrap"><button id="more" type="button" class="more" hidden>Show more</button></div>
+      <p class="foot">New repos every two days, stars refreshed daily. Visits are counted without cookies, and <a href="https://starwire.goatcounter.com">the numbers are public</a>. <a href="how.html">How it works</a> <a href="https://github.com/boffti/starwire/blob/main/data/repos.json">Data</a> <a href="feed.xml">RSS</a></p>
+    </main>
+  </div>
+</div>
+<aside class="panel" id="panel" hidden aria-label="Repo details"></aside>
+<aside class="panel settings" id="settings" hidden aria-label="Settings"></aside>
+<div class="panel-scrim" id="pscrim"></div>
+<script src="app.js?v=47" type="module"></script>
+</body>
+</html>

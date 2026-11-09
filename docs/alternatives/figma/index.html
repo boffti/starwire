@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<base href="/">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open source alternatives to Figma: penpot, open-pencil, desigma and 4 more | starwire</title>
+<link rel="canonical" href="https://starwire.foo/alternatives/figma/">
+<meta name="description" content="7 open source projects do the same job as Figma, ranked by how much of what Figma does each one covers. Free, and many you can self-host.">
+<meta name="theme-color" content="#141414">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://starwire.foo/alternatives/figma/">
+<meta property="og:title" content="Open source alternatives to Figma: penpot, open-pencil, desigma and 4 more | starwire">
+<meta property="og:description" content="7 open source projects do the same job as Figma, ranked by how much of what Figma does each one covers. Free, and many you can self-host.">
+<meta property="og:image" content="https://r.starwire.foo/instead-of/figma/card.png?v=2026-11-09">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://r.starwire.foo/instead-of/figma/card.png?v=2026-11-09">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Open source alternatives to Figma","numberOfItems":7,"itemListElement":[{"@type":"ListItem","position":1,"name":"penpot","url":"https://github.com/penpot/penpot"},{"@type":"ListItem","position":2,"name":"open-pencil","url":"https://github.com/open-pencil/open-pencil"},{"@type":"ListItem","position":3,"name":"desigma","url":"https://github.com/deepfounder-ai/desigma"},{"@type":"ListItem","position":4,"name":"openpencil","url":"https://github.com/ZSeven-W/openpencil"},{"@type":"ListItem","position":5,"name":"open-design","url":"https://github.com/nexu-io/open-design"},{"@type":"ListItem","position":6,"name":"m3e-canvas","url":"https://github.com/lnkiai/m3e-canvas"},{"@type":"ListItem","position":7,"name":"airship","url":"https://github.com/0xnyn/airship"}]}</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23e3b341' d='M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 20.9l1.6-7L2 9.2l7.1-.6z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=42">
+<link rel="alternate" type="application/rss+xml" title="starwire, new picks" href="https://starwire.foo/feed.xml">
+<script>try{const t=localStorage.getItem("starwire-theme");if(t)document.documentElement.dataset.theme=t;if(localStorage.getItem("starwire-rail")==="1")document.documentElement.classList.add("rail")}catch{}</script>
+<style>body[data-alt] .page > :not(#repo-page){display:none}</style>
+</head>
+<body data-alt="Figma">
+<div class="app" id="app">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="./">
+      <span class="mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 20.9l1.6-7L2 9.2l7.1-.6z"/></svg></span>
+      <span><strong>starwire</strong><small>Repos worth a look</small></span>
+    </a>
+    <div class="side-scroll">
+      <nav class="group" id="views" aria-label="Views"></nav>
+      <nav class="group" id="cats" aria-label="Areas"></nav>
+    </div>
+    <div class="side-foot">
+      <details class="mini-promo" id="side-promo">
+        <summary><strong>Organize your own stars</strong><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <a href="https://github.com/boffti/stardash" target="_blank" rel="noopener">
+          <span>StarDash turns your GitHub stars into a searchable, tagged dashboard. Free, open source, and you host it yourself in one container.</span>
+          <em>Try StarDash for free</em>
+        </a>
+      </details>
+      <script>
+        // closed by default; remembers if you open it (this browser only)
+        try { const d = document.getElementById("side-promo"); d.open = localStorage.getItem("starwire-promo") === "open"; d.addEventListener("toggle", () => localStorage.setItem("starwire-promo", d.open ? "open" : "closed")) } catch {}
+      </script>
+      <a class="side-link" href="https://github.com/boffti/starwire/issues/new?template=submit-repo.yml">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Submit a repo</span>
+      </a>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <div class="main">
+    <header class="appbar">
+      <button class="icon-btn menu" id="menu" type="button" aria-label="Open categories"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      <button class="icon-btn rail-btn" id="rail" type="button" aria-pressed="false" aria-label="Collapse sidebar"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M16 10l-2 2 2 2"/></svg></button>
+      <label class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Search repos, topics, languages" autocomplete="off" aria-label="Search repos">
+        <kbd>/</kbd>
+      </label>
+      <nav class="bar-links">
+        <button id="open-settings" class="icon-btn" type="button" aria-label="Settings" title="Settings"></button>
+        <a class="icon-btn" href="how.html" aria-label="How starwire works" title="How starwire works"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg></a>
+        <a class="icon-btn" href="https://github.com/boffti/starwire" aria-label="starwire on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true" class="gh"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+        <button id="theme" class="icon-btn" type="button" aria-label="Switch light or dark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      </nav>
+    </header>
+
+    <main class="page">
+      <section class="rp" id="repo-page" aria-live="polite"><div class="rp-top"><button type="button" class="rp-back" data-back><svg style="fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Back to the list</button><nav class="rp-crumbs" aria-label="Where it sits"><a href="?alt=all">Alternatives</a></nav></div>
+  <section class="hero alt-hero"><div class="who">
+    <h1>Open source alternatives to Figma</h1>
+    <p class="line">7 projects on starwire do the same job. Ranked by how much of what Figma does each one covers, read from its README and website. Ties go to the healthiest.</p>
+  </div></section>
+  <section class="jobs" aria-labelledby="jobs"><h2 id="jobs">What Figma does</h2><ol class="job-list"><li class="core">Vector design canvas for UI<small>core</small></li><li class="core">Real-time multiplayer editing<small>core</small></li><li class="core">Components and design systems<small>core</small></li><li class="">Interactive prototypes</li><li class="">Auto layout</li><li class="">Comments and handoff to developers</li><li class="">Plugins</li><li class="">Import and export of design files</li></ol><p class="foot-note">Each dot in the table is one job, in this order. Square dots are core jobs and count double. Full means yes, half means partly. Hover a dot for the line behind it. <a href="how.html#fit">How we score this</a></p></section>
+  <section aria-label="Alternatives to Figma"><div class="cmp alt-table"><table>
+    <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
+    <tbody><tr>
+      <th scope="row"><a class="alt-name" href="?page=penpot%2Fpenpot"><img src="https://avatars.githubusercontent.com/penpot?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>penpot</b><small>Open source design and prototyping platform for product teams</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>95%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Vector design canvas for UI: yes. &quot;Design responsive and rules-based interfaces with wireframes&quot;"></i><i class="m-y core" title="Real-time multiplayer editing: yes. &quot;Real-time collaboration&quot;"></i><i class="m-y core" title="Components and design systems: yes. &quot;native Design Tokens, Components, and Variants&quot;"></i><i class="m-y" title="Interactive prototypes: yes. &quot;interactive prototypes&quot;"></i><i class="m-y" title="Auto layout: yes. &quot;CSS Grid and Flex Layout&quot;"></i><i class="m-y" title="Comments and handoff to developers: yes. &quot;The inspect tab gives instant access to SVG, CSS and HTML&quot;"></i><i class="m-y" title="Plugins: yes. &quot;Penpot plugins let you expand the platform's capabilities&quot;"></i><i class="m-p" title="Import and export of design files: partly. &quot;like SVG, CSS, HTML, and JSON&quot;"></i></span></td><td data-k="Stars"><span class="s">62k</span><small class="w">+88</small></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:6.799849510910459rem"></span>1,291</div></td>
+      <td data-k="Last release">5 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>80%</span></td>
+      <td data-k="Form">Web app, Self-hostable service</td>
+      <td data-k="License">MPL-2.0</td></tr><tr>
+      <th scope="row"><a class="alt-name" href="?page=open-pencil%2Fopen-pencil"><img src="https://avatars.githubusercontent.com/open-pencil?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>open-pencil</b><small>Open source design editor with AI features, aiming to replace Figma</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>95%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Vector design canvas for UI: yes. &quot;Open-source design editor.&quot;"></i><i class="m-y core" title="Real-time multiplayer editing: yes. &quot;Real-time collaboration&quot;"></i><i class="m-y core" title="Components and design systems: yes. &quot;Components and variants&quot;"></i><i class="m-p" title="Interactive prototypes: partly. &quot;preview it live over the canvas&quot;"></i><i class="m-y" title="Auto layout: yes. &quot;Auto layout &amp; CSS Grid&quot;"></i><i class="m-y" title="Comments and handoff to developers: yes. &quot;comments pinned to layers&quot;"></i><i class="m-y" title="Plugins: yes. &quot;Figma Plugin API plus an `openpencil` API&quot;"></i><i class="m-y" title="Import and export of design files: yes. &quot;read and write native Figma files&quot;"></i></span></td><td data-k="Stars"><span class="s">9.7k</span><small class="w">+74</small></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>1,329</div></td>
+      <td data-k="Last release">26 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>91%</span></td>
+      <td data-k="Form">Desktop app, Web app</td>
+      <td data-k="License">MIT</td></tr><tr>
+      <th scope="row"><a class="alt-name" href="?page=deepfounder-ai%2Fdesigma"><img src="https://avatars.githubusercontent.com/deepfounder-ai?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>desigma</b><small>Rust design canvas aiming to be a free Figma alternative</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>91%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Vector design canvas for UI: yes. &quot;vector editing&quot;"></i><i class="m-y core" title="Real-time multiplayer editing: yes. &quot;Live collaboration share a link, edit together, no account&quot;"></i><i class="m-y core" title="Components and design systems: yes. &quot;Components that stay in sync&quot;"></i><i class="m-y" title="Interactive prototypes: yes. &quot;Prototype what you draw&quot;"></i><i class="m-y" title="Auto layout: yes. &quot;Nested auto layout frames with hug, fill and fixed sizing&quot;"></i><i class="m-y" title="Comments and handoff to developers: yes. &quot;Hand off as code&quot;"></i><i class="m-n" title="Plugins: not shown"></i><i class="m-y" title="Import and export of design files: yes. &quot;real Figma file import&quot;"></i></span></td><td data-k="Stars"><span class="s">1.2k</span><small class="w">+220</small></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:2.043641835966892rem"></span>388</div></td>
+      <td data-k="Last release">None</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>88%</span></td>
+      <td data-k="Form">Desktop app</td>
+      <td data-k="License">Apache-2.0</td></tr><tr>
+      <th scope="row"><a class="alt-name" href="?page=ZSeven-W%2Fopenpencil"><img src="https://avatars.githubusercontent.com/ZSeven-W?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>openpencil</b><small>Open-source vector design tool with AI-driven UI generation on a live canvas</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>64%</b><small>Same job, different way</small></span><span class="fit-dots"><i class="m-y core" title="Vector design canvas for UI: yes. &quot;open-source AI-native vector design tool&quot;"></i><i class="m-y core" title="Real-time multiplayer editing: yes. &quot;Design together over authenticated peer-to-peer sessions&quot;"></i><i class="m-y core" title="Components and design systems: yes. &quot;Manage reusable UIKits with style switching and component composition&quot;"></i><i class="m-n" title="Interactive prototypes: not shown"></i><i class="m-n" title="Auto layout: not shown"></i><i class="m-p" title="Comments and handoff to developers: partly. &quot;Code export to React + Tailwind or HTML + CSS&quot;"></i><i class="m-n" title="Plugins: not shown"></i><i class="m-p" title="Import and export of design files: partly. &quot;Import/export kits from `.pen` files.&quot;"></i></span></td><td data-k="Stars"><span class="s">7.2k</span><small class="w">+84</small></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:4.36117381489842rem"></span>828</div></td>
+      <td data-k="Last release">None</td><td data-k="Issues closed"><span class="lvl-ok"><i class="dot"></i>59%</span></td>
+      <td data-k="Form">Desktop app, Web app</td>
+      <td data-k="License">MIT</td></tr><tr>
+      <th scope="row"><a class="alt-name" href="?page=nexu-io%2Fopen-design"><img src="https://avatars.githubusercontent.com/nexu-io?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>open-design</b><small>Local-first workspace where AI agents build designs, sites, decks and prototypes</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>49%</b><small>Same job, different way</small></span><span class="fit-dots"><i class="m-p core" title="Vector design canvas for UI: partly. &quot;Move and resize elements, change text and color&quot;"></i><i class="m-n core" title="Real-time multiplayer editing: not shown"></i><i class="m-y core" title="Components and design systems: yes. &quot;Choose from 150+ open-source design systems&quot;"></i><i class="m-y" title="Interactive prototypes: yes. &quot;build and refine interactive web experiences&quot;"></i><i class="m-n" title="Auto layout: not shown"></i><i class="m-y" title="Comments and handoff to developers: yes. &quot;let teammates comment right on the design&quot;"></i><i class="m-y" title="Plugins: yes. &quot;skills, design templates, design systems, and plugins&quot;"></i><i class="m-p" title="Import and export of design files: partly. &quot;Export HTML or PDF&quot;"></i></span></td><td data-k="Stars"><span class="s">107k</span><small class="w">+609</small></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:3.0443942814145974rem"></span>578</div></td>
+      <td data-k="Last release">5 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>81%</span></td>
+      <td data-k="Form">Desktop app</td>
+      <td data-k="License">Apache-2.0</td></tr><tr>
+      <th scope="row"><a class="alt-name" href="?page=lnkiai%2Fm3e-canvas"><img src="https://avatars.githubusercontent.com/lnkiai?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>m3e-canvas</b><small>Browser canvas for sketching Material 3 screens and exporting them as prompts</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>36%</b><small>Same job, different way</small></span><span class="fit-dots"><i class="m-p core" title="Vector design canvas for UI: partly. &quot;Drag parts onto phone or desktop screens.&quot;"></i><i class="m-n core" title="Real-time multiplayer editing: not shown"></i><i class="m-p core" title="Components and design systems: partly. &quot;Real M3 Expressive parts&quot;"></i><i class="m-y" title="Interactive prototypes: yes. &quot;Link parts to screens and press Preview to try the flow&quot;"></i><i class="m-n" title="Auto layout: not shown"></i><i class="m-p" title="Comments and handoff to developers: partly. &quot;copy a prompt for your AI coding tool&quot;"></i><i class="m-n" title="Plugins: not shown"></i><i class="m-p" title="Import and export of design files: partly. &quot;save a screen as a PNG&quot;"></i></span></td><td data-k="Stars"><span class="s">10k</span><small class="w">+101</small></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:1.1218961625282167rem"></span>213</div></td>
+      <td data-k="Last release">None</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>80%</span></td>
+      <td data-k="Form">Web app</td>
+      <td data-k="License">MIT</td></tr><tr>
+      <th scope="row"><a class="alt-name" href="?page=0xnyn%2Fairship"><img src="https://avatars.githubusercontent.com/0xnyn?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>airship</b><small>Visual canvas editor for driving coding agents like Claude Code and Codex</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>18%</b><small>Same job, different way</small></span><span class="fit-dots"><i class="m-p core" title="Vector design canvas for UI: partly. &quot;an infinite design canvas in front of your dev server&quot;"></i><i class="m-n core" title="Real-time multiplayer editing: not shown"></i><i class="m-n core" title="Components and design systems: not shown"></i><i class="m-n" title="Interactive prototypes: not shown"></i><i class="m-p" title="Auto layout: partly. &quot;is position, size, spacing and layout&quot;"></i><i class="m-p" title="Comments and handoff to developers: partly. &quot;Changes land in your code.&quot;"></i><i class="m-n" title="Plugins: not shown"></i><i class="m-n" title="Import and export of design files: not shown"></i></span></td><td data-k="Stars"><span class="s">736</span><small class="w">+1</small></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:0.12114371708051166rem"></span>23</div></td>
+      <td data-k="Last release">None</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>100%</span></td>
+      <td data-k="Form">Desktop app</td>
+      <td data-k="License">MIT</td></tr></tbody></table></div>
+    <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a></p></section>
+  </section>
+      <div class="page-head">
+        <div>
+          <h1 id="title">All repos</h1>
+          <p id="sub"></p>
+          <a id="alt-hint" class="alt-hint" hidden></a>
+          <button type="button" class="everywhere" id="everywhere" hidden></button>
+        </div>
+        <div class="controls">
+          <label class="select"><span>Sort</span>
+            <select id="sort">
+              <option value="match" id="sort-match" hidden disabled>Best match</option>
+              <option value="today">Most stars today</option>
+              <option value="picked">Most picked</option>
+              <option value="trending">Trending</option>
+              <option value="stars">Most stars</option>
+              <option value="new">Newest picks</option>
+              <option value="active">Recently updated</option>
+              <option value="saved">Recently saved</option>
+            </select>
+          </label>
+          <button type="button" class="filters-btn" id="filters-btn" aria-expanded="false" aria-controls="filters"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filters<span class="badge" id="filters-n" hidden></span></button>
+          <div class="filters" id="filters">
+            <label class="select"><span>Form</span><select id="f-form"></select></label>
+            <label class="select"><span>Platform</span><select id="f-plat"></select></label>
+            <label class="select"><span>Works with</span><select id="f-with"></select></label>
+            <label class="select"><span>Language</span><select id="lang"><option value="">Any</option></select></label>
+          </div>
+          <div class="view" role="group" aria-label="Layout">
+            <button type="button" data-view="wire" aria-label="Ranked" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6h11M10 12h11M10 18h11M4 6h1M4 12h1M4 18h1"/></svg></button>
+            <button type="button" data-view="cards" aria-label="Cards" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg></button>
+            <button type="button" data-view="list" aria-label="List" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="saved-bar" id="savedbar" hidden></div>
+      <section id="lead" class="lead" hidden aria-label="Top movers"></section>
+      <section id="results" class="wire" aria-label="Repos" aria-live="polite"></section>
+      <div class="more-wrap"><button id="more" type="button" class="more" hidden>Show more</button></div>
+      <p class="foot">New repos every two days, stars refreshed daily. Visits are counted without cookies, and <a href="https://starwire.goatcounter.com">the numbers are public</a>. <a href="how.html">How it works</a> <a href="https://github.com/boffti/starwire/blob/main/data/repos.json">Data</a> <a href="feed.xml">RSS</a></p>
+    </main>
+  </div>
+</div>
+<aside class="panel" id="panel" hidden aria-label="Repo details"></aside>
+<aside class="panel settings" id="settings" hidden aria-label="Settings"></aside>
+<div class="panel-scrim" id="pscrim"></div>
+<script src="app.js?v=47" type="module"></script>
+</body>
+</html>

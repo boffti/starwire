@@ -16,7 +16,7 @@ import { makeIndex, fieldsFor } from "./search.js?v=3"
 import { readmeFragment, followTheme } from "./readme.js?v=1"
 import { count } from "./count.js?v=2"
 import { signs, summary } from "./vitals.js?v=1"
-import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups } from "./repo.js?v=14"
+import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups, replacesOf } from "./repo.js?v=16"
 
 const data = await fetch("data.json").then((r) => r.json())
 const now = Date.parse(data.updated)
@@ -72,6 +72,9 @@ const applyLook = () => {
 }
 applyLook()
 
+// a static alternatives page (/alternatives/notion/, written by the pipeline's build) names its product in <body data-alt>:
+// carry on as ?alt= so the app works as everywhere else; the page's canonical link keeps the clean address for search
+if (document.body.dataset.alt) { history.replaceState(null, "", `/?alt=${encodeURIComponent(document.body.dataset.alt)}`); delete document.body.dataset.alt; document.title = "starwire" }
 const params = new URLSearchParams(location.search)
 // a shared list opens as its own view, with a button to add it to your saves
 const shared = [...new Set((params.get("saved") ?? "").split(",").map((n) => n.trim()).filter((n) => NAME.test(n)).map(canon))].slice(0, 500)
@@ -385,9 +388,10 @@ async function showPage() {
   }
   const r = byName.get(state.page.toLowerCase())
   if (!r) { el.innerHTML = missingPage(state.page); document.title = TITLE; return }
-  const want = state.page, v = await vitals
+  if (r.alt?.length) fits ??= fetch("fit.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
+  const want = state.page, [v, f] = await Promise.all([vitals, r.alt?.length ? fits : {}])
   if (state.page !== want) return // moved on while vitals loaded
-  el.innerHTML = repoPage(r, { repos, vitals: v, today: data.updated.slice(0, 10), TX, saved: savedAt.has(r.r) })
+  el.innerHTML = repoPage(r, { repos, vitals: v, fit: f, today: data.updated.slice(0, 10), TX, saved: savedAt.has(r.r) })
   document.title = `${r.r.split("/")[1]}: ${r.l || "open source repo"} | starwire`
   count(`page/${r.r}`, "Repo page")
 }
@@ -655,8 +659,9 @@ function labels(r) {
     ["Form", (r.fo ?? []).map((x) => chip(`data-go-form="${esc(x)}"`, FORM.get(x))).join("")],
     ["Runs on", (r.pl ?? []).map((x) => chip(`data-go-plat="${esc(x)}"`, PLAT.get(x))).join("")],
     ["Works with", (r.ww ?? []).map((x) => chip(`data-go-with="${esc(x)}"`, WITH.get(x))).join("")],
+    ["Replaces", (r.alt ?? []).map((a) => `<a class="lab" href="?alt=${encodeURIComponent(a)}" data-fit-for="${esc(a.toLowerCase())}">${esc(a)}</a>`).join("")],
   ].filter(([, v]) => v)
-  return `<div class="p-labels">${rows.map(([k, v]) => `<div><span class="k">${k}</span><span class="v">${v}</span></div>`).join("")}${r.alt?.length ? `<p class="p-alt">Open source alternative to ${r.alt.map(esc).join(", ")}</p>` : ""}${r.ai ? `<p class="p-alt">${r.ai === 2 ? "AI tool" : "Uses AI"}</p>` : ""}</div>`
+  return `<div class="p-labels">${rows.map(([k, v]) => `<div><span class="k">${k}</span><span class="v">${v}</span></div>`).join("")}${r.alt?.length ? `<p class="p-alt p-fit" hidden></p>` : ""}${r.ai ? `<p class="p-alt">${r.ai === 2 ? "AI tool" : "Uses AI"}</p>` : ""}</div>`
 }
 
 function openPanel(name, push = true) {
@@ -706,6 +711,7 @@ function openPanel(name, push = true) {
   if (push) setRepoParam(r.r)
   readme(r)
   panelVitals(r)
+  panelFit(r)
 }
 
 // share link: r.starwire.foo/<owner>/<name> shows a card with the repo's picture and vital signs in chat apps and
@@ -718,6 +724,20 @@ async function share(name, b) {
   const was = b.innerHTML
   b.innerHTML = b.querySelector("span") ? `${CHECK}<span>Link copied</span>` : CHECK
   setTimeout(() => (b.innerHTML = was), 1600)
+}
+
+// how well it replaces each product, under the Replaces chips: "82% of Notion, #3 of 9"; fit.json loads only when needed
+async function panelFit(r) {
+  if (!r.alt?.length) return
+  vitals ??= fetch("vitals.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
+  fits ??= fetch("fit.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
+  const [v, f] = await Promise.all([vitals, fits]), el = panel.querySelector(".p-fit")
+  if (state.repo !== r.r || !el) return
+  const items = replacesOf(r, { repos, vitals: v, fit: f, today: data.updated.slice(0, 10) })
+  const parts = items.map(({ name, f: x, rank, n }) => `${x ? `${Math.round(x[0] * 100)}% of ${name}` : name}${n > 1 ? `, #${rank} of ${n}` : ""}`)
+  if (!parts.length) return
+  el.textContent = `Fit: ${parts.join("; ")}.`
+  el.hidden = false
 }
 
 // the vital signs in one plain line; vitals.json loads on the first panel or page opened, not with the list
