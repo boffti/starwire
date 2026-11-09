@@ -1,10 +1,12 @@
 // starwire share links, served at r.starwire.foo:
 //   /owner/name           a small page carrying the repo's preview tags; people are sent on to its page on starwire
 //   /owner/name/card.png  the card image chat apps show (src/card.js), cached for a day
+//   /instead-of/notion    the same pair for an alternatives page: "Instead of Notion" and its best three (src/altcard.js)
 // Data comes from the live site (data.json, vitals.json, art.json), so the cards update with the nightly refresh.
 import { ImageResponse, GoogleFont, cache } from "@cf-wasm/og/workerd"
 import { t } from "@cf-wasm/og/html-to-react"
 import { cardHTML } from "./card.js"
+import { altCardHTML, rankAlts, altSlug } from "./altcard.js"
 import { pickArt } from "./art.js"
 import { signs, summary } from "../../docs/vitals.js"
 
@@ -18,10 +20,11 @@ let memo = { at: 0 }
 async function site() {
   if (memo.data && Date.now() - memo.at < 6e5) return memo
   const get = (f) => fetch(`${SITE}/${f}`, { cf: { cacheTtl: 600, cacheEverything: true } }).then((r) => (r.ok ? r.json() : null)).catch(() => null)
-  const [data, vitals, art] = await Promise.all([get("data.json"), get("vitals.json"), get("art.json")])
+  const [data, vitals, art, fit] = await Promise.all([get("data.json"), get("vitals.json"), get("art.json"), get("fit.json")])
   if (!data) throw new Error("starwire data unavailable")
   memo = {
-    at: Date.now(), data, vitals: vitals ?? {}, art: art ?? {},
+    at: Date.now(), data, vitals: vitals ?? {}, art: art ?? {}, fit: fit ?? {},
+    alts: new Map(data.repos.flatMap((r) => r.alt ?? []).map((a) => [altSlug(a), a])), // slug -> product name
     byName: new Map(data.repos.map((r) => [r.r.toLowerCase(), r])),
     area: new Map(data.taxonomy.areas.flatMap((a) => a.subs.map(([id, n]) => [`${a.id}/${id}`, n]))),
   }
@@ -59,10 +62,57 @@ async function card(r, s, ctx) {
   throw new Error("card failed")
 }
 
+// ---- alternatives pages ----
+// ties go to the healthier project, as on the site: how many of activity, releases and issues are green
+const healthy = (s) => (r) => { const v = s.vitals[r.r]; if (!v) return -1; const x = signs(v, s.data.updated.slice(0, 10)); return [x.activity, x.release, x.issues].filter((y) => y.level === "good").length }
+
+function altPage(name, s) {
+  const ranked = rankAlts(name, s.data.repos, s.fit, healthy(s)), top = ranked.slice(0, 3).map((x) => x.r.r.split("/")[1])
+  const list = top.length > 1 ? `${top.slice(0, -1).join(", ")} and ${top.at(-1)}` : top[0]
+  const title = `Open source alternatives to ${name}`
+  const desc = `${list} ${top.length > 1 ? "lead" : "leads"} the ${ranked.length} on starwire${s.fit?.products?.[name.toLowerCase()] ? `, ranked by how much of what ${name} does each one covers` : ""}.`
+  const target = `${SITE}/?alt=${encodeURIComponent(name)}`, slug = altSlug(name)
+  const img = `${SELF}/instead-of/${slug}/card.png?v=${s.data.updated.slice(0, 10)}`
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>${esc(title)} | starwire</title>
+<meta name="description" content="${esc(desc)}">
+<meta property="og:type" content="website"><meta property="og:site_name" content="starwire">
+<meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}">
+<meta property="og:url" content="${SELF}/instead-of/${slug}"><meta property="og:image" content="${esc(img)}">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="${esc(`Instead of ${name}: ${list}`)}">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(title)}"><meta name="twitter:description" content="${esc(desc)}"><meta name="twitter:image" content="${esc(img)}">
+<link rel="canonical" href="${esc(target)}"><meta http-equiv="refresh" content="0;url=${esc(target)}">
+</head><body style="background:#0b0b0b;color:#f2f2f2;font:16px system-ui;padding:40px"><a style="color:#75d079" href="${esc(target)}">See the open source alternatives to ${esc(name)} on starwire</a></body></html>`
+}
+
+async function altCard(name, s) {
+  const ranked = rankAlts(name, s.data.repos, s.fit, healthy(s))
+  const opts = { cf: { cacheTtl: 86400, cacheEverything: true } }
+  const picks = await Promise.all(ranked.slice(0, 3).map(async (p) => ({ ...p, avatar: (await pickArt(p.r.r, undefined, opts))?.src ?? null })))
+  const draw = (ps) => ImageResponse.async(t(altCardHTML(name, ps, ranked.length)), { width: 1200, height: 630, fonts })
+  // an avatar the renderer can't read: draw the card again without pictures
+  for (const ps of [picks, picks.map((p) => ({ ...p, avatar: null }))]) {
+    try { const res = await draw(ps); await res.clone().arrayBuffer(); return res } catch (e) { console.error(name, e?.message) }
+  }
+  throw new Error("alt card failed")
+}
+
 export default {
   async fetch(req, env, ctx) {
     cache.setExecutionContext(ctx)
     const url = new URL(req.url)
+    const a = url.pathname.match(/^\/instead-of\/([a-z0-9-]+)(\/card\.png)?\/?$/i)
+    if (a) {
+      const s = await site(), name = s.alts.get(a[1].toLowerCase())
+      if (!name) return Response.redirect(`${SITE}/?alt=all`, 302)
+      if (!a[2]) return new Response(altPage(name, s), { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=600" } })
+      const key = new Request(url.toString()), hit = await caches.default.match(key)
+      if (hit) return hit
+      const png = await altCard(name, s)
+      const res = new Response(png.body, { headers: { "content-type": "image/png", "cache-control": "public, max-age=86400" } })
+      ctx.waitUntil(caches.default.put(key, res.clone()))
+      return res
+    }
     const m = url.pathname.match(/^\/([A-Za-z0-9-]+)\/([A-Za-z0-9_.-]+?)(\/card\.png)?\/?$/)
     if (!m) return Response.redirect(SITE, 302)
     const s = await site()

@@ -719,7 +719,7 @@ function openPanel(name, push = true) {
 async function share(name, b) {
   const url = `https://r.starwire.foo/${name}`
   count(`share/${name}`, "Shared")
-  if (navigator.share && matchMedia("(pointer: coarse)").matches) return navigator.share({ url, title: `${name.split("/")[1]} on starwire` }).catch(() => {})
+  if (navigator.share && matchMedia("(pointer: coarse)").matches) return navigator.share({ url, title: name.startsWith("instead-of/") ? `Open source alternatives to ${document.querySelector("#repo-page h1")?.textContent.replace(/^Open source alternatives to /, "") ?? ""}` : `${name.split("/")[1]} on starwire` }).catch(() => {})
   try { await navigator.clipboard.writeText(url) } catch { return void prompt("Copy this link", url) }
   const was = b.innerHTML
   b.innerHTML = b.querySelector("span") ? `${CHECK}<span>Link copied</span>` : CHECK
