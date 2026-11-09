@@ -27,7 +27,7 @@ const I = {
 }
 const GH = '<svg viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;stroke:none"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.4-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>'
 
-let r, repos, vitals, today, AREA, SUB, FORM, PLAT
+let r, repos, vitals, today, AREA, SUB, FORM, PLAT, fit = {}
 
 // repo + { repos, vitals, today, TX, saved } -> the page's HTML
 export function repoPage(repo, ctx) {
@@ -140,15 +140,23 @@ export function altGroups(list) {
   for (const x of list) for (const a of x.alt ?? []) { const k = altKey(a); if (!g.has(k)) g.set(k, { name: a, repos: [] }); g.get(k).repos.push(x) }
   return g
 }
+// fit: how much of the product's checklist a repo covers (scripts/fit.mjs in the pipeline). [score, kind, marks, quotes]
+const KIND = { "drop-in": "Replaces it", part: "Covers one part", different: "Same job, different way" }
+const fitOf = (g, x) => fit.pairs?.[altKey(g.name)]?.[x.r]
+const byFit = (g) => (a, b) => (fitOf(g, b)?.[0] ?? -1) - (fitOf(g, a)?.[0] ?? -1) || healthy(b) - healthy(a) || b.s - a.s
+const covered = (m) => [...m].reduce((n, c) => n + (c === "y" ? 1 : c === "p" ? 0.5 : 0), 0)
 const healthy = (x) => { const v = vitals[x.r]; if (!v) return -1; const s = signs(v, today); return [s.activity, s.release, s.issues].filter((y) => y.level === "good").length }
 
 export function altPage(name, ctx) {
-  ({ repos, vitals, today } = ctx); FORM = new Map(ctx.TX.forms)
+  ({ repos, vitals, today } = ctx); FORM = new Map(ctx.TX.forms); fit = ctx.fit ?? {}
   const groups = altGroups(repos), g = groups.get(altKey(name))
   const crumbs = `<nav class="rp-crumbs" aria-label="Where it sits"><a href="?alt=all">Alternatives</a></nav>`
   if (!g) return `<div class="rp-top">${BACK}${crumbs}</div><p class="rp-missing">No open source alternatives to ${esc(name)} on starwire yet. <a href="?q=${encodeURIComponent(name)}">Search for ${esc(name)}</a> or <a href="?alt=all">see every product</a>.</p>`
-  // healthiest first, then most stars
-  const rows = [...g.repos].sort((a, b) => healthy(b) - healthy(a) || b.s - a.s)
+  // best fit first (how much of the checklist it covers), then the healthiest, then most stars
+  const rows = [...g.repos].sort(byFit(g)), P = fit.products?.[altKey(g.name)]
+  const jobs = P?.jobs ?? []
+  const dots = (f) => `<span class="fit-dots">${jobs.map(([j, w], i) => `<i class="m-${f[2][i]}${w === 2 ? " core" : ""}" title="${esc(`${j}: ${f[2][i] === "y" ? "yes" : f[2][i] === "p" ? "partly" : "not shown"}${f[3][i] ? `. "${f[3][i]}"` : ""}`)}"></i>`).join("")}</span>`
+  const fitCell = (x) => { const f = fitOf(g, x); return f ? `<span class="fit"><b>${Math.round(f[0] * 100)}%</b><small>${KIND[f[1]]}</small></span>${dots(f)}` : `<span class="muted">Not checked yet</span>` }
   const commits = (x) => vitals[x.r]?.weeks.reduce((a, b) => a + b, 0)
   const max = Math.max(...rows.map((x) => commits(x) ?? 0), 1)
   const cell = (x) => { const v = vitals[x.r]; if (!v) return ["Not measured", "Not measured"]; const s = signs(v, today)
@@ -160,13 +168,14 @@ export function altPage(name, ctx) {
   return `<div class="rp-top">${BACK}${crumbs}</div>
   <section class="hero alt-hero"><div class="who">
     <h1>Open source alternatives to ${esc(g.name)}</h1>
-    <p class="line">${rows.length === 1 ? "One project on starwire does the same job." : `${rows.length} projects on starwire do the same job.`} The healthiest come first: steady commits, recent releases and issues getting closed.</p>
+    <p class="line">${rows.length === 1 ? "One project on starwire does the same job." : `${rows.length} projects on starwire do the same job.`} ${P ? `Ranked by how much of what ${esc(g.name)} does each one covers, read from its README and website. Ties go to the healthiest.` : "The healthiest come first: steady commits, recent releases and issues getting closed."}</p>
   </div></section>
+  ${P ? `<section class="jobs" aria-labelledby="jobs"><h2 id="jobs">What ${esc(g.name)} does</h2><ol class="job-list">${jobs.map(([j, w]) => `<li class="${w === 2 ? "core" : ""}">${esc(j)}${w === 2 ? "<small>core</small>" : ""}</li>`).join("")}</ol><p class="foot-note">Each dot in the table is one job, in this order. Square dots are core jobs and count double. Full means yes, half means partly. Hover a dot for the line behind it. <a href="how.html#fit">How we score this</a></p></section>` : ""}
   <section aria-label="Alternatives to ${esc(g.name)}"><div class="cmp alt-table"><table>
-    <thead><tr><th scope="col">Project</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
+    <thead><tr><th scope="col">Project</th>${P ? `<th scope="col">Covers</th>` : ""}<th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody>${rows.map((x) => { const c = commits(x), [rel, iss] = cell(x), [owner, nm] = x.r.split("/"); return `<tr>
       <th scope="row"><a class="alt-name" href="?page=${encodeURIComponent(x.r)}"><img src="${esc(avatar(owner, 56))}" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>${esc(nm)}</b><small>${esc(x.l || owner)}</small></span></a></th>
-      <td data-k="Stars"><span class="s">${num(x.s)}</span>${x.w > 0 ? `<small class="w">+${num(x.w)}</small>` : ""}</td>
+      ${P ? `<td data-k="Covers">${fitCell(x)}</td>` : ""}<td data-k="Stars"><span class="s">${num(x.s)}</span>${x.w > 0 ? `<small class="w">+${num(x.w)}</small>` : ""}</td>
       <td data-k="Commits, 12 weeks">${c == null ? "Not measured" : `<div class="bar"><span style="width:${(c / max) * 7}rem"></span>${c.toLocaleString("en-US")}</div>`}</td>
       <td data-k="Last release">${rel}</td><td data-k="Issues closed">${iss}</td>
       <td data-k="Form">${(x.fo ?? []).map((f) => esc(FORM.get(f))).join(", ") || "Not labelled"}</td>
@@ -175,18 +184,32 @@ export function altPage(name, ctx) {
   ${related.length ? `<section aria-labelledby="also"><h2 id="also">These also replace</h2><div class="alt-chips">${related.map((x) => `<a href="?alt=${encodeURIComponent(x.name)}">${esc(x.name)}<span>${x.repos.length}</span></a>`).join("")}</div></section>` : ""}`
 }
 
+// the index is a swap list: "Instead of Notion, use AFFiNE, litpage, AppFlowy", grouped by the area most of each
+// product's alternatives sit in. Best fit first; ones that only cover part of the product, or do it differently, are dimmed.
+// Scores stay on the product pages, where projects are compared.
 export function altIndex(ctx) {
-  repos = ctx.repos
-  const all = [...altGroups(repos).values()].sort((a, b) => b.repos.length - a.repos.length || a.name.localeCompare(b.name))
-  const tile = (g) => `<a class="alt-tile" href="?alt=${encodeURIComponent(g.name)}" data-name="${esc(g.name.toLowerCase())}"><b>${esc(g.name)}</b><span class="faces">${[...g.repos].sort((a, b) => b.s - a.s).slice(0, 4).map((x) => `<img src="${esc(avatar(x.r.split("/")[0], 40))}" alt="" width="20" height="20" loading="lazy" decoding="async">`).join("")}</span><small>${g.repos.length} ${g.repos.length === 1 ? "alternative" : "alternatives"}</small></a>`
+  ({ repos, vitals, today } = ctx); fit = ctx.fit ?? {}
+  const areaName = new Map((ctx.TX?.areas ?? []).map((a) => [a.id, a.name]))
+  const all = [...altGroups(repos).values()]
+  const areaOf = (g) => { const n = new Map(); for (const x of g.repos) if (x.a) n.set(x.a, (n.get(x.a) ?? 0) + 1); return [...n].sort((a, b) => b[1] - a[1])[0]?.[0] ?? "other" }
+  const groups = new Map()
+  for (const g of all) { const a = areaOf(g); if (!groups.has(a)) groups.set(a, []); groups.get(a).push(g) }
+  const order = [...groups].sort((a, b) => b[1].length - a[1].length).map(([a, gs]) => [a, gs.sort((x, y) => y.repos.length - x.repos.length || x.name.localeCompare(y.name))])
+  const pick = (g, x) => { const f = fitOf(g, x), [owner, nm] = x.r.split("/"), weak = f && (f[1] !== "drop-in" || f[0] < 0.5)
+    return `<a class="sw-pick${weak ? " weak" : ""}" href="?page=${encodeURIComponent(x.r)}"${weak ? ` title="${esc(KIND[f[1]])}"` : ""}><img src="${esc(avatar(owner, 40))}" alt="" width="18" height="18" loading="lazy" decoding="async"><span>${esc(nm)}</span></a>` }
+  const row = (g) => { const top = [...g.repos].sort(byFit(g)), more = top.length - 3
+    return `<li class="sw-row" data-name="${esc([g.name, ...g.repos.map((x) => x.r.split("/")[1])].join(" ").toLowerCase())}">
+      <a class="sw-prod" href="?alt=${encodeURIComponent(g.name)}">${esc(g.name)}</a>
+      <span class="sw-use">${top.slice(0, 3).map((x) => pick(g, x)).join("")}${more > 0 ? `<a class="sw-more" href="?alt=${encodeURIComponent(g.name)}" aria-label="All ${top.length} alternatives to ${esc(g.name)}">+${more}</a>` : ""}</span></li>` }
   return `<div class="rp-top">${BACK}</div>
   <section class="hero alt-hero"><div class="who">
     <h1>Open source alternatives</h1>
-    <p class="line">${all.length} products you might pay for, and the open source projects on starwire that do the same job.</p>
+    <p class="line">${all.length} products you might pay for, and the open source projects on starwire that do the same job. The best fit comes first. Faded names cover only part of the product.</p>
   </div></section>
-  <section aria-label="Products"><input type="search" class="alt-filter" placeholder="Find a product, like Notion or Postman" aria-label="Find a product" data-alt-filter>
-    <div class="alt-grid">${all.map(tile).join("")}</div>
-    <p class="rp-missing" hidden data-alt-none>No product by that name yet.</p></section>`
+  <section aria-label="Products"><input type="search" class="alt-filter" placeholder="Find a product or project, like Notion or penpot" aria-label="Find a product or project" data-alt-filter>
+    <div class="swaplist" role="presentation"><div class="sw-cols" aria-hidden="true"><span>Instead of</span><span>Use</span></div>
+    ${order.map(([a, gs]) => `<section class="sw-group" aria-label="${esc(areaName.get(a) ?? "Other")}"><h2>${esc(areaName.get(a) ?? "Other")}</h2><ul>${gs.map(row).join("")}</ul></section>`).join("")}</div>
+    <p class="rp-missing" hidden data-alt-none>No product or project by that name yet.</p></section>`
 }
 
 function swapCard() {

@@ -120,6 +120,7 @@
   <h2 id="sorts">The other sorts and labels</h2>
   <table>
     <tr><th>Sort</th><th>Order</th></tr>
+    <tr><td>Most stars today</td><td>Stars gained in the latest day of our daily counts. The arrow beside the rank compares it with the day before.</td></tr>
     <tr><td>Most picked</td><td>Number of different sources that picked the repo. Each source counts once, however often it posts. Ties go to more stars.</td></tr>
     <tr><td>Trending</td><td>Heat, as above</td></tr>
     <tr><td>Most stars</td><td>Current stars</td></tr>
@@ -146,7 +147,7 @@
   </ul>
 
   <h2 id="vitals">Vital signs on repo pages</h2>
-  <p>Each repo page shows four signs, measured from GitHub about once a week. They describe the project's recent activity; they aren't a rating of its quality, and they never change the order of any list.</p>
+  <p>Each repo page shows four signs, measured from GitHub about once a week. They describe the project's recent activity; they aren't a rating of its quality. They only break ties on alternatives pages, and never change the order of any other list.</p>
   <table>
     <thead><tr><th>Sign</th><th>What it shows</th><th>Green when</th><th>Amber when</th></tr></thead>
     <tbody>
@@ -157,6 +158,16 @@
     </tbody>
   </table>
   <p>Anything between is shown in a softer green. Some signs are left out instead of judged: no releases (many projects never use GitHub releases), fewer than 5 issues opened and closed in 90 days, or a repo with no measured star gain. "How it compares" puts the same numbers next to repos that replace the same tools, or its closest neighbours in its subarea.</p>
+
+  <h2 id="fit">How well an alternative fits</h2>
+  <p>Every product on the alternatives pages has a short checklist of the jobs people use it for, 5 to 8 of them, with the 2 or 3 core jobs marked. Notion's include pages and docs, databases with views, and real-time collaboration. Each project listed against a product is then read against that checklist, from its README and its website: yes, partly (planned, basic, or needs a plugin) or not shown, with the line that backs each yes or partly.</p>
+  <ul>
+    <li>The score is the share of the checklist covered. Core jobs count double, partly counts half.</li>
+    <li>A project that doesn't show one of the core jobs is held under 50%, so one that does the main thing always ranks above one that doesn't.</li>
+    <li>Each project is also tagged as replacing the product, covering one part of it, or doing the same job a different way.</li>
+    <li>Stars and activity play no part in the score. Ties go to the healthier project.</li>
+  </ul>
+  <p>The checklists and the reading are done with Claude and checked against a hand-made set of pairs before each change. A feature that neither the README nor the website mentions scores as missing, so a project that documents little can rank lower than it deserves. A project is read again when its README or website changes.</p>
 
   <h2 id="counts">What we count</h2>
   <p>starwire counts visits with <a href="https://www.goatcounter.com">GoatCounter</a> to learn what's useful: no cookies, nothing stored in your browser, no IP addresses kept, no way to follow you to other sites. <a href="https://starwire.goatcounter.com">The numbers are public</a>, so you see exactly what we see.</p>

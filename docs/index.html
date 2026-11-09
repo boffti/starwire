@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=30">
+<link rel="stylesheet" href="style.css?v=41">
 <link rel="alternate" type="application/rss+xml" title="starwire, new picks" href="https://starwire.foo/feed.xml">
 <script>try{const t=localStorage.getItem("starwire-theme");if(t)document.documentElement.dataset.theme=t;if(localStorage.getItem("starwire-rail")==="1")document.documentElement.classList.add("rail")}catch{}</script>
 </head>
@@ -83,6 +83,7 @@
           <label class="select"><span>Sort</span>
             <select id="sort">
               <option value="match" id="sort-match" hidden disabled>Best match</option>
+              <option value="today">Most stars today</option>
               <option value="picked">Most picked</option>
               <option value="trending">Trending</option>
               <option value="stars">Most stars</option>
@@ -99,6 +100,7 @@
             <label class="select"><span>Language</span><select id="lang"><option value="">Any</option></select></label>
           </div>
           <div class="view" role="group" aria-label="Layout">
+            <button type="button" data-view="wire" aria-label="Ranked" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6h11M10 12h11M10 18h11M4 6h1M4 12h1M4 18h1"/></svg></button>
             <button type="button" data-view="cards" aria-label="Cards" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg></button>
             <button type="button" data-view="list" aria-label="List" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
           </div>
@@ -106,7 +108,8 @@
       </div>
 
       <div class="saved-bar" id="savedbar" hidden></div>
-      <section id="results" class="cards" aria-label="Repos" aria-live="polite"></section>
+      <section id="lead" class="lead" hidden aria-label="Top movers"></section>
+      <section id="results" class="wire" aria-label="Repos" aria-live="polite"></section>
       <div class="more-wrap"><button id="more" type="button" class="more" hidden>Show more</button></div>
       <p class="foot">New repos every two days, stars refreshed daily. Visits are counted without cookies, and <a href="https://starwire.goatcounter.com">the numbers are public</a>. <a href="how.html">How it works</a> <a href="https://github.com/boffti/starwire/blob/main/data/repos.json">Data</a> <a href="feed.xml">RSS</a></p>
     </main>
@@ -115,6 +118,6 @@
 <aside class="panel" id="panel" hidden aria-label="Repo details"></aside>
 <aside class="panel settings" id="settings" hidden aria-label="Settings"></aside>
 <div class="panel-scrim" id="pscrim"></div>
-<script src="app.js?v=34" type="module"></script>
+<script src="app.js?v=45" type="module"></script>
 </body>
 </html>

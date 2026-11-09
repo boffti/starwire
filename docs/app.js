@@ -16,7 +16,7 @@ import { makeIndex, fieldsFor } from "./search.js?v=3"
 import { readmeFragment, followTheme } from "./readme.js?v=1"
 import { count } from "./count.js?v=2"
 import { signs, summary } from "./vitals.js?v=1"
-import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups } from "./repo.js?v=6"
+import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups } from "./repo.js?v=14"
 
 const data = await fetch("data.json").then((r) => r.json())
 const now = Date.parse(data.updated)
@@ -51,14 +51,14 @@ function setSaved(list) {
 // ---- settings: per-browser preferences in localStorage. They pick the defaults; a link's own parameters still win,
 // so a shared link shows the same thing for everyone. Versioned so later settings can be added without breaking old ones.
 const PREFS_KEY = "starwire-prefs"
-const DEFAULT_PREFS = { v: 1, sort: "picked", layout: "cards", topics: true, gain: true, picked: true, stardash: true, sidebar: "area", hideAI: false }
-const SORTS = ["picked", "trending", "stars", "new", "active"]
+const DEFAULT_PREFS = { v: 1, sort: "today", layout: "wire", topics: true, gain: true, picked: true, stardash: true, sidebar: "area", hideAI: false }
+const SORTS = ["today", "picked", "trending", "stars", "new", "active"]
 function readPrefs() {
   let p = {}
   try { p = JSON.parse(localStorage.getItem(PREFS_KEY) ?? "{}") ?? {} } catch {}
   const out = { ...DEFAULT_PREFS }
   if (SORTS.includes(p.sort)) out.sort = p.sort
-  if (["cards", "list"].includes(p.layout)) out.layout = p.layout
+  if (["wire", "cards", "list"].includes(p.layout)) out.layout = p.layout
   for (const k of ["topics", "gain", "picked", "stardash", "hideAI"]) if (typeof p[k] === "boolean") out[k] = p[k]
   if (["area", "form", "with"].includes(p.sidebar)) out.sidebar = p.sidebar
   return out
@@ -183,6 +183,74 @@ function card(r) {
 </div>`
 }
 
+// ---- ranked wire: momentum is the unit. Stars per day from the daily history: day(r) is the latest interval,
+// day(r, 1) the one before it, so a rank can be compared with yesterday's
+const TODAY = data.updated.slice(0, 10)
+function day(r, back = 0) {
+  const hs = r.hs ?? [], a = hs.at(-2 - back), b = hs.at(-1 - back)
+  if (!a || !b) return null
+  return (b[1] - a[1]) / Math.max(1, Math.round((Date.parse(b[0]) - Date.parse(a[0])) / 864e5))
+}
+const dayText = (r) => { const d = day(r); return d == null ? "" : `${d < 0 ? "" : "+"}${num(Math.round(d))}` }
+function spark(hs, w = 120, h = 32, cls = "wspark") {
+  if (hs.length < 2) return `<span class="${cls} none" aria-hidden="true"></span>`
+  const t0 = Date.parse(hs[0][0]), span = Date.parse(hs.at(-1)[0]) - t0 || 1
+  const ys = hs.map((x) => x[1]), lo = Math.min(...ys), hi = Math.max(...ys)
+  const pts = hs.map(([d, v]) => [((Date.parse(d) - t0) / span) * w, h - 3 - ((v - lo) / (hi - lo || 1)) * (h - 6)])
+  const line = pts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ")
+  return `<svg class="${cls}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><polygon points="0,${h} ${line} ${w},${h}"/><polyline points="${line}"/></svg>`
+}
+// rank change: position by stars per day now vs the interval before, within the list on screen (only for that sort)
+let moves = null
+function rankMoves(list) {
+  const pos = (f) => new Map(list.filter((r) => f(r) != null).sort((a, b) => f(b) - f(a)).map((r, i) => [r.r, i]))
+  const now = pos((r) => day(r)), then = pos((r) => day(r, 1))
+  return (r) => { const a = now.get(r.r), b = then.get(r.r); return a == null ? "" : b == null ? `<i class="mv new">new</i>` : b > a ? `<i class="mv up">▲${b - a}</i>` : b < a ? `<i class="mv down">▼${a - b}</i>` : `<i class="mv same">=</i>` }
+}
+function row(r, i) {
+  const [owner, name] = r.r.split("/"), d = day(r), today = r.hs?.at(-1)?.[0] === TODAY
+  return `<div class="repo wrow${i < 3 ? " top" : ""}" role="button" tabindex="0" data-r="${esc(r.r)}" aria-label="${esc(name)} details">
+  <span class="rank">${i + 1}${moves ? moves(r) : ""}</span>
+  <img src="${esc(avatar(owner, 56))}" alt="" loading="lazy" decoding="async" width="28" height="28">
+  <div class="name"><strong>${esc(name)}</strong><span>${esc(owner)}${pills(r) ? ` ${pills(r)}` : ""}</span></div>
+  <p class="line">${esc(r.l)}</p>
+  <span class="lang">${r.g ? `<span class="dot" style="--c:${esc(r.gc ?? "")}">${esc(r.g)}</span>` : ""}</span>
+  ${spark(r.hs ?? [])}
+  <div class="gain">${d != null ? `<b>${dayText(r)}</b><small>${today ? "today" : "a day"}</small>` : `<b class="flat">${STAR}${num(r.s)}</b>`}</div>
+  <div class="tot"><span class="stars">${STAR}${num(r.s)}</span><small title="${esc(gainTitle(r))}">${r.h > 0 ? esc(gain(r)) : ""}</small></div>
+  ${saveBtn(r.r)}<a class="jump" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener" aria-label="Open ${esc(name)} on GitHub" title="Open on GitHub">${GH}</a>
+</div>`
+}
+const DATE = new Date(now).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" })
+// above the list: the day's biggest mover on the plain views, the area's top three of the week inside an area
+function lead(list) {
+  const el = $("#lead")
+  if (state.q || state.form || state.plat || state.with || state.lang || ["saved", "shared"].includes(state.f)) return (el.hidden = true)
+  if (state.a) {
+    const top = list.filter((r) => r.w > 0).sort((a, b) => b.w - a.w).slice(0, 3)
+    if (top.length < 3) return (el.hidden = true)
+    el.className = "lead movers"
+    el.innerHTML = `<h2>Rising fastest in ${esc(state.sa ? SUB.get(`${state.a}/${state.sa}`) : AREA.get(state.a).name)} this week</h2><div class="mv-row">${top.map((r, i) => { const [o, n] = r.r.split("/"); return `<a class="mv-tile" href="?page=${esc(r.r)}"><span class="n">${i + 1}</span><img src="${esc(avatar(o, 56))}" alt="" width="28" height="28" loading="lazy"><span class="who"><b>${esc(n)}</b><small>${esc(r.l)}</small></span>${spark(r.hs ?? [], 96, 28)}<span class="g"><b>+${num(r.w)}</b><small>${/ a week$/.test(gain(r)) ? "this week" : esc(gain(r).replace(/^~?\+\S+ /, ""))}</small></span></a>` }).join("")}</div>`
+    return (el.hidden = false)
+  }
+  const r = list.filter((x) => day(x) != null).sort((a, b) => day(b) - day(a))[0]
+  if (!r) return (el.hidden = true)
+  const [owner, name] = r.r.split("/"), hs = r.hs ?? []
+  el.className = "lead spot"
+  el.innerHTML = `<div class="spot-text">
+    <h2>Biggest mover on ${DATE}</h2>
+    <a class="spot-name" href="?page=${esc(r.r)}"><img src="${esc(avatar(owner, 96))}" alt="" width="44" height="44"><span><b>${esc(name)}</b><small>${esc(owner)}</small></span></a>
+    <p>${esc(r.l)}</p>
+    <ul class="spot-stats"><li><b>${dayText(r)}</b> stars today</li>${r.h > 0 ? `<li><b>${esc(gain(r).replace(/ a week$/, ""))}</b> ${/ a week$/.test(gain(r)) ? "this week" : ""}</li>` : ""}<li><b>${num(r.s)}</b> stars in all</li></ul>
+    <p class="spot-vitals" hidden></p>
+    <a class="btn" href="?page=${esc(r.r)}">See the repo</a>
+  </div>
+  <figure class="spot-chart">${spark(hs, 480, 150, "bigspark")}<figcaption><span>${num(hs[0]?.[1] ?? r.s)} stars, ${esc(hs[0]?.[0] ?? "")}</span><span>${num(r.s)} stars, ${esc(hs.at(-1)?.[0] ?? "")}</span></figcaption></figure>`
+  el.hidden = false
+  vitals ??= fetch("vitals.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
+  vitals.then((v) => { const p = el.querySelector(".spot-vitals"); if (v[r.r] && p && el.contains(p)) { p.textContent = `${summary(signs(v[r.r], TODAY))}.`; p.hidden = false } })
+}
+
 const promo = `<a class="promo" href="https://github.com/boffti/stardash" target="_blank" rel="noopener">
   <div><small>From the maker of starwire</small><strong>Keep the ones you star organized</strong><p>StarDash sorts your GitHub stars into collections, tags them with AI and tells you when tools you use ship breaking changes. Free, open source and self-hosted.</p></div>
   <span>Try StarDash for free</span>
@@ -190,6 +258,7 @@ const promo = `<a class="promo" href="https://github.com/boffti/stardash" target
 
 const sorters = {
   saved: (a, b) => (savedAt.get(b.r) ?? -1) - (savedAt.get(a.r) ?? -1),
+  today: (a, b) => (day(b) ?? -1) - (day(a) ?? -1) || b.h - a.h,
   trending: (a, b) => b.h - a.h,
   picked: (a, b) => b.k - a.k || b.s - a.s,
   stars: (a, b) => b.s - a.s,
@@ -230,13 +299,15 @@ function render() {
   const gone = state.f === "saved" && !anyFacet() && !state.lang && !scores ? saved.filter((n) => !byName.has(n.toLowerCase())) : []
   const el = $("#results")
   const layout = PHONE.matches ? "list" : state.view // phones always get the list; cards add nothing on a narrow screen
-  el.className = layout === "list" ? "list" : "cards"
+  el.className = layout
+  moves = layout === "wire" && state.sort === "today" && !scores ? rankMoves(list) : null
+  if (state.view === "wire") lead(list); else $("#lead").hidden = true // phones get the list rows, but keep the lead
   const cols = getComputedStyle(el).gridTemplateColumns.split(" ").length
   const spot = PROMO_ROW * cols + Math.floor(PROMO_COL * cols)
   // the StarDash card takes one repo's place, so a full page is 60 cells: whole rows at 3, 4, 5 or 6 columns
   const promoted = layout === "cards" && !state.q && !["saved", "shared"].includes(state.f) && Math.min(list.length, state.shown) > spot
   const shown = state.shown - (promoted ? 1 : 0)
-  const page = list.slice(0, shown).map(card)
+  const page = list.slice(0, shown).map(layout === "wire" ? row : card)
   if (list.length <= shown) page.push(...gone.map((n) => `<div class="repo gone"><div class="head"><div class="name"><strong>${esc(n.split("/")[1])}</strong><span>${esc(n.split("/")[0])}</span></div>${saveBtn(n)}</div><p class="line">No longer on the list. <a href="https://github.com/${esc(n)}" target="_blank" rel="noopener">Open on GitHub</a></p></div>`))
   if (promoted) page.splice(spot, 0, promo)
   const empty = state.f === "saved" && !saved.length
@@ -287,25 +358,28 @@ function syncURL() {
   const p = new URLSearchParams()
   for (const k of ["f", "a", "sa", "form", "plat", "with", "q", "lang", "repo", "page", "alt"]) if (state[k] && !(k === "f" && state.f === "shared")) p.set(k, state[k])
   if (state.f === "shared") p.set("saved", shared.join(","))
-  if (state.sort !== "picked" && !(state.sort === "match" && state.q)) p.set("sort", state.sort)
-  if (state.view !== "cards") p.set("view", state.view)
+  // left out only when it's what this browser falls back to on load, so a reload lands where you were
+  if (state.sort !== prefs.sort && !(state.sort === "match" && state.q)) p.set("sort", state.sort)
+  if (state.view !== prefs.layout) p.set("view", state.view)
   history.replaceState(null, "", `${location.pathname}${p.size ? `?${p}` : ""}`)
 }
 
 // ---- repo page: ?page=owner/name shows the repo in the main column, sidebar and search stay ----
 const TITLE = document.title
-let shownPage = "", vitals
+let shownPage = "", vitals, fits
 async function showPage() {
   const key = state.alt ? `alt:${state.alt}` : state.page
   if (shownPage === key) return // already drawn: keep its README and scroll position
   shownPage = key
   const el = $("#repo-page")
+  el.classList.toggle("wide", state.alt === "all")
   vitals ??= fetch("vitals.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
-  if (state.alt === "all") { el.innerHTML = altIndex({ repos }); document.title = `Open source alternatives | starwire`; return count("alt/all", "Alternatives") }
+  fits ??= fetch("fit.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
+  if (state.alt === "all") { const [v, f] = await Promise.all([vitals, fits]); if (shownPage !== key) return; el.innerHTML = altIndex({ repos, vitals: v, fit: f, today: data.updated.slice(0, 10), TX }); document.title = `Open source alternatives | starwire`; return count("alt/all", "Alternatives") }
   if (state.alt) {
-    const v = await vitals
+    const [v, f] = await Promise.all([vitals, fits])
     if (shownPage !== key) return
-    el.innerHTML = altPage(state.alt, { repos, vitals: v, today: data.updated.slice(0, 10), TX })
+    el.innerHTML = altPage(state.alt, { repos, vitals: v, fit: f, today: data.updated.slice(0, 10), TX })
     document.title = `Open source alternatives to ${state.alt} | starwire`
     return count(`alt/${state.alt.toLowerCase()}`, "Alternatives page")
   }
@@ -388,7 +462,7 @@ $("#filters-btn").addEventListener("click", (e) => {
 })
 $("#menu").addEventListener("click", () => $("#app").classList.add("open"))
 $("#scrim").addEventListener("click", closeMenu)
-document.querySelector(".view").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) set({ view: b.dataset.view, shown: state.shown }) })
+document.querySelector(".view").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; prefs.layout = b.dataset.view; savePrefs(); set({ view: b.dataset.view, shown: state.shown }) }) // the layout you pick is remembered, like the setting
 $("#everywhere").addEventListener("click", () => set({ f: "", a: "", sa: "", form: "", plat: "", with: "", lang: "", sort: "match" }, true))
 $("#more").addEventListener("click", () => set({ shown: state.shown + PAGE }))
 document.addEventListener("keydown", (e) => {
@@ -479,8 +553,8 @@ function openSettings() {
   <form class="p-body s-body">
     ${seg("sidebar", "Sidebar shows", prefs.sidebar, [["area", "Areas"], ["form", "Forms"], ["with", "Works with"]])}
     <fieldset class="s-row"><legend>Repos</legend>${check("hideAI", "Hide AI repos (AI tools, agents and anything built around AI)")}</fieldset>
-    ${seg("sort", "Default sort", prefs.sort, [["picked", "Most picked"], ["trending", "Trending"], ["stars", "Most stars"], ["new", "Newest"]])}
-    <div class="s-layout">${seg("layout", "Default layout", prefs.layout, [["cards", "Cards"], ["list", "List"]])}</div>
+    ${seg("sort", "Default sort", prefs.sort, [["today", "Most stars today"], ["picked", "Most picked"], ["trending", "Trending"], ["stars", "Most stars"], ["new", "Newest"]])}
+    <div class="s-layout">${seg("layout", "Default layout", prefs.layout, [["wire", "Ranked"], ["cards", "Cards"], ["list", "List"]])}</div>
     ${seg("theme", "Theme", themeNow(), [["system", "System"], ["light", "Light"], ["dark", "Dark"]])}
     <fieldset class="s-row"><legend>On each repo card</legend>${check("topics", "Topics")}${check("gain", "Stars gained")}${check("picked", "How many times it was picked")}</fieldset>
     <fieldset class="s-row"><legend>StarDash</legend>${check("stardash", "Show suggestions for StarDash, our tool for organizing your own stars")}</fieldset>
@@ -714,9 +788,10 @@ panel.addEventListener("click", async (e) => {
 $("#alt-hint").addEventListener("click", (e) => { const a = inApp(e); if (a) { e.preventDefault(); navigate(a.getAttribute("href")) } })
 $("#repo-page").addEventListener("input", (e) => {
   if (!("altFilter" in e.target.dataset)) return
-  const q = e.target.value.trim().toLowerCase(), tiles = $("#repo-page").querySelectorAll(".alt-tile")
-  for (const t of tiles) t.hidden = !!q && !t.dataset.name.includes(q)
-  $("#repo-page").querySelector("[data-alt-none]").hidden = [...tiles].some((t) => !t.hidden)
+  const q = e.target.value.trim().toLowerCase(), rows = $("#repo-page").querySelectorAll(".sw-row")
+  for (const t of rows) t.hidden = !!q && !t.dataset.name.includes(q)
+  for (const g of $("#repo-page").querySelectorAll(".sw-group")) g.hidden = !g.querySelector(".sw-row:not([hidden])")
+  $("#repo-page").querySelector("[data-alt-none]").hidden = [...rows].some((t) => !t.hidden)
 })
 $("#repo-page").addEventListener("click", async (e) => {
   const a = inApp(e)
