@@ -51,7 +51,7 @@ function setSaved(list) {
 // ---- settings: per-browser preferences in localStorage. They pick the defaults; a link's own parameters still win,
 // so a shared link shows the same thing for everyone. Versioned so later settings can be added without breaking old ones.
 const PREFS_KEY = "starwire-prefs"
-const DEFAULT_PREFS = { v: 1, sort: "today", layout: "wire", topics: true, gain: true, picked: true, stardash: true, sidebar: "area", hideAI: false }
+const DEFAULT_PREFS = { v: 1, sort: "today", layout: "wire", topics: true, gain: true, picked: true, stardash: true, listCard: true, sidebar: "area", hideAI: false }
 const SORTS = ["today", "picked", "trending", "stars", "new", "active"]
 function readPrefs() {
   let p = {}
@@ -59,7 +59,7 @@ function readPrefs() {
   const out = { ...DEFAULT_PREFS }
   if (SORTS.includes(p.sort)) out.sort = p.sort
   if (["wire", "cards", "list"].includes(p.layout)) out.layout = p.layout
-  for (const k of ["topics", "gain", "picked", "stardash", "hideAI"]) if (typeof p[k] === "boolean") out[k] = p[k]
+  for (const k of ["topics", "gain", "picked", "stardash", "listCard", "hideAI"]) if (typeof p[k] === "boolean") out[k] = p[k]
   if (["area", "form", "with"].includes(p.sidebar)) out.sidebar = p.sidebar
   return out
 }
@@ -68,7 +68,7 @@ function savePrefs() { try { localStorage.setItem(PREFS_KEY, JSON.stringify(pref
 // what hides with CSS: topics, gain badge and picked count on cards, and every StarDash suggestion
 const applyLook = () => {
   const b = document.body.classList
-  b.toggle("no-topics", !prefs.topics); b.toggle("no-gain", !prefs.gain); b.toggle("no-picked", !prefs.picked); b.toggle("no-stardash", !prefs.stardash)
+  b.toggle("no-topics", !prefs.topics); b.toggle("no-gain", !prefs.gain); b.toggle("no-picked", !prefs.picked); b.toggle("no-stardash", !prefs.stardash); b.toggle("no-list-card", !prefs.listCard)
 }
 applyLook()
 
@@ -143,12 +143,12 @@ const item = (attr, key, label, count) =>
   `<button type="button" class="cat" data-${attr}="${esc(key)}" aria-current="false" title="${esc(label)}"><svg viewBox="0 0 24 24" aria-hidden="true">${I[key] ?? I[""]}</svg><span>${esc(label)}</span><span class="n">${count.toLocaleString("en-US")}</span></button>`
 I.alt = '<path d="M4 7h13l-3-3M20 17H7l3 3"/>'
 const ALTS = altGroups(repos)
-$("#views").innerHTML = "<h2>Browse</h2>" + VIEWS.filter((v) => !v.hidden).map((v) => item("f", v.f, v.label, v.f === "saved" ? saved.length : repos.filter(v.test).length)).join("")
-  + item("alt", "all", "Alternatives", ALTS.size)
 const visible = (r) => !(prefs.hideAI && r.ai > 0) // "Hide AI repos" in settings
 let collapsed = false // the selected area's subareas are folded away; the area itself stays selected
 function renderSidebar() {
   const pool = repos.filter(visible), count = (test) => pool.filter(test).length
+  $("#views").innerHTML = "<h2>Browse</h2>" + VIEWS.filter((v) => !v.hidden).map((v) => item("f", v.f, v.label, v.f === "saved" ? saved.length : count(v.test))).join("")
+    + item("alt", "all", "Alternatives", ALTS.size)
   let html
   if (prefs.sidebar === "form") html = "<h2>Forms</h2>" + TX.forms.map(([id, name]) => [id, name, count((r) => r.fo?.includes(id))]).filter((x) => x[2]).sort((a, b) => b[2] - a[2]).map(([id, name, n]) => item("form", id, name, n)).join("")
   else if (prefs.sidebar === "with") html = "<h2>Works with</h2>" + TX.worksWith.map(([id, name]) => [id, name, count((r) => r.ww?.includes(id))]).filter((x) => x[2]).sort((a, b) => b[2] - a[2]).map(([id, name, n]) => item("with", id, name, n)).join("")
@@ -255,7 +255,7 @@ function lead(list) {
 }
 
 const promo = `<a class="promo" href="https://github.com/boffti/stardash" target="_blank" rel="noopener">
-  <div><small>From the maker of starwire</small><strong>Keep the ones you star organized</strong><p>StarDash sorts your GitHub stars into collections, tags them with AI and tells you when tools you use ship breaking changes. Free, open source and self-hosted.</p></div>
+  <div><small>A separate app from the maker of starwire</small><strong>Keep the ones you star organized</strong><p>StarDash sorts your GitHub stars into collections, tags them with AI and tells you when tools you use ship breaking changes. Free, open source and self-hosted.</p></div>
   <span>Try StarDash for free</span>
 </a>`
 
@@ -549,6 +549,8 @@ const GEAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12
 $("#open-settings").innerHTML = GEAR
 const themeNow = () => { try { return localStorage.getItem("starwire-theme") ?? "system" } catch { return "system" } }
 const seg = (name, label, value, options) => `<fieldset class="s-row"><legend>${label}</legend><div class="seg">${options.map(([v, t]) => `<label><input type="radio" name="${name}" value="${v}"${v === value ? " checked" : ""}><span>${t}</span></label>`).join("")}</div></fieldset>`
+// a dropdown for settings with too many options to fit one segmented row
+const dropdown = (name, label, value, options) => `<fieldset class="s-row"><legend>${label}</legend><label class="select"><select name="${name}" aria-label="${label}">${options.map(([v, t]) => `<option value="${v}"${v === value ? " selected" : ""}>${t}</option>`).join("")}</select></label></fieldset>`
 const check = (name, label) => `<label class="check"><input type="checkbox" name="${name}"${prefs[name] ? " checked" : ""}>${label}</label>`
 function openSettings() {
   settings.innerHTML = `
@@ -557,10 +559,11 @@ function openSettings() {
   <form class="p-body s-body">
     ${seg("sidebar", "Sidebar shows", prefs.sidebar, [["area", "Areas"], ["form", "Forms"], ["with", "Works with"]])}
     <fieldset class="s-row"><legend>Repos</legend>${check("hideAI", "Hide AI repos (AI tools, agents and anything built around AI)")}</fieldset>
-    ${seg("sort", "Default sort", prefs.sort, [["today", "Most stars today"], ["picked", "Most picked"], ["trending", "Trending"], ["stars", "Most stars"], ["new", "Newest"]])}
+    ${dropdown("sort", "Default sort", prefs.sort, [["today", "Most stars today"], ["picked", "Most picked"], ["trending", "Trending"], ["stars", "Most stars"], ["new", "Newest picks"]])}
     <div class="s-layout">${seg("layout", "Default layout", prefs.layout, [["wire", "Ranked"], ["cards", "Cards"], ["list", "List"]])}</div>
     ${seg("theme", "Theme", themeNow(), [["system", "System"], ["light", "Light"], ["dark", "Dark"]])}
     <fieldset class="s-row"><legend>On each repo card</legend>${check("topics", "Topics")}${check("gain", "Stars gained")}${check("picked", "How many times it was picked")}</fieldset>
+    <fieldset class="s-row"><legend>Sidebar</legend>${check("listCard", "Show the card linking to the list on GitHub")}</fieldset>
     <fieldset class="s-row"><legend>StarDash</legend>${check("stardash", "Show suggestions for StarDash, our tool for organizing your own stars")}</fieldset>
     <div class="s-foot"><button class="btn" type="button" id="s-reset">Reset to defaults</button></div>
   </form>`
@@ -702,7 +705,7 @@ function openPanel(name, push = true) {
     <section><h3>Stars over time</h3>${trend(r.hs ?? [])}</section>
     <section><h3>README</h3><div class="readme"><p class="muted">Loading README…</p></div></section>
     <section><h3>Similar${r.a ? ` in ${esc(SUB.get(`${r.a}/${r.sa}`))}` : ""}</h3><div class="p-similar">${similar(r).map((x) => `<button type="button" class="sim" data-r="${esc(x.r)}"><img src="${esc(avatar(x.r.split("/")[0], 40))}" alt="" width="20" height="20" loading="lazy" decoding="async"><span><strong>${esc(x.r.split("/")[1])}</strong><small>${esc(x.l)}</small></span><em>${STAR}${num(x.s)}</em></button>`).join("")}</div></section>
-    <a class="p-promo" href="https://github.com/boffti/stardash" target="_blank" rel="noopener">Starring this? <strong>StarDash</strong> keeps your GitHub stars organized and tells you when they ship breaking changes. Free, open source and self-hosted.</a>
+    <a class="p-promo" href="https://github.com/boffti/stardash" target="_blank" rel="noopener">Starring this? <strong>StarDash</strong>, a separate app from the maker of starwire, keeps your GitHub stars organized and tells you when they ship breaking changes. Free, open source and self-hosted.</a>
   </div>`
   panel.hidden = false
   document.body.classList.add("has-panel")

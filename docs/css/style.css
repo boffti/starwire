@@ -104,6 +104,8 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .pill-link:hover { border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
 .icon-btn { width: 34px; height: 34px; display: grid; place-items: center; background: none; border: 0; border-radius: 8px; color: var(--muted); cursor: pointer; text-decoration: none; }
 .icon-btn:hover { background: var(--raise); color: var(--text); }
+.icon-btn.labeled { width: auto; padding: 0 10px; display: flex; gap: 6px; font-size: 13px; font-weight: 500; }
+@media (max-width: 640px) { .icon-btn.labeled { width: 34px; padding: 0; justify-content: center; } .icon-btn.labeled span { display: none; } }
 .gh { fill: currentColor; stroke: none; }
 .menu { display: none; }
 
@@ -324,7 +326,8 @@ html { scrollbar-gutter: stable; }
 
 /* what the settings hide */
 .no-topics .repo .topics, .no-gain .repo .rise, .no-picked .repo .pill.picked { display: none; }
-.no-stardash .promo, .no-stardash .p-promo, .no-stardash #side-promo { display: none; }
+.no-stardash .promo, .no-stardash .p-promo { display: none; }
+.no-list-card #side-promo { display: none; }
 
 /* areas in the sidebar open into their subareas */
 .subs { display: flex; flex-direction: column; gap: 1px; margin: 2px 0 6px 18px; padding-left: 10px; border-left: 1px solid var(--line); }
