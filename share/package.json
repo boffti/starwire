@@ -13,8 +13,5 @@
   },
   "devDependencies": {
     "wrangler": "^4.158.0"
-  },
-  "overrides": {
-    "satori": "0.33.5"
   }
 }
