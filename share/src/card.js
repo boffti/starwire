@@ -39,7 +39,7 @@ function stats(r, size) {
 const SHORT = { "Commits, 12 wks": "commits, 12 wk", "Last release": "last release", "Issues closed": "issues closed" }
 const shortAgo = (v) => v.replace(" days ago", "d ago").replace(" months ago", "mo ago").replace(" years ago", "y ago")
 function signStats(cs, width, size) {
-  return cs.map(([label, value, level]) => `<div style="display:flex;flex-direction:column;gap:6px;width:${width}px;flex-shrink:0">
+  return cs.map(([label, value, level]) => `<div style="display:flex;flex-direction:column;gap:6px;${width ? `width:${width}px;` : ""}flex-shrink:0">
     <div style="display:flex;align-items:center;gap:9px"><div style="display:flex;width:12px;height:12px;border-radius:6px;background:${DOT[level]}"></div><span style="font-size:${size}px;font-weight:700;color:${level === "low" ? C.amber : C.text}">${esc(shortAgo(value))}</span></div>
     <span style="font-size:${Math.round(size * 0.64)}px;white-space:nowrap;color:${C.muted}">${SHORT[label] ?? label}</span></div>`).join("")
 }
@@ -74,19 +74,21 @@ function standard(r, owner, name, cs, footer, art) {
 </div>`
 }
 
+// the strip under a wide picture: chat apps shrink a card to about half size, so few things, drawn large
 function showcase(r, owner, name, cs, footer, art) {
+  const sub = [owner, footer].filter(Boolean).map((t, i) => `<span style="${i ? "flex-shrink:1;overflow:hidden;text-overflow:ellipsis" : "flex-shrink:0"}">${esc(t)}</span>`).join(`<span style="flex-shrink:0;color:#4a4a4a">/</span>`)
+  const two = [...cs.filter((c) => c[0] !== "Commits, 12 wks"), ...cs.filter((c) => c[0] === "Commits, 12 wks")].slice(0, 2) // commits mean least to a passer-by
   return `<div style="display:flex;flex-direction:column;width:1200px;height:630px;background:${C.bg};color:${C.text};font-family:Geist">
-  <div style="display:flex;width:1200px;height:420px;overflow:hidden;background:${art.kind === "readme" ? C.tileLight : C.panel}">
-    <img src="${art.src}" width="1200" height="420" style="width:1200px;height:420px;${art.kind === "og" ? "object-fit:cover;object-position:center top" : "object-fit:contain;padding:28px 40px 20px"}"/>
+  <div style="display:flex;width:1200px;height:390px;overflow:hidden;background:${art.kind === "readme" ? C.tileLight : C.panel}">
+    <img src="${art.src}" width="1200" height="390" style="width:1200px;height:390px;${art.kind === "og" ? "object-fit:cover;object-position:center top" : "object-fit:contain;padding:28px 40px 20px"}"/>
   </div>
-  <div style="display:flex;box-sizing:border-box;width:1200px;flex-grow:1;align-items:center;gap:28px;padding:10px 48px 26px">
-    <div style="display:flex;flex-direction:column;flex-grow:1;width:440px">
-      <span style="font-size:${nameSize(name, 60)}px;line-height:1.05;font-weight:800;letter-spacing:-2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:440px">${esc(name)}</span>
-      <div style="display:flex;align-items:center;gap:22px;margin-top:12px"><span style="flex-shrink:0;white-space:nowrap;font-size:23px;color:${C.muted}">${esc(owner)}</span>${stats({ ...r, g: null, li: null }, 24)}</div>
-      <span style="margin-top:12px;font-size:21px;color:${C.muted}">${esc(footer)}</span>
+  <div style="display:flex;box-sizing:border-box;width:1200px;flex-grow:1;align-items:center;gap:40px;padding:0 52px;border-top:2px solid ${C.line}">
+    <div style="display:flex;flex-direction:column;flex-grow:1;flex-shrink:1;width:560px;gap:12px">
+      <span style="font-size:${nameSize(name, 70)}px;line-height:1.05;font-weight:800;letter-spacing:-2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(name)}</span>
+      ${stats({ ...r, g: null, li: null }, 32)}
+      <div style="display:flex;gap:14px;font-size:26px;color:${C.muted};white-space:nowrap;overflow:hidden">${sub}</div>
     </div>
-    <div style="display:flex;gap:14px">${signStats(cs, 132, 25)}</div>
-    <div style="display:flex;align-self:flex-end;align-items:center;gap:10px;font-size:22px;font-weight:600;color:${C.soft}">${MARK(36)}</div>
+    <div style="display:flex;flex-shrink:0;gap:48px">${signStats(two, null, 40)}</div>
   </div>
 </div>`
 }
