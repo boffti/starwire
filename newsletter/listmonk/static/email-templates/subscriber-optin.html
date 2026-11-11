@@ -1,0 +1,29 @@
+{{ define "subscriber-optin" }}
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light only"><title>Confirm your starwire subscription</title></head>
+<body style="margin:0;padding:0;background:#f3f3f1">
+<div style="display:none;max-height:0;overflow:hidden">One click and the weekly email is yours.</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f3f1"><tr><td align="center" style="padding:24px 12px">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border:1px solid #e6e6e3">
+<tr><td style="background:#0b0b0c;border-bottom:3px solid #e3b341;padding:26px 24px 22px">
+<div style="font:800 34px/1 -apple-system,'Segoe UI',Helvetica,Arial,sans-serif;letter-spacing:-1.5px;color:#f0f6fc">starwire</div>
+<div style="padding-top:10px;font:14px/1.4 -apple-system,'Segoe UI',Helvetica,Arial,sans-serif;color:#9da7b3">The GitHub repos that open source curators keep pointing at.</div>
+</td></tr>
+<tr><td style="padding:30px 24px 8px;font:16px/1.55 -apple-system,'Segoe UI',Helvetica,Arial,sans-serif;color:#171717">
+<div style="font:700 12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:1.5px;color:#a87a06">ONE CLICK LEFT</div>
+<div style="padding:10px 0 12px;font:700 26px/1.2 -apple-system,'Segoe UI',Helvetica,Arial,sans-serif;letter-spacing:-0.5px">Confirm your subscription</div>
+Someone, hopefully you, asked to get the starwire weekly email at this address. Confirm it and the next issue comes to you.
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin:22px 0 6px"><tr><td style="background:#0b0b0c;border-radius:6px"><a href="{{ .OptinURL }}" style="display:inline-block;padding:13px 22px;font:600 15px -apple-system,'Segoe UI',Helvetica,Arial,sans-serif;color:#ffffff;text-decoration:none">Confirm subscription <span style="color:#e3b341">&rarr;</span></a></td></tr></table>
+</td></tr>
+<tr><td style="padding:0 24px 8px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr><td colspan="2" style="padding:26px 0 10px;font:700 12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:1.5px;color:#a87a06">WHAT YOU GET, ONCE A WEEK</td></tr>
+<tr><td width="30" style="padding:12px 8px 12px 0;border-top:1px solid #e6e6e3;vertical-align:top;font:13px/22px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#9a9a9a">01</td><td style="padding:12px 0;border-top:1px solid #e6e6e3;font:14px/1.5 -apple-system,'Segoe UI',Helvetica,Arial,sans-serif;color:#4a4a4a"><b style="color:#171717">The repo of the week</b><br>The one gaining stars fastest for its size, and what it actually does.</td></tr>
+<tr><td width="30" style="padding:12px 8px 12px 0;border-top:1px solid #e6e6e3;vertical-align:top;font:13px/22px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#9a9a9a">02</td><td style="padding:12px 0;border-top:1px solid #e6e6e3;font:14px/1.5 -apple-system,'Segoe UI',Helvetica,Arial,sans-serif;color:#4a4a4a"><b style="color:#171717">Trending and new</b><br>Five repos on the rise and five fresh picks, each with a short note.</td></tr>
+<tr><td width="30" style="padding:12px 8px 12px 0;border-top:1px solid #e6e6e3;vertical-align:top;font:13px/22px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#9a9a9a">03</td><td style="padding:12px 0;border-top:1px solid #e6e6e3;font:14px/1.5 -apple-system,'Segoe UI',Helvetica,Arial,sans-serif;color:#4a4a4a"><b style="color:#171717">A hidden gem and an alternative</b><br>One small repo worth knowing, and open source replacements for a paid tool.</td></tr>
+</table></td></tr>
+<tr><td style="padding:14px 24px 28px;font:13px/1.6 -apple-system,'Segoe UI',Helvetica,Arial,sans-serif;color:#6b6b6b">Button not working? Open this link:<br><a href="{{ .OptinURL }}" style="color:#6b6b6b;word-break:break-all">{{ .OptinURL }}</a></td></tr>
+<tr><td style="background:#f8f8f6;border-top:1px solid #e6e6e3;padding:20px 24px;font:12px/1.6 -apple-system,'Segoe UI',Helvetica,Arial,sans-serif;color:#6b6b6b">Didn't ask for this? Ignore this email and you won't hear from us again. Nothing is sent until you confirm.<br><a href="{{ .UnsubURL }}?manage=true" style="color:#6b6b6b">Manage or remove this address</a> &nbsp;&middot;&nbsp; <a href="https://starwire.foo" style="color:#6b6b6b">starwire.foo</a></td></tr>
+</table>
+</td></tr></table>
+</body></html>
+{{ end }}

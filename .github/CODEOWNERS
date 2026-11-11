@@ -1,0 +1,4 @@
+# Changes here run next to the mailing list's keys or decide what GitHub Actions does, so they ask for the
+# maintainer's review.
+/.github/     @boffti
+/newsletter/  @boffti
