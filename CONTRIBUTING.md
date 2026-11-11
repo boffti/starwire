@@ -16,7 +16,7 @@ If your repo is on starwire, its page there has a **Copy badge** button under "G
 [![starwire](https://r.starwire.foo/owner/repo/badge.svg)](https://starwire.foo/?page=owner/repo&ref=badge)
 ```
 
-The badge updates itself. It shows the repo's rank when it's in the top ten of its subarea by stars ("#3 in Databases"), "Trending this week" while it's on the Trending list, and "Listed" otherwise. The rules are in `share/src/badge.js`.
+The badge updates itself and shows the best true thing about the repo that day: its rank in its subarea ("#3 in Databases"), "Rising #2 in Databases", "Hidden gem", a strong week ("+38% this week"), its rank among small repos ("#4 under 1k in Databases") or, for everyone else, how early it was found ("Spotted at 47 ★"). The rules are in `share/src/badge.js`.
 
 ## Please don't edit the list files by hand
 
