@@ -192,6 +192,11 @@ if (!process.env.LISTMONK_TOKEN) {
   }
   // a new campaign is a draft
   const { id } = await api("POST", "/api/campaigns", { name: `weekly ${day}`, subject, lists: [LIST_ID], type: "regular", content_type: "html", body: html, template_id: TEMPLATE_ID })
+  // Publish the issue to listmonk's public archive (list.starwire.foo/archive, and /archive.xml as a feed). A draft is
+  // marked now and appears there once it is sent. The page has no subscriber, so archive_meta stands in for one.
+  // ponytail: the archive lives on list.starwire.foo; write pages into docs/ instead if issues should rank on starwire.foo
+  await api("PUT", `/api/campaigns/${id}/archive`, { archive: true, archive_slug: `weekly-${day}`, archive_template_id: TEMPLATE_ID, archive_meta: { name: "Reader", email: "", attribs: {} } })
+    .catch((e) => console.error(`not added to the archive: ${e.message}`)) // the email still goes out
   if (process.env.SEND === "1") await api("PUT", `/api/campaigns/${id}/status`, { status: "running" })
   console.log(`${process.env.SEND === "1" ? "sending" : "draft created"}: campaign ${id}, ${notes.size} notes, ${subject}`)
 }

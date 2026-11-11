@@ -26,3 +26,6 @@ Email is not the web: keep to tables and inline styles, no scripts, no web fonts
 A scheduled job in a private repo runs `newsletter.mjs` from this repo's `main` with the mailing list's keys, and
 creates a draft in [listmonk](https://listmonk.app) that a person reads before sending. The keys are not in this
 repo, and nothing here can send email on its own.
+
+Every issue that is sent is also published at [list.starwire.foo/archive](https://list.starwire.foo/archive), with an RSS
+feed at `/archive.xml`. That is listmonk's own archive; `newsletter.mjs` only marks each issue for it.

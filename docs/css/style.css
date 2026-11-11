@@ -210,6 +210,8 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .news-trap { display: none; }
 .news-say { margin: 0; font-size: 13.5px; color: var(--muted); }
 .news-say:empty { display: none; }
+.news-past { font-size: 13px; color: var(--muted); }
+.news-past:hover { color: var(--text); }
 .news.sent .news-row, .news.sent altcha-widget { display: none; }
 .news.sent .news-say { color: var(--green); font-size: 14.5px; }
 .news altcha-widget { --altcha-max-width: 100%; --altcha-color-base: transparent; --altcha-color-text: var(--muted); --altcha-color-border: var(--line); --altcha-border-radius: 8px; font-size: 13px; }
