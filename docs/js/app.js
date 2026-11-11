@@ -837,7 +837,7 @@ $("#repo-page").addEventListener("click", async (e) => {
   if (!b) return
   if ("back" in b.dataset) return moved ? history.back() : set({ page: "", alt: "" }, true)
   if ("save" in b.dataset) return toggleSave(b.dataset.save)
-  if ("clone" in b.dataset) return copyClone(b)
+  if ("clone" in b.dataset || "badge" in b.dataset) return copyClone(b)
   if ("share" in b.dataset) return share(b.dataset.share, b)
   if ("readme" in b.dataset) return showReadme($("#repo-page"), b)
 })

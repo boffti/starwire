@@ -238,14 +238,17 @@ function startCard(v) {
   return `<section class="card" aria-labelledby="start"><h2 id="start">Get started</h2><div class="start">
     ${v?.release ? `<a href="https://github.com/${esc(r.r)}/releases/latest" target="_blank" rel="noopener">${icon(I.down)}Download</a>` : ""}
     <button type="button" data-clone>${icon(I.copy)}<span>Copy clone</span></button>
+    <button type="button" data-badge title="Markdown for this repo's README: a badge with its place on starwire, linking to this page">${icon(I.copy)}<span>Copy badge</span></button>
     <a href="https://github.com/${esc(r.r)}/contribute" target="_blank" rel="noopener">${icon(I.hand)}<span>${v?.gfi ? `<b>${v.gfi}</b> first ${v.gfi === 1 ? "issue" : "issues"}` : "Contribute"}</span></a>
   </div></section>`
 }
 
 export async function copyClone(b) {
-  const label = b.querySelector("span"), cmd = `git clone https://github.com/${r.r}.git`
+  // the same button copies the clone command or, for maintainers, the README badge that links back to this page
+  const badge = "badge" in b.dataset, label = b.querySelector("span")
+  const cmd = badge ? `[![starwire](https://r.starwire.foo/${r.r}/badge.svg)](https://starwire.foo/?page=${r.r}&ref=badge)` : `git clone https://github.com/${r.r}.git`
   try { await navigator.clipboard.writeText(cmd); label.textContent = "Copied" } catch { label.textContent = cmd }
-  setTimeout(() => (label.textContent = "Copy clone"), 1600)
+  setTimeout(() => (label.textContent = badge ? "Copy badge" : "Copy clone"), 1600)
 }
 
 export async function showReadme(root, b) {
