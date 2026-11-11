@@ -912,3 +912,29 @@ if (params.has("settings")) openSettings()
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); dlg.open ? dlg.close() : open() }
   })
 }
+
+// Collapsed sidebar: hovering an icon (or tabbing to it) shows its name beside it at once, with its count. The
+// browser's own title tooltip takes about a second, which is too slow when icons are all there is to go on.
+{
+  const side = document.querySelector(".sidebar"), tip = Object.assign(document.createElement("div"), { className: "rail-tip", hidden: true })
+  document.body.append(tip)
+  let held = null // the item whose title is parked while our label shows, so the browser's tooltip doesn't appear as well
+  const hide = () => { tip.hidden = true; if (held) { held.title = held.dataset.t; held = null } }
+  const show = (e) => {
+    const el = e.target.closest(".cat, .side-link")
+    if (!el || !document.documentElement.classList.contains("rail")) return hide()
+    if (el === held) return
+    hide()
+    const box = el.getBoundingClientRect(), n = el.querySelector(".n")?.textContent
+    tip.textContent = (el.querySelector("span")?.textContent ?? "") + (n ? `  ${n}` : "")
+    tip.style.top = `${box.top + box.height / 2}px`
+    tip.style.left = `${box.right + 10}px`
+    tip.hidden = false
+    if (el.title) { el.dataset.t = el.title; el.removeAttribute("title"); held = el }
+  }
+  side.addEventListener("pointerover", show)
+  side.addEventListener("focusin", show)
+  side.addEventListener("pointerleave", hide)
+  side.addEventListener("focusout", hide)
+  side.addEventListener("click", hide)
+}
