@@ -8,6 +8,14 @@ Use the [submission form](https://github.com/boffti/starwire/issues/new?template
 
 Submissions are checked on the next update, usually within two days. The issue gets a reply and is closed with the result. A repo is added when it is public, not archived and has at least 10 stars.
 
+## Show that your repo is listed
+
+If your repo is on starwire, its page there has a **Copy badge** button under "Get started". It copies this Markdown, with your repo filled in, for your README:
+
+```markdown
+[![Listed on starwire](https://starwire.foo/badge.svg)](https://starwire.foo/?page=owner/repo&ref=badge)
+```
+
 ## Please don't edit the list files by hand
 
 `README.md`, everything in `lists/`, `data/`, `assets/badges/`, `assets/banner.svg`, `docs/data/*.json` and `docs/feed.xml` are generated on every update. Edits to them in a pull request would be overwritten, so these pull requests are closed. Use the submission form instead.
