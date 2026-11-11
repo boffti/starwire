@@ -34,6 +34,7 @@
   .doc a { color: var(--accent); }
   .doc code { font-family: ui-monospace, Menlo, monospace; font-size: 13.5px; background: var(--raise); padding: 1px 6px; border-radius: 5px; }
   .doc .formula { font-family: ui-monospace, Menlo, monospace; font-size: 14px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 16px; margin: 0 0 12px; overflow-x: auto; }
+  .doc table.wide td:first-child { width: 34%; } .doc table.wide code { overflow-wrap: anywhere; }
   .doc table { width: 100%; border-collapse: collapse; font-size: 14.5px; margin: 0 0 14px; }
   .doc th, .doc td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--line); }
   .doc th { font-weight: 600; color: var(--muted); font-size: 13px; }
@@ -182,7 +183,7 @@
 
   <h2 id="data">Use the data</h2>
   <p>Everything starwire publishes is free to build on. The list and its data are <a href="https://github.com/boffti/starwire/blob/main/LICENSE">CC0</a>: no key, no sign-up, no credit needed. All of it refreshes once a day.</p>
-  <table>
+  <table class="wide">
     <thead><tr><th>What</th><th>Address</th></tr></thead>
     <tbody>
       <tr><td>Every repo, as JSON</td><td><code>https://raw.githubusercontent.com/boffti/starwire/main/data/repos.json</code></td></tr>
@@ -194,7 +195,7 @@
     </tbody>
   </table>
   <p><code>repos.json</code> is one array with an entry per repo. It can be fetched from a web page, since GitHub serves it to any site.</p>
-  <table>
+  <table class="wide">
     <thead><tr><th>Field</th><th>What it holds</th></tr></thead>
     <tbody>
       <tr><td><code>repo</code>, <code>url</code>, <code>page</code></td><td>The <code>owner/name</code>, its GitHub address and its page on starwire</td></tr>
