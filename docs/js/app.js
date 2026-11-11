@@ -95,14 +95,19 @@ const pick = (k, map) => { const v = params.get(k) ?? old[k] ?? ""; return !map 
 const state = {
   a: pick("a", AREA), sa: "", form: pick("form", FORM), plat: pick("plat", PLAT), with: pick("with", WITH), tag: pick("tag", TAG),
   f: params.get("f") ?? (shared.length ? "shared" : params.has("multi") ? "multi" : ""), q: params.get("q") ?? "",
-  repo: params.get("repo") ?? "", page: params.get("page") ?? "", alt: params.get("alt") ?? "", sort: params.get("sort") ?? (params.get("q") ? "match" : params.get("f") === "saved" ? "saved" : params.get("f") === "trending" ? "trending" : prefs.sort), lang: params.get("lang") ?? "", view: params.get("view") ?? prefs.layout, shown: PAGE,
+  repo: params.get("repo") ?? "", page: params.get("page") ?? "", alt: params.get("alt") ?? "", sort: params.get("sort") ?? (params.get("q") ? "match" : viewSort(params.get("f")) || prefs.sort), lang: params.get("lang") ?? "", view: params.get("view") ?? prefs.layout, shown: PAGE,
 }
 { const sa = params.get("sa") ?? old.sa; if (state.a && SUB.has(`${state.a}/${sa}`)) state.sa = sa }
 // new = a new project: first picked in the last 7 days and created in the last 90 (same rule as the pipeline's README)
 const isNew = (r) => (now - Date.parse(r.f)) / 864e5 <= 7 && !!r.ca && (now - Date.parse(r.ca)) / 864e5 <= 90
+// Hidden gems: trending repos still under 1,000 stars, the same cut the weekly email uses for its hidden gem
+const GEM_STARS = 1000
+// views that come with their own order: Trending and Hidden gems by heat, Saved by when you saved it
+function viewSort(f) { return f === "gems" ? "trending" : f === "trending" || f === "saved" ? f : "" }
 const VIEWS = [
   { f: "", label: "All repos", test: () => true },
   { f: "trending", label: "Trending", test: (r) => r.h > 0 },
+  { f: "gems", label: "Hidden gems", test: (r) => r.h > 0 && r.s < GEM_STARS },
   { f: "new", label: "New this week", test: isNew },
   { f: "multi", label: "Picked more than once", test: (r) => r.k > 1 },
   { f: "saved", label: "Saved", test: (r) => savedAt.has(r.r) },
@@ -145,6 +150,7 @@ I.multi = '<path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 
 const item = (attr, key, label, count) =>
   `<button type="button" class="cat" data-${attr}="${esc(key)}" aria-current="false" title="${esc(label)}"><svg viewBox="0 0 24 24" aria-hidden="true">${I[key] ?? I[""]}</svg><span>${esc(label)}</span><span class="n">${count.toLocaleString("en-US")}</span></button>`
 I.alt = '<path d="M4 7h13l-3-3M20 17H7l3 3"/>'
+I.gems = '<path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M8 9l4 12 4-12M8 9l4-6 4 6"/>'
 const ALTS = altGroups(repos)
 const visible = (r) => !(prefs.hideAI && r.ai > 0) // "Hide AI repos" in settings
 let collapsed = false // the selected area's subareas are folded away; the area itself stays selected
@@ -422,7 +428,7 @@ function set(patch, syncInputs) {
   Object.assign(state, patch, "shown" in patch ? {} : { shown: PAGE })
   // typing a search switches to Best match; clearing it goes back to the usual order
   if (state.q && !hadQ && !("sort" in patch)) state.sort = "match", (syncInputs = true)
-  if (!state.q && state.sort === "match") state.sort = ["trending", "saved"].includes(state.f) ? state.f : prefs.sort, (syncInputs = true)
+  if (!state.q && state.sort === "match") state.sort = viewSort(state.f) || prefs.sort, (syncInputs = true)
   $("#sort-match").hidden = $("#sort-match").disabled = !state.q
   if (syncInputs) { $("#q").value = state.q; $("#lang").value = state.lang; $("#sort").value = state.sort; for (const k of ["form", "plat", "with", "tag"]) $(`#f-${k}`).value = state[k] }
   renderSidebar()
@@ -457,7 +463,7 @@ $("#sidebar").addEventListener("click", (e) => {
   if (!n) return
   // views and sidebar groups are one choice: picking either clears the other; clicking the selected one again goes back
   const f = "f" in n.dataset ? n.dataset.f : ""
-  const sort = f === "trending" || f === "saved" ? f : ["trending", "saved"].includes(state.sort) ? prefs.sort : state.sort
+  const sort = viewSort(f) || (["trending", "saved"].includes(state.sort) ? prefs.sort : state.sort)
   const d = n.dataset
   if ("alt" in d) { closeMenu(); return navigate("?alt=all") }
   if ("sa" in d) set({ sa: d.sa === state.sa ? "" : d.sa })
@@ -600,7 +606,7 @@ settings.addEventListener("click", (e) => {
   if (e.target.closest(".s-close")) return closeSettings()
   if (e.target.closest("#s-reset")) {
     prefs = { ...DEFAULT_PREFS }; savePrefs(); applyLook(); setTheme("system"); renderSidebar()
-    set({ sort: ["trending", "saved"].includes(state.f) ? state.sort : prefs.sort, view: prefs.layout }, true)
+    set({ sort: viewSort(state.f) ? state.sort : prefs.sort, view: prefs.layout }, true)
     openSettings()
   }
 })
@@ -610,7 +616,7 @@ settings.addEventListener("change", (e) => {
   prefs[name] = type === "checkbox" ? checked : value
   savePrefs(); applyLook()
   // a new default sort or layout applies to what's on screen now too, except in Trending and Saved, which keep their own order
-  if (name === "sort" && !["trending", "saved"].includes(state.f)) set({ sort: value }, true)
+  if (name === "sort" && !viewSort(state.f)) set({ sort: value }, true)
   if (name === "layout") set({ view: value, shown: state.shown })
   if (name === "sidebar") set({ a: "", sa: "", form: "", with: "" }, true)
   if (name === "hideAI") set({}, true)
@@ -853,7 +859,7 @@ if (params.has("settings")) openSettings()
   const clear = { f: "", a: "", sa: "", form: "", plat: "", with: "", tag: "", lang: "", q: "" }
   let all = null, items = [], at = 0
   const commands = () => (all ??= [
-    ...VIEWS.filter((v) => !v.hidden).map((v) => ({ kind: "View", label: v.label, run: () => set({ ...clear, f: v.f }, true) })),
+    ...VIEWS.filter((v) => !v.hidden).map((v) => ({ kind: "View", label: v.label, run: () => set({ ...clear, f: v.f, ...(viewSort(v.f) ? { sort: viewSort(v.f) } : {}) }, true) })),
     ...TX.areas.flatMap((a) => [{ kind: "Area", label: a.name, run: () => set({ a: a.id, sa: "" }, true) }, ...a.subs.map(([id, name]) => ({ kind: "Area", label: `${a.name} › ${name}`, run: () => set({ a: a.id, sa: id }, true) }))]),
     ...[...TAG].map(([t, n]) => ({ kind: "Theme", label: t, n, run: () => set({ tag: t }, true) })),
     ...TX.forms.map(([id, name]) => ({ kind: "Form", label: name, run: () => set({ form: id }, true) })),
