@@ -157,8 +157,9 @@ const visible = (r) => !(prefs.hideAI && r.ai > 0) // "Hide AI repos" in setting
 let collapsed = false // the selected area's subareas are folded away; the area itself stays selected
 function renderSidebar() {
   const pool = repos.filter(visible), count = (test) => pool.filter(test).length
-  $("#views").innerHTML = "<h2>Browse</h2>" + VIEWS.filter((v) => !v.hidden).map((v) => item("f", v.f, v.label, v.f === "saved" ? saved.length : count(v.test))).join("")
-    + item("alt", "all", "Alternatives", ALTS.size)
+  // ways to discover first, then Alternatives, and Saved last: it's the reader's own list, not another cut of ours
+  $("#views").innerHTML = "<h2>Browse</h2>" + VIEWS.filter((v) => !v.hidden && v.f !== "saved").map((v) => item("f", v.f, v.label, count(v.test))).join("")
+    + item("alt", "all", "Alternatives", ALTS.size) + item("f", "saved", "Saved", saved.length)
   let html
   if (prefs.sidebar === "form") html = "<h2>Forms</h2>" + TX.forms.map(([id, name]) => [id, name, count((r) => r.fo?.includes(id))]).filter((x) => x[2]).sort((a, b) => b[2] - a[2]).map(([id, name, n]) => item("form", id, name, n)).join("")
   else if (prefs.sidebar === "with") html = "<h2>Works with</h2>" + TX.worksWith.map(([id, name]) => [id, name, count((r) => r.ww?.includes(id))]).filter((x) => x[2]).sort((a, b) => b[2] - a[2]).map(([id, name, n]) => item("with", id, name, n)).join("")

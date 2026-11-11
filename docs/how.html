@@ -34,6 +34,7 @@
   .doc a { color: var(--accent); }
   .doc code { font-family: ui-monospace, Menlo, monospace; font-size: 13.5px; background: var(--raise); padding: 1px 6px; border-radius: 5px; }
   .doc .formula { font-family: ui-monospace, Menlo, monospace; font-size: 14px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 16px; margin: 0 0 12px; overflow-x: auto; }
+  .doc table.wide td:first-child { width: 34%; } .doc table.wide code { overflow-wrap: anywhere; }
   .doc table { width: 100%; border-collapse: collapse; font-size: 14.5px; margin: 0 0 14px; }
   .doc th, .doc td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--line); }
   .doc th { font-weight: 600; color: var(--muted); font-size: 13px; }
@@ -65,6 +66,7 @@
     <li><a href="#sorts">The other sorts and labels</a></li>
     <li><a href="#neutral">What never affects ranking</a></li>
     <li><a href="#vitals">Vital signs on repo pages</a></li>
+    <li><a href="#data">Use the data</a></li>
     <li><a href="#counts">What we count</a></li>
     <li><a href="#limits">Known limits</a></li>
     <li><a href="#changes">Changes to the method</a></li>
@@ -178,6 +180,37 @@
     <li>Stars and activity play no part in the score. Ties go to the healthier project.</li>
   </ul>
   <p>The checklists and the reading are done with Claude and checked against a hand-made set of pairs before each change. A feature that neither the README nor the website mentions scores as missing, so a project that documents little can rank lower than it deserves. A project is read again when its README or website changes.</p>
+
+  <h2 id="data">Use the data</h2>
+  <p>Everything starwire publishes is free to build on. The list and its data are <a href="https://github.com/boffti/starwire/blob/main/LICENSE">CC0</a>: no key, no sign-up, no credit needed. All of it refreshes once a day.</p>
+  <table class="wide">
+    <thead><tr><th>What</th><th>Address</th></tr></thead>
+    <tbody>
+      <tr><td>Every repo, as JSON</td><td><code>https://raw.githubusercontent.com/boffti/starwire/main/data/repos.json</code></td></tr>
+      <tr><td>The day's best, as RSS (one item a day)</td><td><code>https://starwire.foo/top.xml</code></td></tr>
+      <tr><td>The 100 newest picks, as RSS</td><td><code>https://starwire.foo/feed.xml</code></td></tr>
+      <tr><td>One area as a Markdown list</td><td><code>https://github.com/boffti/starwire/tree/main/lists</code></td></tr>
+      <tr><td>A repo's badge for its README</td><td><code>https://r.starwire.foo/owner/repo/badge.svg</code></td></tr>
+      <tr><td>A repo's share link and card image</td><td><code>https://r.starwire.foo/owner/repo</code> and <code>/card.png</code></td></tr>
+    </tbody>
+  </table>
+  <p><code>repos.json</code> is one array with an entry per repo. It can be fetched from a web page, since GitHub serves it to any site.</p>
+  <table class="wide">
+    <thead><tr><th>Field</th><th>What it holds</th></tr></thead>
+    <tbody>
+      <tr><td><code>repo</code>, <code>url</code>, <code>page</code></td><td>The <code>owner/name</code>, its GitHub address and its page on starwire</td></tr>
+      <tr><td><code>line</code>, <code>description</code></td><td>Our one-line summary, and the repo's own description</td></tr>
+      <tr><td><code>area</code>, <code>subarea</code>, <code>category</code></td><td>Where it sits in the list</td></tr>
+      <tr><td><code>forms</code>, <code>platforms</code>, <code>worksWith</code>, <code>tags</code></td><td>What kind of thing it is, where it runs, what it plugs into, and its themes</td></tr>
+      <tr><td><code>alternativeTo</code></td><td>Products it can stand in for</td></tr>
+      <tr><td><code>stars</code>, <code>forks</code>, <code>language</code>, <code>license</code>, <code>topics</code>, <code>homepage</code></td><td>Facts from GitHub. <code>license</code> is an SPDX id, <code>Other</code> for a custom license, or <code>null</code> for none</td></tr>
+      <tr><td><code>createdAt</code>, <code>pushedAt</code></td><td>When the repo was created and last pushed to</td></tr>
+      <tr><td><code>firstSeen</code>, <code>picks</code></td><td>The day it was first picked, and how many sources have picked it</td></tr>
+      <tr><td><code>starsThisWeek</code>, <code>trending</code></td><td>Stars gained in the last 7 days as we measured them, and whether it's on the Trending list</td></tr>
+      <tr><td><code>starsWhenPicked</code></td><td>Stars it had on the <code>firstSeen</code> day, or <code>null</code> when we couldn't measure it</td></tr>
+    </tbody>
+  </table>
+  <p>Fields are only ever added to this file. None will be renamed or removed, so anything you build on it keeps working. The files under <code>starwire.foo/data/</code> are the site's own and can change shape without notice; use <code>repos.json</code> instead.</p>
 
   <h2 id="counts">What we count</h2>
   <p>starwire counts visits with <a href="https://www.goatcounter.com">GoatCounter</a> to learn what's useful: no cookies, nothing stored in your browser, no IP addresses kept, no way to follow you to other sites. <a href="https://starwire.goatcounter.com">The numbers are public</a>, so you see exactly what we see.</p>
