@@ -22,6 +22,11 @@ To try it locally, serve the folder and open it:
 python3 -m http.server 8000 --directory docs
 ```
 
+## Improve the weekly email
+
+The email's template, its wording and the instruction behind its short notes are in [`newsletter/`](newsletter/README.md).
+`node newsletter/newsletter.mjs` builds a preview with no keys or packages. Ideas for sections are welcome as issues first.
+
 ## Report a problem
 
 - A wrong category, a broken repo or a description that's off: open an issue with the repo link.
