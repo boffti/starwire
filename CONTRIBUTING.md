@@ -10,11 +10,11 @@ Submissions are checked on the next update, usually within two days. The issue g
 
 ## Please don't edit the list files by hand
 
-`README.md`, everything in `lists/`, `data/`, `assets/badges/`, `assets/banner.svg`, `docs/data.json` and `docs/feed.xml` are generated on every update. Edits to them in a pull request would be overwritten, so these pull requests are closed. Use the submission form instead.
+`README.md`, everything in `lists/`, `data/`, `assets/badges/`, `assets/banner.svg`, `docs/data/*.json` and `docs/feed.xml` are generated on every update. Edits to them in a pull request would be overwritten, so these pull requests are closed. Use the submission form instead.
 
 ## Fix something on the site
 
-The site at [starwire.foo](https://starwire.foo) is plain HTML, CSS and JavaScript in `docs/` (`index.html`, `style.css`, `app.js`). Pull requests for bugs, accessibility and small improvements are welcome. Open an issue first for anything bigger, so we can agree on it before you spend time.
+The site at [starwire.foo](https://starwire.foo) is plain HTML, CSS and JavaScript in `docs/` (`index.html`, `css/style.css`, `js/app.js`). Pull requests for bugs, accessibility and small improvements are welcome. Open an issue first for anything bigger, so we can agree on it before you spend time.
 
 To try it locally, serve the folder and open it:
 
