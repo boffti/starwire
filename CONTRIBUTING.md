@@ -18,6 +18,10 @@ If your repo is on starwire, its page there has a **Copy badge** button under "G
 
 The badge updates itself and shows the best true thing about the repo that day: its rank in its subarea ("#3 in Databases"), "Rising #2 in Databases", "Hidden gem", a strong week ("+38% this week"), its rank among small repos ("#4 under 1k in Databases") or, for everyone else, how early it was found ("Spotted at 47 ★"). The rules are in `share/src/badge.js`.
 
+## Suggest a collection
+
+Collections are short hand-picked sets for one job, like "A better terminal". They live in [`docs/collections.json`](docs/collections.json), which is written by hand, so a pull request is welcome. Each one needs an `id`, a `title`, a one or two sentence `intro`, and five to eight repos that are already on starwire, each with a plain line on why it's in the set. A repo that leaves the list drops out of its collection on its own.
+
 ## Please don't edit the list files by hand
 
 `README.md`, everything in `lists/`, `data/`, `assets/badges/`, `assets/banner.svg`, `docs/data/*.json` and `docs/feed.xml` are generated on every update. Edits to them in a pull request would be overwritten, so these pull requests are closed. Use the submission form instead.

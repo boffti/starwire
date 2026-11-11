@@ -1,0 +1,84 @@
+[
+  {
+    "id": "self-host-everyday",
+    "title": "Self-host your everyday apps",
+    "intro": "Photos, passwords, films, notes and PDFs on a machine you own. Each of these runs in Docker on a spare computer or a small server, and stands in for a service you'd otherwise rent.",
+    "repos": [
+      ["immich-app/immich", "Phone photo backup and a gallery with search, in place of Google Photos"],
+      ["dani-garcia/vaultwarden", "A password server that works with the Bitwarden apps and fits on the smallest machine"],
+      ["jellyfin/jellyfin", "Streams your own films and music to any device, with no account and no fees"],
+      ["usememos/memos", "Quick notes on a personal timeline, in place of Google Keep"],
+      ["Stirling-Tools/Stirling-PDF", "Merge, split, sign and convert PDFs without uploading them anywhere"],
+      ["home-assistant/core", "Runs the house: lights, sensors and automations that keep working offline"],
+      ["louislam/uptime-kuma", "Watches all of the above and tells you when one goes down"]
+    ]
+  },
+  {
+    "id": "replace-your-saas",
+    "title": "Replace your team's SaaS stack",
+    "intro": "The tools a small team pays for every month, each with an open source project that does the same job. Start with the one whose bill annoys you most.",
+    "repos": [
+      ["makeplane/plane", "Issues, sprints and docs, in place of Jira or Linear"],
+      ["penpot/penpot", "Design and prototyping in the browser, in place of Figma"],
+      ["nocodb/nocodb", "A spreadsheet face on a real database, in place of Airtable"],
+      ["twentyhq/twenty", "A CRM you can shape to your own sales process, in place of Salesforce"],
+      ["go-gitea/gitea", "Git hosting with code review and CI on your own server"],
+      ["apache/superset", "Dashboards and charts over your data, in place of Tableau"],
+      ["supabase/supabase", "Database, auth and storage for your app, in place of Firebase"]
+    ]
+  },
+  {
+    "id": "ai-on-your-machine",
+    "title": "Run AI on your own machine",
+    "intro": "From working out what your hardware can run to chatting with a model that never leaves it. In roughly the order you'd need them.",
+    "repos": [
+      ["AlexsJones/llmfit", "Start here: tells you which models fit your memory and GPU"],
+      ["open-webui/open-webui", "The chat window for local models, with history, files and users"],
+      ["lyogavin/airllm", "Fits large models into a small GPU by loading one layer at a time"],
+      ["jundot/omlx", "A fast model server made for Apple Silicon Macs"],
+      ["unslothai/unsloth", "Fine-tune a model on your own data without a data centre"],
+      ["vllm-project/vllm", "When one machine becomes a service: high-throughput serving"],
+      ["jamiepine/voicebox", "Voice cloning, dictation and speech, all generated locally"]
+    ]
+  },
+  {
+    "id": "a-better-terminal",
+    "title": "A better terminal",
+    "intro": "Seven upgrades that make the command line faster and friendlier. None needs the others, so take them one at a time.",
+    "repos": [
+      ["ghostty-org/ghostty", "A fast terminal that feels native on each platform"],
+      ["starship/starship", "A prompt that shows what matters (branch, runtime, status) in any shell"],
+      ["atuinsh/atuin", "Searchable shell history, synced across your machines"],
+      ["BurntSushi/ripgrep", "Search a codebase in milliseconds, skipping what git ignores"],
+      ["nushell/nushell", "A shell where command output is tables you can filter and sort"],
+      ["tldr-pages/tldr", "Man pages cut down to the five examples you actually wanted"],
+      ["schollz/croc", "Send a file to another computer with one command and a code phrase"]
+    ]
+  },
+  {
+    "id": "build-with-mcp",
+    "title": "Build with MCP",
+    "intro": "MCP is how AI agents reach outside tools. These are the servers worth plugging in first and the kit for writing your own.",
+    "repos": [
+      ["modelcontextprotocol/servers", "The reference servers: read these to see how one is put together"],
+      ["PrefectHQ/fastmcp", "The quickest way to write your own server, in Python"],
+      ["github/github-mcp-server", "Gives an agent your issues, pull requests and repos"],
+      ["ChromeDevTools/chrome-devtools-mcp", "Lets a coding agent open a page and read the console and network"],
+      ["upstash/context7", "Feeds agents current library docs so they stop inventing APIs"],
+      ["punkpeye/awesome-mcp-servers", "The directory to browse once you want more"]
+    ]
+  },
+  {
+    "id": "local-first-notes",
+    "title": "Notes that live on your device",
+    "intro": "Note apps that keep your writing in files on your own machine first, with sync as an option and no lock-in.",
+    "repos": [
+      ["logseq/logseq", "An outliner that links every note into a graph, stored as plain Markdown"],
+      ["siyuan-note/siyuan", "Block-based notes with databases, and sync you can host yourself"],
+      ["fastrepl/anarlog", "Records and summarises meetings on your own computer"],
+      ["colanode/colanode", "Team chat and a shared knowledge base that work offline"],
+      ["ZhFahim/anchor", "A simple offline-first notes app you can self-host"],
+      ["memex-lab/memex", "A phone journal that organises entries for you"]
+    ]
+  }
+]
