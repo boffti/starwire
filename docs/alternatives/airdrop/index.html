@@ -65,11 +65,13 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <input id="q" type="search" placeholder="Search repos, topics, languages" autocomplete="off" aria-label="Search repos">
         <kbd>/</kbd>
+        <button type="button" class="kbd" id="cmdk-open" aria-label="Open the command palette" title="Find repos, areas, themes, languages and more"></button>
       </label>
       <nav class="bar-links">
-        <button id="open-settings" class="icon-btn" type="button" aria-label="Settings" title="Settings"></button>
-        <a class="icon-btn" href="how.html" aria-label="How starwire works" title="How starwire works"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg></a>
+        <button class="icon-btn labeled" id="news-link" type="button" popovertarget="news" aria-label="Get the weekly email" title="Get the weekly email"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span>Newsletter</span></button>
         <a class="icon-btn labeled" href="https://github.com/boffti/starwire" aria-label="starwire on GitHub" title="starwire on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true" class="gh"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg><span>Source</span></a>
+        <a class="icon-btn" href="how.html" aria-label="How starwire works" title="How starwire works"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg></a>
+        <button id="open-settings" class="icon-btn" type="button" aria-label="Settings" title="Settings"></button>
         <button id="theme" class="icon-btn" type="button" aria-label="Switch light or dark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
       </nav>
     </header>
@@ -86,26 +88,26 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=localsend%2Flocalsend"><img src="https://avatars.githubusercontent.com/localsend?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>localsend</b><small>Cross-platform app for sending files to nearby devices over the local network</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>100%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Send files to nearby devices: yes. &quot;securely share files and messages with nearby devices&quot;"></i><i class="m-y core" title="No setup or internet needed: yes. &quot;without needing an internet connection&quot;"></i><i class="m-y" title="Share photos and links: yes. &quot;Choose photos, videos, documents, or text.&quot;"></i><i class="m-y" title="Discover nearby people: yes. &quot;Tap the nearby device.&quot;"></i><i class="m-y" title="Fast peer-to-peer transfer: yes. &quot;Transfer files at the maximum speed of your WiFi network.&quot;"></i></span></td><td data-k="Stars"><span class="s">98k</span><small class="w">+974</small></td>
-      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>118</div></td>
+      <td data-k="Covers"><span class="fit"><b>100%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Send files to nearby devices: yes. &quot;securely share files and messages with nearby devices&quot;"></i><i class="m-y core" title="No setup or internet needed: yes. &quot;without needing an internet connection&quot;"></i><i class="m-y" title="Share photos and links: yes. &quot;Choose photos, videos, documents, or text.&quot;"></i><i class="m-y" title="Discover nearby people: yes. &quot;Tap the nearby device.&quot;"></i><i class="m-y" title="Fast peer-to-peer transfer: yes. &quot;Transfer files at the maximum speed of your WiFi network.&quot;"></i></span></td><td data-k="Stars"><span class="s">98k</span><small class="w">+1.0k</small></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:6.692982456140351rem"></span>109</div></td>
       <td data-k="Last release">3 months ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>100%</span></td>
       <td data-k="Form">Desktop app, Mobile app</td>
       <td data-k="License">Apache-2.0</td></tr><tr>
       <th scope="row"><a class="alt-name" href="?page=schlagmichdoch%2FPairDrop"><img src="https://avatars.githubusercontent.com/schlagmichdoch?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>PairDrop</b><small>Browser-based file transfer between devices on the same network</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>100%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Send files to nearby devices: yes. &quot;devices on the same local network&quot;"></i><i class="m-y core" title="No setup or internet needed: yes. &quot;No Setup, No Signup.&quot;"></i><i class="m-y" title="Share photos and links: yes. &quot;Send images, documents or text via peer-to-peer connection&quot;"></i><i class="m-y" title="Discover nearby people: yes. &quot;Devices from the local network, in the same public room&quot;"></i><i class="m-y" title="Fast peer-to-peer transfer: yes. &quot;via peer-to-peer connection&quot;"></i></span></td><td data-k="Stars"><span class="s">12k</span><small class="w">+34</small></td>
+      <td data-k="Covers"><span class="fit"><b>100%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Send files to nearby devices: yes. &quot;devices on the same local network&quot;"></i><i class="m-y core" title="No setup or internet needed: yes. &quot;No Setup, No Signup.&quot;"></i><i class="m-y" title="Share photos and links: yes. &quot;Send images, documents or text via peer-to-peer connection&quot;"></i><i class="m-y" title="Discover nearby people: yes. &quot;Devices from the local network, in the same public room&quot;"></i><i class="m-y" title="Fast peer-to-peer transfer: yes. &quot;via peer-to-peer connection&quot;"></i></span></td><td data-k="Stars"><span class="s">12k</span><small class="w">+35</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:0rem"></span>0</div></td>
       <td data-k="Last release">21 months ago</td><td data-k="Issues closed"><span class="lvl-low"><i class="dot"></i>15%</span></td>
       <td data-k="Form">Web app, Self-hostable service</td>
       <td data-k="License">GPL-3.0</td></tr><tr>
       <th scope="row"><a class="alt-name" href="?page=polius%2FFileSync"><img src="https://avatars.githubusercontent.com/polius?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>FileSync</b><small>Self hosted real time file transfer from one device to many via WebRTC</small></span></a></th>
       <td data-k="Covers"><span class="fit"><b>57%</b><small>Same job, different way</small></span><span class="fit-dots"><i class="m-p core" title="Send files to nearby devices: partly. &quot;from another device on the same network&quot;"></i><i class="m-p core" title="No setup or internet needed: partly. &quot;No installs or accounts&quot;"></i><i class="m-y" title="Share photos and links: yes. &quot;paste from the clipboard, chat with the room&quot;"></i><i class="m-n" title="Discover nearby people: not shown"></i><i class="m-y" title="Fast peer-to-peer transfer: yes. &quot;Files travel directly between browsers over WebRTC&quot;"></i></span></td><td data-k="Stars"><span class="s">1.9k</span><small class="w">+1</small></td>
-      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:1.8983050847457628rem"></span>32</div></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:1.9649122807017543rem"></span>32</div></td>
       <td data-k="Last release">6 days ago</td><td data-k="Issues closed">Too few</td>
       <td data-k="Form">Self-hostable service, Web app</td>
       <td data-k="License">MIT</td></tr><tr>
       <th scope="row"><a class="alt-name" href="?page=t4t5%2Fowly"><img src="https://avatars.githubusercontent.com/t4t5?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>owly</b><small>Rust tool for sending files between Apple and non-Apple devices over AWDL</small></span></a></th>
       <td data-k="Covers"><span class="fit"><b>49%</b><small>Same job, different way</small></span><span class="fit-dots"><i class="m-y core" title="Send files to nearby devices: yes. &quot;AirDrop between iPhones and Linux devices&quot;"></i><i class="m-n core" title="No setup or internet needed: not shown"></i><i class="m-p" title="Share photos and links: partly. &quot;owly send --to &quot;Jane's iPhone&quot; photo.jpg&quot;"></i><i class="m-y" title="Discover nearby people: yes. &quot;find nearby AirDrop receivers&quot;"></i><i class="m-p" title="Fast peer-to-peer transfer: partly. &quot;sending files between Apple and non-Apple devices over AWDL&quot;"></i></span></td><td data-k="Stars"><span class="s">3.3k</span><small class="w">+61</small></td>
-      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:6.762711864406779rem"></span>114</div></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>114</div></td>
       <td data-k="Last release">11 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>80%</span></td>
       <td data-k="Form">Command-line tool</td>
       <td data-k="License">MIT</td></tr></tbody></table></div>
@@ -136,6 +138,7 @@
             <label class="select"><span>Form</span><select id="f-form"></select></label>
             <label class="select"><span>Platform</span><select id="f-plat"></select></label>
             <label class="select"><span>Works with</span><select id="f-with"></select></label>
+            <label class="select"><span>Theme</span><select id="f-tag"></select></label>
             <label class="select"><span>Language</span><select id="lang"><option value="">Any</option></select></label>
           </div>
           <div class="view" role="group" aria-label="Layout">
@@ -150,10 +153,66 @@
       <section id="lead" class="lead" hidden aria-label="Top movers"></section>
       <section id="results" class="wire" aria-label="Repos" aria-live="polite"></section>
       <div class="more-wrap"><button id="more" type="button" class="more" hidden>Show more</button></div>
-      <p class="foot">New repos every two days, stars refreshed daily. Visits are counted without cookies, and <a href="https://starwire.goatcounter.com">the numbers are public</a>. <a href="how.html">How it works</a> <a href="https://github.com/boffti/starwire/blob/main/data/repos.json">Data</a> <a href="feed.xml">RSS</a></p>
+      <p class="foot">New repos every two days, stars refreshed daily. Visits are counted without cookies, and <a href="https://starwire.goatcounter.com">the numbers are public</a>. <a href="how.html">How it works</a> <a href="https://github.com/boffti/starwire/blob/main/data/repos.json">Data</a> <a href="feed.xml">RSS</a> <a href="https://list.starwire.foo/subscription/form">Newsletter</a></p>
     </main>
   </div>
 </div>
+<!-- Weekly email: a small panel that opens under the Newsletter button in the top bar (the browser's own popover, so
+     a click outside or Esc closes it). It posts to our listmonk (list.starwire.foo), which sends a confirmation link.
+     The value of "l" is the list's public id, not a secret. "nonce" is a trap for bots: people never see or fill it. -->
+<form class="news" id="news" popover novalidate method="post" action="https://list.starwire.foo/subscription/form">
+  <div><b>The best new open source, once a week</b><span>One short email: the repo everyone is suddenly starring, a handful worth trying, and one hidden gem, each with a plain note on what it does. Free, with no tracking pixels.</span></div>
+  <div class="news-row">
+    <input type="email" name="email" required autofocus placeholder="you@example.com" autocomplete="email" aria-label="Email address">
+    <input type="hidden" name="l" value="210204f3-4730-4ab9-aa7e-e27194bb60ea">
+    <input name="nonce" class="news-trap" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <button class="btn primary" type="submit">Subscribe</button>
+  </div>
+  <altcha-widget challengeurl="https://list.starwire.foo/api/public/captcha/altcha" hidefooter hidelogo></altcha-widget>
+  <p class="news-say" role="status" aria-live="polite"></p>
+</form>
+<script>
+  // The signup stays on this page: the form is sent in the background and the panel says what happened, then closes.
+  // Without this script the form still works; it then lands on listmonk's own "check your email" page.
+  {
+    const news = document.getElementById("news"), say = news.querySelector(".news-say"), box = news.querySelector("altcha-widget"), go = news.querySelector("button")
+    // the bot check (a proof-of-work script served by our listmonk) loads only when the panel is first opened
+    news.addEventListener("toggle", () => { const s = document.createElement("script"); s.src = "https://list.starwire.foo/public/static/altcha.umd.js"; document.head.appendChild(s) }, { once: true })
+    const checked = () => new Promise((ok, no) => {
+      if (box.getState() === "verified") return ok()
+      const on = (e) => { if (e.detail.state === "verified") ok(); else if (e.detail.state === "error") no(new Error("bot check failed")); else return; box.removeEventListener("statechange", on) }
+      box.addEventListener("statechange", on)
+      box.verify()
+    })
+    news.addEventListener("submit", async (e) => {
+      e.preventDefault()
+      // novalidate on the form keeps the bot check's own "tick this box" rule out of the way (we run that check
+      // ourselves below), so the email field is checked by hand
+      if (!news.email.reportValidity()) return
+      go.disabled = true
+      say.textContent = "One moment…"
+      try {
+        await customElements.whenDefined("altcha-widget")
+        await checked()
+        const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
+        if (!res.ok) throw new Error(`listmonk said ${res.status}`)
+        news.classList.add("sent")
+        say.textContent = "Almost there. We sent you an email with a link to confirm."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+      } catch {
+        box.reset?.()
+        say.textContent = "That didn't go through. Please try again in a moment."
+      }
+      go.disabled = false
+    })
+  }
+</script>
+<!-- Command palette (Cmd or Ctrl + K): one box that finds repos and sets any view, area, theme, filter or sort -->
+<dialog class="cmdk" id="cmdk" aria-label="Find and filter">
+  <input id="cmdk-q" type="text" placeholder="Find a repo, or jump to an area, theme, language…" autocomplete="off" spellcheck="false" role="combobox" aria-controls="cmdk-list" aria-expanded="true" aria-label="Find and filter">
+  <ul id="cmdk-list" role="listbox"></ul>
+  <p class="cmdk-foot"><kbd>↑</kbd> <kbd>↓</kbd> to move &nbsp; <kbd>Enter</kbd> to choose &nbsp; <kbd>Esc</kbd> to close</p>
+</dialog>
 <aside class="panel" id="panel" hidden aria-label="Repo details"></aside>
 <aside class="panel settings" id="settings" hidden aria-label="Settings"></aside>
 <div class="panel-scrim" id="pscrim"></div>

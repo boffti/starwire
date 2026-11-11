@@ -65,11 +65,13 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <input id="q" type="search" placeholder="Search repos, topics, languages" autocomplete="off" aria-label="Search repos">
         <kbd>/</kbd>
+        <button type="button" class="kbd" id="cmdk-open" aria-label="Open the command palette" title="Find repos, areas, themes, languages and more"></button>
       </label>
       <nav class="bar-links">
-        <button id="open-settings" class="icon-btn" type="button" aria-label="Settings" title="Settings"></button>
-        <a class="icon-btn" href="how.html" aria-label="How starwire works" title="How starwire works"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg></a>
+        <button class="icon-btn labeled" id="news-link" type="button" popovertarget="news" aria-label="Get the weekly email" title="Get the weekly email"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span>Newsletter</span></button>
         <a class="icon-btn labeled" href="https://github.com/boffti/starwire" aria-label="starwire on GitHub" title="starwire on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true" class="gh"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg><span>Source</span></a>
+        <a class="icon-btn" href="how.html" aria-label="How starwire works" title="How starwire works"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg></a>
+        <button id="open-settings" class="icon-btn" type="button" aria-label="Settings" title="Settings"></button>
         <button id="theme" class="icon-btn" type="button" aria-label="Switch light or dark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
       </nav>
     </header>
@@ -86,13 +88,13 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=Merserk%2Fdlss5-visual-enhancer"><img src="https://avatars.githubusercontent.com/Merserk?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>dlss5-visual-enhancer</b><small>Neural upscaling and enhancement for images and video, with HDR and color grading</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>75%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="AI upscaling of video resolution: yes. &quot;AI upscaling with VisionNext, RazorNext, PeakMagnetar&quot;"></i><i class="m-y core" title="Denoise and sharpen footage: yes. &quot;Standard Upscaling, Denoise, Deblur, and High-Bitrate modes&quot;"></i><i class="m-y" title="Frame interpolation and slow motion: yes. &quot;Increase video frame rate with a 2×–8× multiplier&quot;"></i><i class="m-n" title="Deinterlacing old footage: not shown"></i><i class="m-n" title="Stabilization: not shown"></i><i class="m-y" title="Batch processing and export: yes. &quot;Single files or whole batches&quot;"></i></span></td><td data-k="Stars"><span class="s">1.8k</span><small class="w">+85</small></td>
+      <td data-k="Covers"><span class="fit"><b>75%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="AI upscaling of video resolution: yes. &quot;AI upscaling with VisionNext, RazorNext, PeakMagnetar&quot;"></i><i class="m-y core" title="Denoise and sharpen footage: yes. &quot;Standard Upscaling, Denoise, Deblur, and High-Bitrate modes&quot;"></i><i class="m-y" title="Frame interpolation and slow motion: yes. &quot;Increase video frame rate with a 2×–8× multiplier&quot;"></i><i class="m-n" title="Deinterlacing old footage: not shown"></i><i class="m-n" title="Stabilization: not shown"></i><i class="m-y" title="Batch processing and export: yes. &quot;Single files or whole batches&quot;"></i></span></td><td data-k="Stars"><span class="s">1.8k</span><small class="w">+86</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>105</div></td>
-      <td data-k="Last release">7 days ago</td><td data-k="Issues closed"><span class="lvl-ok"><i class="dot"></i>56%</span></td>
+      <td data-k="Last release">7 days ago</td><td data-k="Issues closed"><span class="lvl-ok"><i class="dot"></i>54%</span></td>
       <td data-k="Form">Desktop app</td>
       <td data-k="License">None listed</td></tr><tr>
       <th scope="row"><a class="alt-name" href="?page=munitkala%2Ftapewake"><img src="https://avatars.githubusercontent.com/munitkala?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>tapewake</b><small>Restores VHS and home videos with deinterlacing, AI upscaling and audio cleanup</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>56%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-y core" title="AI upscaling of video resolution: yes. &quot;Real-ESRGAN upscaling to 1280×960 at 59.94 fps&quot;"></i><i class="m-p core" title="Denoise and sharpen footage: partly. &quot;face restoration that keeps likeness, gentle grain&quot;"></i><i class="m-n" title="Frame interpolation and slow motion: not shown"></i><i class="m-y" title="Deinterlacing old footage: yes. &quot;QTGMC deinterlacing&quot;"></i><i class="m-n" title="Stabilization: not shown"></i><i class="m-p" title="Batch processing and export: partly. &quot;gives you the restored film plus a before-and-after comparison&quot;"></i></span></td><td data-k="Stars"><span class="s">24</span><small class="w">+16</small></td>
+      <td data-k="Covers"><span class="fit"><b>56%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-y core" title="AI upscaling of video resolution: yes. &quot;Real-ESRGAN upscaling to 1280×960 at 59.94 fps&quot;"></i><i class="m-p core" title="Denoise and sharpen footage: partly. &quot;face restoration that keeps likeness, gentle grain&quot;"></i><i class="m-n" title="Frame interpolation and slow motion: not shown"></i><i class="m-y" title="Deinterlacing old footage: yes. &quot;QTGMC deinterlacing&quot;"></i><i class="m-n" title="Stabilization: not shown"></i><i class="m-p" title="Batch processing and export: partly. &quot;gives you the restored film plus a before-and-after comparison&quot;"></i></span></td><td data-k="Stars"><span class="s">25</span><small class="w">+18</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:1.9333333333333336rem"></span>29</div></td>
       <td data-k="Last release">3 days ago</td><td data-k="Issues closed">Too few</td>
       <td data-k="Form">Desktop app</td>
@@ -124,6 +126,7 @@
             <label class="select"><span>Form</span><select id="f-form"></select></label>
             <label class="select"><span>Platform</span><select id="f-plat"></select></label>
             <label class="select"><span>Works with</span><select id="f-with"></select></label>
+            <label class="select"><span>Theme</span><select id="f-tag"></select></label>
             <label class="select"><span>Language</span><select id="lang"><option value="">Any</option></select></label>
           </div>
           <div class="view" role="group" aria-label="Layout">
@@ -138,10 +141,66 @@
       <section id="lead" class="lead" hidden aria-label="Top movers"></section>
       <section id="results" class="wire" aria-label="Repos" aria-live="polite"></section>
       <div class="more-wrap"><button id="more" type="button" class="more" hidden>Show more</button></div>
-      <p class="foot">New repos every two days, stars refreshed daily. Visits are counted without cookies, and <a href="https://starwire.goatcounter.com">the numbers are public</a>. <a href="how.html">How it works</a> <a href="https://github.com/boffti/starwire/blob/main/data/repos.json">Data</a> <a href="feed.xml">RSS</a></p>
+      <p class="foot">New repos every two days, stars refreshed daily. Visits are counted without cookies, and <a href="https://starwire.goatcounter.com">the numbers are public</a>. <a href="how.html">How it works</a> <a href="https://github.com/boffti/starwire/blob/main/data/repos.json">Data</a> <a href="feed.xml">RSS</a> <a href="https://list.starwire.foo/subscription/form">Newsletter</a></p>
     </main>
   </div>
 </div>
+<!-- Weekly email: a small panel that opens under the Newsletter button in the top bar (the browser's own popover, so
+     a click outside or Esc closes it). It posts to our listmonk (list.starwire.foo), which sends a confirmation link.
+     The value of "l" is the list's public id, not a secret. "nonce" is a trap for bots: people never see or fill it. -->
+<form class="news" id="news" popover novalidate method="post" action="https://list.starwire.foo/subscription/form">
+  <div><b>The best new open source, once a week</b><span>One short email: the repo everyone is suddenly starring, a handful worth trying, and one hidden gem, each with a plain note on what it does. Free, with no tracking pixels.</span></div>
+  <div class="news-row">
+    <input type="email" name="email" required autofocus placeholder="you@example.com" autocomplete="email" aria-label="Email address">
+    <input type="hidden" name="l" value="210204f3-4730-4ab9-aa7e-e27194bb60ea">
+    <input name="nonce" class="news-trap" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <button class="btn primary" type="submit">Subscribe</button>
+  </div>
+  <altcha-widget challengeurl="https://list.starwire.foo/api/public/captcha/altcha" hidefooter hidelogo></altcha-widget>
+  <p class="news-say" role="status" aria-live="polite"></p>
+</form>
+<script>
+  // The signup stays on this page: the form is sent in the background and the panel says what happened, then closes.
+  // Without this script the form still works; it then lands on listmonk's own "check your email" page.
+  {
+    const news = document.getElementById("news"), say = news.querySelector(".news-say"), box = news.querySelector("altcha-widget"), go = news.querySelector("button")
+    // the bot check (a proof-of-work script served by our listmonk) loads only when the panel is first opened
+    news.addEventListener("toggle", () => { const s = document.createElement("script"); s.src = "https://list.starwire.foo/public/static/altcha.umd.js"; document.head.appendChild(s) }, { once: true })
+    const checked = () => new Promise((ok, no) => {
+      if (box.getState() === "verified") return ok()
+      const on = (e) => { if (e.detail.state === "verified") ok(); else if (e.detail.state === "error") no(new Error("bot check failed")); else return; box.removeEventListener("statechange", on) }
+      box.addEventListener("statechange", on)
+      box.verify()
+    })
+    news.addEventListener("submit", async (e) => {
+      e.preventDefault()
+      // novalidate on the form keeps the bot check's own "tick this box" rule out of the way (we run that check
+      // ourselves below), so the email field is checked by hand
+      if (!news.email.reportValidity()) return
+      go.disabled = true
+      say.textContent = "One moment…"
+      try {
+        await customElements.whenDefined("altcha-widget")
+        await checked()
+        const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
+        if (!res.ok) throw new Error(`listmonk said ${res.status}`)
+        news.classList.add("sent")
+        say.textContent = "Almost there. We sent you an email with a link to confirm."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+      } catch {
+        box.reset?.()
+        say.textContent = "That didn't go through. Please try again in a moment."
+      }
+      go.disabled = false
+    })
+  }
+</script>
+<!-- Command palette (Cmd or Ctrl + K): one box that finds repos and sets any view, area, theme, filter or sort -->
+<dialog class="cmdk" id="cmdk" aria-label="Find and filter">
+  <input id="cmdk-q" type="text" placeholder="Find a repo, or jump to an area, theme, language…" autocomplete="off" spellcheck="false" role="combobox" aria-controls="cmdk-list" aria-expanded="true" aria-label="Find and filter">
+  <ul id="cmdk-list" role="listbox"></ul>
+  <p class="cmdk-foot"><kbd>↑</kbd> <kbd>↓</kbd> to move &nbsp; <kbd>Enter</kbd> to choose &nbsp; <kbd>Esc</kbd> to close</p>
+</dialog>
 <aside class="panel" id="panel" hidden aria-label="Repo details"></aside>
 <aside class="panel settings" id="settings" hidden aria-label="Settings"></aside>
 <div class="panel-scrim" id="pscrim"></div>
