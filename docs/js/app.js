@@ -203,11 +203,13 @@ function spark(hs, w = 120, h = 32, cls = "wspark") {
   const line = pts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ")
   return `<svg class="${cls}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><polygon points="0,${h} ${line} ${w},${h}"/><polyline points="${line}"/></svg>`
 }
-// rank change: position by stars per day now vs the interval before, within the list on screen (only for that sort)
+// rank change: position by a score now vs the day before, within the list on screen. Most stars today ranks by stars
+// per day; Trending by heat, with the pipeline's heat as of yesterday in hy (none = wasn't trending, so "new")
 let moves = null
-function rankMoves(list) {
+const MOVE_SCORES = { today: (r, back) => day(r, back), trending: (r, back) => (back ? r.hy : r.h) || null }
+function rankMoves(list, score) {
   const pos = (f) => new Map(list.filter((r) => f(r) != null).sort((a, b) => f(b) - f(a)).map((r, i) => [r.r, i]))
-  const now = pos((r) => day(r)), then = pos((r) => day(r, 1))
+  const now = pos((r) => score(r, 0)), then = pos((r) => score(r, 1))
   return (r) => { const a = now.get(r.r), b = then.get(r.r); return a == null ? "" : b == null ? `<i class="mv new">new</i>` : b > a ? `<i class="mv up">▲${b - a}</i>` : b < a ? `<i class="mv down">▼${a - b}</i>` : `<i class="mv same">=</i>` }
 }
 function row(r, i) {
@@ -303,7 +305,7 @@ function render() {
   const el = $("#results")
   const layout = PHONE.matches ? "list" : state.view // phones always get the list; cards add nothing on a narrow screen
   el.className = layout
-  moves = layout === "wire" && state.sort === "today" && !scores ? rankMoves(list) : null
+  moves = layout === "wire" && MOVE_SCORES[state.sort] && !scores ? rankMoves(list, MOVE_SCORES[state.sort]) : null
   if (state.view === "wire") lead(list); else $("#lead").hidden = true // phones get the list rows, but keep the lead
   const cols = getComputedStyle(el).gridTemplateColumns.split(" ").length
   const spot = PROMO_ROW * cols + Math.floor(PROMO_COL * cols)
