@@ -13,8 +13,10 @@ Submissions are checked on the next update, usually within two days. The issue g
 If your repo is on starwire, its page there has a **Copy badge** button under "Get started". It copies this Markdown, with your repo filled in, for your README:
 
 ```markdown
-[![Listed on starwire](https://starwire.foo/badge.svg)](https://starwire.foo/?page=owner/repo&ref=badge)
+[![starwire](https://r.starwire.foo/owner/repo/badge.svg)](https://starwire.foo/?page=owner/repo&ref=badge)
 ```
+
+The badge updates itself. It shows the repo's rank when it's in the top ten of its subarea by stars ("#3 in Databases"), "Trending this week" while it's on the Trending list, and "Listed" otherwise. The rules are in `share/src/badge.js`.
 
 ## Please don't edit the list files by hand
 

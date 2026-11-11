@@ -1,6 +1,7 @@
 // starwire share links, served at r.starwire.foo:
 //   /owner/name           a small page carrying the repo's preview tags; people are sent on to its page on starwire
 //   /owner/name/card.png  the card image chat apps show (src/card.js), cached for a day
+//   /owner/name/badge.svg the README badge maintainers embed (src/badge.js): its rank, or what else is true today
 //   /instead-of/notion    the same pair for an alternatives page: "Instead of Notion" and its best three (src/altcard.js)
 // Data comes from the live site (data.json, vitals.json, art.json), so the cards update with the nightly refresh.
 import { ImageResponse, GoogleFont, cache } from "@cf-wasm/og/workerd"
@@ -8,6 +9,7 @@ import { t } from "@cf-wasm/og/html-to-react"
 import { cardHTML } from "./card.js"
 import { altCardHTML, rankAlts, altSlug } from "./altcard.js"
 import { pickArt } from "./art.js"
+import { badgeText, badgeSVG } from "./badge.js"
 import { signs, summary } from "../../docs/js/vitals.js"
 
 const SITE = "https://starwire.foo", SELF = "https://r.starwire.foo"
@@ -115,10 +117,15 @@ export default {
       ctx.waitUntil(caches.default.put(key, res.clone()))
       return res
     }
-    const m = url.pathname.match(/^\/([A-Za-z0-9-]+)\/([A-Za-z0-9_.-]+?)(\/card\.png)?\/?$/)
+    const m = url.pathname.match(/^\/([A-Za-z0-9-]+)\/([A-Za-z0-9_.-]+?)(\/card\.png|\/badge\.svg)?\/?$/)
     if (!m) return Response.redirect(SITE, 302)
     const s = await site()
     const r = s.byName.get(`${m[1]}/${m[2]}`.toLowerCase())
+    // a badge is text, so it's cheap: no image cache. An hour is short enough to follow the nightly refresh,
+    // and GitHub's image proxy keeps its own copy for about as long. A repo we don't list gets no badge.
+    if (m[3] === "/badge.svg") return r
+      ? new Response(badgeSVG(badgeText(r, s.data.repos, s.area)), { headers: { "content-type": "image/svg+xml; charset=utf-8", "cache-control": "public, max-age=3600" } })
+      : new Response("not listed on starwire", { status: 404 })
     if (!r) return Response.redirect(`${SITE}/?page=${encodeURIComponent(`${m[1]}/${m[2]}`)}`, 302)
     if (!m[3]) return new Response(page(r, s), { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=600" } })
     const key = new Request(url.toString()), hit = await caches.default.match(key)
