@@ -121,7 +121,7 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
   appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
   background-position: right 13px center, right 9px center; background-size: 4px 4px; background-repeat: no-repeat; cursor: pointer;
 }
-.filters .select select { max-width: 140px; } /* the four filters stay narrow so Sort, filters and the layout toggle fit one row */
+.filters .select select { max-width: 140px; } /* the filters stay narrow so Sort, filters and the layout toggle fit one row */
 .view { display: flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; height: 34px; }
 .view button { background: var(--panel); border: 0; color: var(--muted); padding: 0 9px; cursor: pointer; display: grid; place-items: center; }
 .view button + button { border-left: 1px solid var(--line); }
@@ -364,8 +364,8 @@ html { scrollbar-gutter: stable; }
 .filters-btn[aria-expanded="true"] { background: var(--raise); }
 .filters-btn .badge { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: var(--accent); color: oklch(0.13 0 0); font-size: 11.5px; font-weight: 600; display: inline-grid; place-items: center; }
 .filters-btn .badge[hidden] { display: none; }
-/* below the width where Sort, all four filters and the layout toggle fit one row, the filters fold behind a button */
-@media (max-width: 1499px) {
+/* below the width where Sort, all five filters and the layout toggle fit one row, the filters fold behind a button */
+@media (max-width: 1689px) {
   .filters-btn { display: inline-flex; }
   .filters { display: none; order: 9; width: 100%; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); gap: 10px 12px; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
   .filters.open { display: grid; }

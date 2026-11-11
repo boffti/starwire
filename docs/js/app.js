@@ -27,6 +27,9 @@ const SUB = new Map(TX.areas.flatMap((a) => a.subs.map(([id, name]) => [`${a.id}
 const FORM = new Map(TX.forms), PLAT = new Map(TX.platforms), WITH = new Map(TX.worksWith)
 const areaPairs = (r) => (r.a ? [`${r.a}/${r.sa}`, ...(r.mo ?? [])] : [])
 const repos = data.repos.map((r) => ({ ...r, age: (now - Date.parse(r.p)) / 864e5 }))
+// themes: the tags each repo carries (tg), which cut across areas ("local-first", "rag"). A tag is its own name; the map holds how many repos have it
+const TAG = new Map()
+for (const r of repos) for (const t of r.tg ?? []) TAG.set(t, (TAG.get(t) ?? 0) + 1)
 // ranked search, scored against a test set in the pipeline; the index is built on the first search, not on page load
 let index
 const search = (q, pool) => (q.trim() ? (index ??= makeIndex(repos, fieldsFor(TX)))(q, pool) : null)
@@ -90,7 +93,7 @@ const OLD_CATEGORY = {
 const old = OLD_CATEGORY[params.get("c")] ?? {}
 const pick = (k, map) => { const v = params.get(k) ?? old[k] ?? ""; return !map || map.has(v) ? v : "" }
 const state = {
-  a: pick("a", AREA), sa: "", form: pick("form", FORM), plat: pick("plat", PLAT), with: pick("with", WITH),
+  a: pick("a", AREA), sa: "", form: pick("form", FORM), plat: pick("plat", PLAT), with: pick("with", WITH), tag: pick("tag", TAG),
   f: params.get("f") ?? (shared.length ? "shared" : params.has("multi") ? "multi" : ""), q: params.get("q") ?? "",
   repo: params.get("repo") ?? "", page: params.get("page") ?? "", alt: params.get("alt") ?? "", sort: params.get("sort") ?? (params.get("q") ? "match" : params.get("f") === "saved" ? "saved" : params.get("f") === "trending" ? "trending" : prefs.sort), lang: params.get("lang") ?? "", view: params.get("view") ?? prefs.layout, shown: PAGE,
 }
@@ -230,7 +233,7 @@ const DATE = new Date(now).toLocaleDateString("en-US", { month: "long", day: "nu
 // above the list: the day's biggest mover on the plain views, the area's top three of the week inside an area
 function lead(list) {
   const el = $("#lead")
-  if (state.q || state.form || state.plat || state.with || state.lang || ["saved", "shared"].includes(state.f)) return (el.hidden = true)
+  if (state.q || state.form || state.plat || state.with || state.tag || state.lang || ["saved", "shared"].includes(state.f)) return (el.hidden = true)
   if (state.a) {
     const top = list.filter((r) => r.w > 0).sort((a, b) => b.w - a.w).slice(0, 3)
     if (top.length < 3) return (el.hidden = true)
@@ -276,8 +279,8 @@ const PROMO_ROW = 3 + Math.floor(Math.random() * 5), PROMO_COL = Math.random()
 
 const facetMatch = (r) =>
   (!state.a || areaPairs(r).some((p) => (state.sa ? p === `${state.a}/${state.sa}` : p.startsWith(state.a + "/")))) &&
-  (!state.form || r.fo?.includes(state.form)) && (!state.plat || r.pl?.includes(state.plat)) && (!state.with || r.ww?.includes(state.with))
-const anyFacet = () => state.a || state.form || state.plat || state.with
+  (!state.form || r.fo?.includes(state.form)) && (!state.plat || r.pl?.includes(state.plat)) && (!state.with || r.ww?.includes(state.with)) && (!state.tag || r.tg?.includes(state.tag))
+const anyFacet = () => state.a || state.form || state.plat || state.with || state.tag
 
 const PHONE = matchMedia("(max-width: 760px)")
 PHONE.addEventListener("change", () => render())
@@ -329,6 +332,7 @@ function render() {
   if (state.form && !(prefs.sidebar === "form" && !state.a)) parts.push(FORM.get(state.form).toLowerCase())
   if (state.plat) parts.push(`on ${PLAT.get(state.plat)}`)
   if (state.with && !(prefs.sidebar === "with" && !state.a)) parts.push(`works with ${WITH.get(state.with)}`)
+  if (state.tag) parts.push(`tagged ${state.tag}`)
   if (state.lang) parts.push(`in ${state.lang}`)
   if (prefs.hideAI) parts.push("AI repos hidden")
   if (!anyFacet() && !state.f && !state.lang && !state.q) parts.push(`updated ${new Date(now).toLocaleDateString("en-US", { month: "long", day: "numeric" })}`)
@@ -339,7 +343,7 @@ function render() {
   hint.hidden = !g
   if (g) { hint.href = `?alt=${encodeURIComponent(g.name)}`; hint.textContent = `See all ${g.repos.length} open source ${g.repos.length === 1 ? "alternative" : "alternatives"} to ${g.name}` }
   // phones keep the filters behind one button; it shows how many are on
-  const on = ["form", "plat", "with", "lang"].filter((k) => state[k]).length
+  const on = ["form", "plat", "with", "tag", "lang"].filter((k) => state[k]).length
   $("#filters-n").hidden = !on; $("#filters-n").textContent = on
   $("#more").hidden = list.length <= shown
   $("#more").textContent = `Show more (${(list.length - shown).toLocaleString("en-US")} left)`
@@ -348,7 +352,7 @@ function render() {
   for (const k of ["a", "form", "with"]) document.querySelectorAll(`[data-${k}]`).forEach((n) => n.setAttribute("aria-current", String(n.dataset[k] === state[k] && !(k === "a" && state.sa))))
   document.querySelectorAll("[data-sa]").forEach((n) => n.setAttribute("aria-current", String(n.dataset.sa === state.sa)))
   document.querySelectorAll(".view button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.view === state.view)))
-  $("#reset")?.addEventListener("click", () => set({ f: "", a: "", sa: "", form: "", plat: "", with: "", q: "", lang: "" }, true))
+  $("#reset")?.addEventListener("click", () => set({ f: "", a: "", sa: "", form: "", plat: "", with: "", tag: "", q: "", lang: "" }, true))
   syncURL()
   const place = state.a ? `area/${state.a}${state.sa ? `/${state.sa}` : ""}` : `view/${state.f || "all"}`
   if (place !== counted.place) count((counted.place = place), state.a ? "Area" : "View")
@@ -361,7 +365,7 @@ const counted = { place: "", q: "", t: 0 }
 
 function syncURL() {
   const p = new URLSearchParams()
-  for (const k of ["f", "a", "sa", "form", "plat", "with", "q", "lang", "repo", "page", "alt"]) if (state[k] && !(k === "f" && state.f === "shared")) p.set(k, state[k])
+  for (const k of ["f", "a", "sa", "form", "plat", "with", "tag", "q", "lang", "repo", "page", "alt"]) if (state[k] && !(k === "f" && state.f === "shared")) p.set(k, state[k])
   if (state.f === "shared") p.set("saved", shared.join(","))
   // left out only when it's what this browser falls back to on load, so a reload lands where you were
   if (state.sort !== prefs.sort && !(state.sort === "match" && state.q)) p.set("sort", state.sort)
@@ -406,7 +410,7 @@ function navigate(href) {
 }
 function fromURL() {
   const p = new URLSearchParams(location.search)
-  set(Object.fromEntries(["f", "a", "sa", "form", "plat", "with", "q", "lang", "page", "alt"].map((k) => [k, p.get(k) ?? ""])), true)
+  set(Object.fromEntries(["f", "a", "sa", "form", "plat", "with", "tag", "q", "lang", "page", "alt"].map((k) => [k, p.get(k) ?? ""])), true)
   scrollTo({ top: 0 })
 }
 addEventListener("popstate", fromURL)
@@ -420,7 +424,7 @@ function set(patch, syncInputs) {
   if (state.q && !hadQ && !("sort" in patch)) state.sort = "match", (syncInputs = true)
   if (!state.q && state.sort === "match") state.sort = ["trending", "saved"].includes(state.f) ? state.f : prefs.sort, (syncInputs = true)
   $("#sort-match").hidden = $("#sort-match").disabled = !state.q
-  if (syncInputs) { $("#q").value = state.q; $("#lang").value = state.lang; $("#sort").value = state.sort; for (const k of ["form", "plat", "with"]) $(`#f-${k}`).value = state[k] }
+  if (syncInputs) { $("#q").value = state.q; $("#lang").value = state.lang; $("#sort").value = state.sort; for (const k of ["form", "plat", "with", "tag"]) $(`#f-${k}`).value = state[k] }
   renderSidebar()
   render()
 }
@@ -440,6 +444,13 @@ for (const [k, label, map, has] of [["form", "Form", TX.forms, (r, id) => r.fo?.
   el.innerHTML = `<option value="">Any</option>` + map.map(([id, name]) => [id, name, repos.filter((r) => has(r, id)).length]).filter((x) => x[2]).sort((a, b) => b[2] - a[2]).map(([id, name, n]) => `<option value="${esc(id)}">${esc(name)} (${n})</option>`).join("")
   el.value = state[k]
   el.addEventListener("change", (e) => set({ [k]: e.target.value }))
+}
+// Theme: the 25 most used tags first, then the rest by name, since nobody scans 99 options sorted by count
+{
+  const el = $("#f-tag"), byCount = [...TAG].sort((a, b) => b[1] - a[1]), opt = ([t, n]) => `<option value="${esc(t)}">${esc(t)} (${n})</option>`
+  el.innerHTML = `<option value="">Any</option><optgroup label="Most used">${byCount.slice(0, 25).map(opt).join("")}</optgroup><optgroup label="More">${byCount.slice(25).sort((a, b) => a[0].localeCompare(b[0])).map(opt).join("")}</optgroup>`
+  el.value = state.tag
+  el.addEventListener("change", (e) => set({ tag: e.target.value }))
 }
 $("#sidebar").addEventListener("click", (e) => {
   const n = e.target.closest(".cat")
@@ -469,7 +480,7 @@ $("#filters-btn").addEventListener("click", (e) => {
 $("#menu").addEventListener("click", () => $("#app").classList.add("open"))
 $("#scrim").addEventListener("click", closeMenu)
 document.querySelector(".view").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; prefs.layout = b.dataset.view; savePrefs(); set({ view: b.dataset.view, shown: state.shown }) }) // the layout you pick is remembered, like the setting
-$("#everywhere").addEventListener("click", () => set({ f: "", a: "", sa: "", form: "", plat: "", with: "", lang: "", sort: "match" }, true))
+$("#everywhere").addEventListener("click", () => set({ f: "", a: "", sa: "", form: "", plat: "", with: "", tag: "", lang: "", sort: "match" }, true))
 $("#more").addEventListener("click", () => set({ shown: state.shown + PAGE }))
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeMenu()
@@ -664,6 +675,7 @@ function labels(r) {
     ["Form", (r.fo ?? []).map((x) => chip(`data-go-form="${esc(x)}"`, FORM.get(x))).join("")],
     ["Runs on", (r.pl ?? []).map((x) => chip(`data-go-plat="${esc(x)}"`, PLAT.get(x))).join("")],
     ["Works with", (r.ww ?? []).map((x) => chip(`data-go-with="${esc(x)}"`, WITH.get(x))).join("")],
+    ["Themes", (r.tg ?? []).map((x) => chip(`data-go-tag="${esc(x)}"`, x)).join("")],
     ["Replaces", (r.alt ?? []).map((a) => `<a class="lab" href="?alt=${encodeURIComponent(a)}" data-fit-for="${esc(a.toLowerCase())}">${esc(a)}</a>`).join("")],
   ].filter(([, v]) => v)
   return `<div class="p-labels">${rows.map(([k, v]) => `<div><span class="k">${k}</span><span class="v">${v}</span></div>`).join("")}${r.alt?.length ? `<p class="p-alt p-fit" hidden></p>` : ""}${r.ai ? `<p class="p-alt">${r.ai === 2 ? "AI tool" : "Uses AI"}</p>` : ""}</div>`
@@ -794,7 +806,7 @@ panel.addEventListener("click", async (e) => {
   if (go) {
     const d = go.dataset
     closePanel()
-    set({ f: "", a: d.goA ?? "", sa: d.goSa ?? "", form: d.goForm ?? "", plat: d.goPlat ?? "", with: d.goWith ?? "" }, true)
+    set({ f: "", a: d.goA ?? "", sa: d.goSa ?? "", form: d.goForm ?? "", plat: d.goPlat ?? "", with: d.goWith ?? "", tag: d.goTag ?? "" }, true)
     return scrollTo({ top: 0 })
   }
   const sim = e.target.closest(".sim")
