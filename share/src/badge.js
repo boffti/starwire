@@ -5,14 +5,14 @@
 //   2 "Rising #2 in Databases"    top five in its subarea by this week's gain for its size (the Trending score)
 //   3 "Hidden gem"                on the Trending list with under 1,000 stars
 //   4 "+38% this week"            grew a tenth or more this week, by at least ten stars
-//   5 "#4 under 1k in Databases"  top ten among the under-1,000-star repos in its subarea
+//   5 "#4 under 1k in Databases"  top ten among the under-1,000-star repos in its subarea (from 10 stars up)
 //   6 "Spotted at 47 ★"           the stars it had the day it was first picked: true from day one, better with age
 //   7 "Listed"                    when we don't know that number yet
 // Rungs 2 to 6 are there for small repos, which rung 1 alone never reaches. A subarea needs MIN_PEERS repos
 // (or MIN_PEERS small ones, for rung 5) before a rank in it means anything.
 // Run `node share/src/badge.js` to check the rules.
 
-const TOP = 10, RISING = 5, MIN_PEERS = 5, SMALL = 1000
+const TOP = 10, RISING = 5, MIN_PEERS = 5, SMALL = 1000, FLOOR = 10
 const num = (n) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k` : String(n))
 
 // r: the repo; repos: every listed repo; subName: Map "area/sub" -> name
@@ -29,7 +29,7 @@ export function badgeText(r, repos, subName) {
   if (r.h > 0 && r.s < SMALL) return "Hidden gem"
   const before = r.s - (r.w ?? 0) // a repo whose every star came this week has no "before" to grow from
   if (r.w >= 10 && before > 0 && r.w / before >= 0.1) return `+${Math.round((r.w / before) * 100)}% this week`
-  if (r.s < SMALL) {
+  if (r.s < SMALL && r.s >= FLOOR) { // below the floor a rank is mostly ties
     const small = peers.filter((x) => x.s < SMALL)
     if (small.length >= MIN_PEERS) { const k = place(small, (x) => x.s); if (k <= TOP) return `#${k} under 1k in ${name}` }
   }
@@ -71,6 +71,7 @@ if (typeof process !== "undefined" && import.meta.url === `file://${process.argv
   assert.equal(t(small[0]), "#1 under 1k in Databases")
   assert.equal(t(small[9]), "#10 under 1k in Databases")
   assert.equal(t(small[10]), "Spotted at 5 ★")
+  assert.equal(t({ ...small[0], s: 9 }, all.filter((x) => x.s >= 2000)), "Spotted at 5 ★") // 9 stars: under the floor, no rank
   assert.equal(t(all.at(-1)), "Spotted before its first star") // a subarea of one gets no rank
   assert.equal(t({ ...big[10], sp: 46892 }), "Spotted at 47k ★")
   assert.ok(badgeSVG("#3 in R&D <x>").includes("#3 in R&amp;D &lt;x&gt;"))
