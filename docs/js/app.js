@@ -845,3 +845,70 @@ $("#pscrim").addEventListener("click", () => { closePanel(); closeSettings() })
 document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !panel.hidden) closePanel() })
 if (state.repo) openPanel(state.repo, false)
 if (params.has("settings")) openSettings()
+
+// Command palette (Cmd or Ctrl + K): one box that finds repos and sets any view, area, theme, filter or sort.
+// A filter picked here is added to what is already on, so "local-first" then "Rust" gives both; views start over.
+{
+  const dlg = $("#cmdk"), inp = $("#cmdk-q"), out = $("#cmdk-list"), opener = $("#cmdk-open")
+  const clear = { f: "", a: "", sa: "", form: "", plat: "", with: "", tag: "", lang: "", q: "" }
+  let all = null, items = [], at = 0
+  const commands = () => (all ??= [
+    ...VIEWS.filter((v) => !v.hidden).map((v) => ({ kind: "View", label: v.label, run: () => set({ ...clear, f: v.f }, true) })),
+    ...TX.areas.flatMap((a) => [{ kind: "Area", label: a.name, run: () => set({ a: a.id, sa: "" }, true) }, ...a.subs.map(([id, name]) => ({ kind: "Area", label: `${a.name} › ${name}`, run: () => set({ a: a.id, sa: id }, true) }))]),
+    ...[...TAG].map(([t, n]) => ({ kind: "Theme", label: t, n, run: () => set({ tag: t }, true) })),
+    ...TX.forms.map(([id, name]) => ({ kind: "Form", label: name, run: () => set({ form: id }, true) })),
+    ...TX.platforms.map(([id, name]) => ({ kind: "Platform", label: name, run: () => set({ plat: id }, true) })),
+    ...TX.worksWith.map(([id, name]) => ({ kind: "Works with", label: name, run: () => set({ with: id }, true) })),
+    ...langs.map(([l, n]) => ({ kind: "Language", label: l, n, run: () => set({ lang: l }, true) })),
+    ...[...ALTS.values()].map((g) => ({ kind: "Instead of", label: g.name, n: g.repos.length, run: () => set({ alt: g.name }) })),
+    ...[...$("#sort").options].filter((o) => !o.hidden).map((o) => ({ kind: "Sort by", label: o.textContent, run: () => set({ sort: o.value }, true) })),
+    { kind: "Action", label: "Clear all filters", run: () => set(clear, true) },
+  ])
+  // 0 the label is the query, 1 it starts with it, 2 every word appears somewhere in "kind label"; -1 no match.
+  // Words that name the kind ("theme rag", "language rust") are set aside before the label is compared.
+  const rank = (c, words) => {
+    const label = c.label.toLowerCase(), kind = c.kind.toLowerCase()
+    if (!words.every((w) => `${kind} ${label}`.includes(w))) return -1
+    const rest = words.filter((w) => !kind.includes(w))
+    return !rest.length ? 1 : label === rest.join(" ") ? 0 : label.startsWith(rest[0]) ? 1 : 2
+  }
+  function draw() {
+    const q = inp.value.trim(), words = q.toLowerCase().split(/\s+/).filter(Boolean)
+    if (!q) {
+      // nothing typed: the views, a way back if filters are on, and the biggest themes as a hint of what can be typed
+      const on = anyFacet() || state.f || state.lang || state.q
+      items = [...commands().filter((c) => c.kind === "View" || (c.kind === "Action" && on)), ...commands().filter((c) => c.kind === "Theme").sort((a, b) => b.n - a.n).slice(0, 6)]
+    } else {
+      const hits = commands().map((c) => [rank(c, words), c]).filter((x) => x[0] >= 0).sort((a, b) => a[0] - b[0] || (b[1].n ?? 0) - (a[1].n ?? 0)).slice(0, 8)
+      const found = search(q, repos.filter(visible))
+      const rs = [...(found ?? [])].sort((a, b) => b[1] - a[1]).slice(0, 5).map(([r]) => ({ kind: "Repo", label: r.r, sub: r.l, run: () => openPanel(r.r) }))
+      // filters named by the query first, then repos, then looser filter matches, then the full search
+      items = [...hits.filter((x) => x[0] < 2).map((x) => x[1]), ...rs, ...hits.filter((x) => x[0] === 2).map((x) => x[1]), { kind: "Search", label: `All repos matching “${q}”`, run: () => set({ ...clear, q }, true) }]
+    }
+    at = 0
+    out.innerHTML = items.map((c, i) => `<li role="option" id="cmdk-${i}" data-i="${i}" aria-selected="${i === 0}"><span class="k">${esc(c.kind)}</span><span class="l">${esc(c.label)}${c.sub ? `<small>${esc(c.sub)}</small>` : ""}</span>${c.n ? `<span class="n">${c.n.toLocaleString("en-US")}</span>` : ""}</li>`).join("")
+    inp.setAttribute("aria-activedescendant", "cmdk-0")
+  }
+  const move = (to) => {
+    out.children[at]?.setAttribute("aria-selected", "false")
+    at = (to + items.length) % items.length
+    out.children[at].setAttribute("aria-selected", "true")
+    out.children[at].scrollIntoView({ block: "nearest" })
+    inp.setAttribute("aria-activedescendant", `cmdk-${at}`)
+  }
+  const go = (i) => { const c = items[i]; if (!c) return; dlg.close(); c.run(); scrollTo({ top: 0 }) }
+  const open = () => { inp.value = ""; draw(); dlg.showModal() }
+  opener.textContent = /Mac|iPhone|iPad/.test(navigator.platform) ? "⌘K" : "Ctrl K"
+  opener.addEventListener("click", (e) => { e.preventDefault(); open() })
+  inp.addEventListener("input", draw)
+  dlg.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowDown") { e.preventDefault(); move(at + 1) }
+    else if (e.key === "ArrowUp") { e.preventDefault(); move(at - 1) }
+    else if (e.key === "Enter") { e.preventDefault(); go(at) }
+  })
+  out.addEventListener("click", (e) => { const li = e.target.closest("li"); if (li) go(+li.dataset.i) })
+  dlg.addEventListener("click", (e) => { if (e.target === dlg) dlg.close() }) // a click on the dimmed backdrop
+  document.addEventListener("keydown", (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); dlg.open ? dlg.close() : open() }
+  })
+}

@@ -95,6 +95,8 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .search:focus-within { border-color: var(--accent); }
 .search input { flex: 1; min-width: 0; background: none; border: 0; outline: 0; color: var(--text); font: inherit; font-size: 14px; }
 .search kbd { font: 11px/1 inherit; border: 1px solid var(--line); border-radius: 4px; padding: 3px 6px; background: var(--panel); }
+.search .kbd { font: 11px/1 inherit; border: 1px solid var(--line); border-radius: 4px; padding: 3px 6px; background: var(--panel); color: inherit; cursor: pointer; }
+.search .kbd:hover { border-color: var(--muted); }
 .bar-links { margin-left: auto; display: flex; align-items: center; gap: 6px; }
 .pill-link {
   display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border-radius: 12px; font-size: 14px; font-weight: 500;
@@ -216,7 +218,7 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
   .app.open .sidebar { transform: none; }
   .app.open .scrim { display: block; position: fixed; inset: 0; z-index: 30; background: rgb(0 0 0 / 0.5); }
   .menu { display: grid; margin-left: -6px; }
-  .search kbd { display: none; }
+  .search kbd, .search .kbd { display: none; }
   .pill-link span, .bar-links .icon-btn[aria-label="starwire on GitHub"] { display: none; }
   .pill-link { width: 34px; padding: 0; justify-content: center; }
   .appbar { gap: 8px; padding: 0 12px; }
@@ -659,3 +661,18 @@ html { scrollbar-gutter: stable; }
 .rp .replaces a small { font-size: 13px; color: var(--muted); }
 .rp .replaces .fit { flex-direction: column; align-items: flex-end; gap: 0; }
 .p-fit { margin-top: 2px; }
+
+/* command palette */
+.cmdk { width: min(640px, calc(100vw - 24px)); max-height: min(560px, calc(100vh - 16vh)); margin: 12vh auto auto; padding: 0; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); color: var(--text); box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45); overflow: hidden; }
+.cmdk[open] { display: flex; flex-direction: column; }
+.cmdk::backdrop { background: rgba(0, 0, 0, 0.5); }
+.cmdk input { width: 100%; padding: 16px 18px; border: 0; border-bottom: 1px solid var(--line); outline: 0; background: none; color: var(--text); font: inherit; font-size: 16px; }
+.cmdk ul { list-style: none; margin: 0; padding: 6px; overflow-y: auto; }
+.cmdk li { display: flex; align-items: center; gap: 12px; padding: 9px 12px; border-radius: 8px; cursor: pointer; }
+.cmdk li[aria-selected="true"], .cmdk li:hover { background: var(--raise); }
+.cmdk .k { flex: 0 0 84px; font-size: 11.5px; letter-spacing: 0.02em; color: var(--muted); }
+.cmdk .l { flex: 1; min-width: 0; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cmdk .l small { display: block; font-size: 12.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; }
+.cmdk .n { font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.cmdk-foot { margin: 0; padding: 9px 14px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+.cmdk-foot kbd { font: 11px/1 inherit; border: 1px solid var(--line); border-radius: 4px; padding: 2px 5px; background: var(--ink); }
