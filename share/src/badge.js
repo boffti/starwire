@@ -47,7 +47,8 @@ export function badgeSVG(text) {
   // bold runs about 7% wider than the table; textLength then makes any renderer fit the words to the pill
   const len = Math.round(width(text) * 1.07), left = 72, right = len + 16, w = left + right
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="20" role="img" aria-label="starwire: ${esc(text)}"><title>starwire: ${esc(text)}</title>` +
-    `<clipPath id="r"><rect width="${w}" height="20" rx="3"/></clipPath><g clip-path="url(#r)"><rect width="${left}" height="20" fill="#21262d"/><rect x="${left}" width="${right}" height="20" fill="#e3b341"/></g>` +
+    // gold pill, then the dark half drawn over its left end: no clip path, so no id that could clash when a page inlines several badges
+    `<rect width="${w}" height="20" rx="3" fill="#e3b341"/><path d="M0 3a3 3 0 0 1 3-3h${left - 3}v20H3a3 3 0 0 1-3-3z" fill="#21262d"/>` +
     `<g font-family="Verdana,Geneva,DejaVu Sans,sans-serif" font-size="11" text-anchor="middle"><text x="${left / 2}" y="14" fill="#e6edf3"><tspan fill="#e3b341">★</tspan> starwire</text>` +
     `<text x="${left + right / 2}" y="14" fill="#0d1117" font-weight="bold" textLength="${len}" lengthAdjust="spacingAndGlyphs">${esc(text)}</text></g></svg>`
 }
