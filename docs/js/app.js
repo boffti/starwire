@@ -16,6 +16,7 @@ import { makeIndex, fieldsFor } from "./search.js"
 import { readmeFragment, followTheme } from "./readme.js"
 import { count } from "./count.js"
 import { signs, summary } from "./vitals.js"
+import { LICENSE_KINDS, licenseKind, licenseText } from "./license.js"
 import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups, replacesOf } from "./repo.js"
 
 const data = await fetch("data/data.json").then((r) => r.json())
@@ -24,7 +25,7 @@ const now = Date.parse(data.updated)
 const TX = data.taxonomy ?? { areas: [], forms: [], platforms: [], worksWith: [] }
 const AREA = new Map(TX.areas.map((a) => [a.id, a]))
 const SUB = new Map(TX.areas.flatMap((a) => a.subs.map(([id, name]) => [`${a.id}/${id}`, name])))
-const FORM = new Map(TX.forms), PLAT = new Map(TX.platforms), WITH = new Map(TX.worksWith)
+const FORM = new Map(TX.forms), PLAT = new Map(TX.platforms), WITH = new Map(TX.worksWith), LIC = new Map(LICENSE_KINDS)
 const areaPairs = (r) => (r.a ? [`${r.a}/${r.sa}`, ...(r.mo ?? [])] : [])
 const repos = data.repos.map((r) => ({ ...r, age: (now - Date.parse(r.p)) / 864e5 }))
 // themes: the tags each repo carries (tg), which cut across areas ("local-first", "rag"). A tag is its own name; the map holds how many repos have it
@@ -93,7 +94,7 @@ const OLD_CATEGORY = {
 const old = OLD_CATEGORY[params.get("c")] ?? {}
 const pick = (k, map) => { const v = params.get(k) ?? old[k] ?? ""; return !map || map.has(v) ? v : "" }
 const state = {
-  a: pick("a", AREA), sa: "", form: pick("form", FORM), plat: pick("plat", PLAT), with: pick("with", WITH), tag: pick("tag", TAG),
+  a: pick("a", AREA), sa: "", form: pick("form", FORM), plat: pick("plat", PLAT), with: pick("with", WITH), tag: pick("tag", TAG), lic: pick("lic", LIC),
   f: params.get("f") ?? (shared.length ? "shared" : params.has("multi") ? "multi" : ""), q: params.get("q") ?? "",
   repo: params.get("repo") ?? "", page: params.get("page") ?? "", alt: params.get("alt") ?? "", sort: params.get("sort") ?? (params.get("q") ? "match" : params.get("f") === "saved" ? "saved" : params.get("f") === "trending" ? "trending" : prefs.sort), lang: params.get("lang") ?? "", view: params.get("view") ?? prefs.layout, shown: PAGE,
 }
@@ -233,7 +234,7 @@ const DATE = new Date(now).toLocaleDateString("en-US", { month: "long", day: "nu
 // above the list: the day's biggest mover on the plain views, the area's top three of the week inside an area
 function lead(list) {
   const el = $("#lead")
-  if (state.q || state.form || state.plat || state.with || state.tag || state.lang || ["saved", "shared"].includes(state.f)) return (el.hidden = true)
+  if (state.q || state.form || state.plat || state.with || state.tag || state.lic || state.lang || ["saved", "shared"].includes(state.f)) return (el.hidden = true)
   if (state.a) {
     const top = list.filter((r) => r.w > 0).sort((a, b) => b.w - a.w).slice(0, 3)
     if (top.length < 3) return (el.hidden = true)
@@ -279,8 +280,8 @@ const PROMO_ROW = 3 + Math.floor(Math.random() * 5), PROMO_COL = Math.random()
 
 const facetMatch = (r) =>
   (!state.a || areaPairs(r).some((p) => (state.sa ? p === `${state.a}/${state.sa}` : p.startsWith(state.a + "/")))) &&
-  (!state.form || r.fo?.includes(state.form)) && (!state.plat || r.pl?.includes(state.plat)) && (!state.with || r.ww?.includes(state.with)) && (!state.tag || r.tg?.includes(state.tag))
-const anyFacet = () => state.a || state.form || state.plat || state.with || state.tag
+  (!state.form || r.fo?.includes(state.form)) && (!state.plat || r.pl?.includes(state.plat)) && (!state.with || r.ww?.includes(state.with)) && (!state.tag || r.tg?.includes(state.tag)) && (!state.lic || licenseKind(r.li) === state.lic)
+const anyFacet = () => state.a || state.form || state.plat || state.with || state.tag || state.lic
 
 const PHONE = matchMedia("(max-width: 760px)")
 PHONE.addEventListener("change", () => render())
@@ -333,6 +334,7 @@ function render() {
   if (state.plat) parts.push(`on ${PLAT.get(state.plat)}`)
   if (state.with && !(prefs.sidebar === "with" && !state.a)) parts.push(`works with ${WITH.get(state.with)}`)
   if (state.tag) parts.push(`tagged ${state.tag}`)
+  if (state.lic) parts.push(LIC.get(state.lic).toLowerCase())
   if (state.lang) parts.push(`in ${state.lang}`)
   if (prefs.hideAI) parts.push("AI repos hidden")
   if (!anyFacet() && !state.f && !state.lang && !state.q) parts.push(`updated ${new Date(now).toLocaleDateString("en-US", { month: "long", day: "numeric" })}`)
@@ -343,7 +345,7 @@ function render() {
   hint.hidden = !g
   if (g) { hint.href = `?alt=${encodeURIComponent(g.name)}`; hint.textContent = `See all ${g.repos.length} open source ${g.repos.length === 1 ? "alternative" : "alternatives"} to ${g.name}` }
   // phones keep the filters behind one button; it shows how many are on
-  const on = ["form", "plat", "with", "tag", "lang"].filter((k) => state[k]).length
+  const on = ["form", "plat", "with", "tag", "lic", "lang"].filter((k) => state[k]).length
   $("#filters-n").hidden = !on; $("#filters-n").textContent = on
   $("#more").hidden = list.length <= shown
   $("#more").textContent = `Show more (${(list.length - shown).toLocaleString("en-US")} left)`
@@ -352,7 +354,7 @@ function render() {
   for (const k of ["a", "form", "with"]) document.querySelectorAll(`[data-${k}]`).forEach((n) => n.setAttribute("aria-current", String(n.dataset[k] === state[k] && !(k === "a" && state.sa))))
   document.querySelectorAll("[data-sa]").forEach((n) => n.setAttribute("aria-current", String(n.dataset.sa === state.sa)))
   document.querySelectorAll(".view button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.view === state.view)))
-  $("#reset")?.addEventListener("click", () => set({ f: "", a: "", sa: "", form: "", plat: "", with: "", tag: "", q: "", lang: "" }, true))
+  $("#reset")?.addEventListener("click", () => set({ f: "", a: "", sa: "", form: "", plat: "", with: "", tag: "", lic: "", q: "", lang: "" }, true))
   syncURL()
   const place = state.a ? `area/${state.a}${state.sa ? `/${state.sa}` : ""}` : `view/${state.f || "all"}`
   if (place !== counted.place) count((counted.place = place), state.a ? "Area" : "View")
@@ -365,7 +367,7 @@ const counted = { place: "", q: "", t: 0 }
 
 function syncURL() {
   const p = new URLSearchParams()
-  for (const k of ["f", "a", "sa", "form", "plat", "with", "tag", "q", "lang", "repo", "page", "alt"]) if (state[k] && !(k === "f" && state.f === "shared")) p.set(k, state[k])
+  for (const k of ["f", "a", "sa", "form", "plat", "with", "tag", "lic", "q", "lang", "repo", "page", "alt"]) if (state[k] && !(k === "f" && state.f === "shared")) p.set(k, state[k])
   if (state.f === "shared") p.set("saved", shared.join(","))
   // left out only when it's what this browser falls back to on load, so a reload lands where you were
   if (state.sort !== prefs.sort && !(state.sort === "match" && state.q)) p.set("sort", state.sort)
@@ -410,7 +412,7 @@ function navigate(href) {
 }
 function fromURL() {
   const p = new URLSearchParams(location.search)
-  set(Object.fromEntries(["f", "a", "sa", "form", "plat", "with", "tag", "q", "lang", "page", "alt"].map((k) => [k, p.get(k) ?? ""])), true)
+  set(Object.fromEntries(["f", "a", "sa", "form", "plat", "with", "tag", "lic", "q", "lang", "page", "alt"].map((k) => [k, p.get(k) ?? ""])), true)
   scrollTo({ top: 0 })
 }
 addEventListener("popstate", fromURL)
@@ -424,7 +426,7 @@ function set(patch, syncInputs) {
   if (state.q && !hadQ && !("sort" in patch)) state.sort = "match", (syncInputs = true)
   if (!state.q && state.sort === "match") state.sort = ["trending", "saved"].includes(state.f) ? state.f : prefs.sort, (syncInputs = true)
   $("#sort-match").hidden = $("#sort-match").disabled = !state.q
-  if (syncInputs) { $("#q").value = state.q; $("#lang").value = state.lang; $("#sort").value = state.sort; for (const k of ["form", "plat", "with", "tag"]) $(`#f-${k}`).value = state[k] }
+  if (syncInputs) { $("#q").value = state.q; $("#lang").value = state.lang; $("#sort").value = state.sort; for (const k of ["form", "plat", "with", "tag", "lic"]) $(`#f-${k}`).value = state[k] }
   renderSidebar()
   render()
 }
@@ -451,6 +453,13 @@ for (const [k, label, map, has] of [["form", "Form", TX.forms, (r, id) => r.fo?.
   el.innerHTML = `<option value="">Any</option><optgroup label="Most used">${byCount.slice(0, 25).map(opt).join("")}</optgroup><optgroup label="More">${byCount.slice(25).sort((a, b) => a[0].localeCompare(b[0])).map(opt).join("")}</optgroup>`
   el.value = state.tag
   el.addEventListener("change", (e) => set({ tag: e.target.value }))
+}
+// License: what the license file allows, in four kinds (rules in license.js)
+{
+  const el = $("#f-lic")
+  el.innerHTML = `<option value="">Any</option>` + LICENSE_KINDS.map(([id, name]) => [id, name, repos.filter((r) => licenseKind(r.li) === id).length]).filter((x) => x[2]).map(([id, name, n]) => `<option value="${id}">${name} (${n})</option>`).join("")
+  el.value = state.lic
+  el.addEventListener("change", (e) => set({ lic: e.target.value }))
 }
 $("#sidebar").addEventListener("click", (e) => {
   const n = e.target.closest(".cat")
@@ -480,7 +489,7 @@ $("#filters-btn").addEventListener("click", (e) => {
 $("#menu").addEventListener("click", () => $("#app").classList.add("open"))
 $("#scrim").addEventListener("click", closeMenu)
 document.querySelector(".view").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; prefs.layout = b.dataset.view; savePrefs(); set({ view: b.dataset.view, shown: state.shown }) }) // the layout you pick is remembered, like the setting
-$("#everywhere").addEventListener("click", () => set({ f: "", a: "", sa: "", form: "", plat: "", with: "", tag: "", lang: "", sort: "match" }, true))
+$("#everywhere").addEventListener("click", () => set({ f: "", a: "", sa: "", form: "", plat: "", with: "", tag: "", lic: "", lang: "", sort: "match" }, true))
 $("#more").addEventListener("click", () => set({ shown: state.shown + PAGE }))
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeMenu()
@@ -691,7 +700,7 @@ function openPanel(name, push = true) {
     ["Stars", num(r.s)],
     r.h > 0 ? ["Stars gained", gain(r)] : null,
     ["Forks", num(r.fk ?? 0)],
-    ["License", r.li ?? "None listed"],
+    ["License", licenseText(r.li)],
     ["Language", r.g ?? "Mixed"],
     r.ca ? ["Created", new Date(r.ca).toLocaleDateString("en-US", { month: "short", year: "numeric" })] : null,
     r.k > 1 ? ["Picked", `${r.k} times`] : null,
@@ -850,7 +859,7 @@ if (params.has("settings")) openSettings()
 // A filter picked here is added to what is already on, so "local-first" then "Rust" gives both; views start over.
 {
   const dlg = $("#cmdk"), inp = $("#cmdk-q"), out = $("#cmdk-list"), opener = $("#cmdk-open")
-  const clear = { f: "", a: "", sa: "", form: "", plat: "", with: "", tag: "", lang: "", q: "" }
+  const clear = { f: "", a: "", sa: "", form: "", plat: "", with: "", tag: "", lic: "", lang: "", q: "" }
   let all = null, items = [], at = 0
   const commands = () => (all ??= [
     ...VIEWS.filter((v) => !v.hidden).map((v) => ({ kind: "View", label: v.label, run: () => set({ ...clear, f: v.f }, true) })),
@@ -859,6 +868,7 @@ if (params.has("settings")) openSettings()
     ...TX.forms.map(([id, name]) => ({ kind: "Form", label: name, run: () => set({ form: id }, true) })),
     ...TX.platforms.map(([id, name]) => ({ kind: "Platform", label: name, run: () => set({ plat: id }, true) })),
     ...TX.worksWith.map(([id, name]) => ({ kind: "Works with", label: name, run: () => set({ with: id }, true) })),
+    ...LICENSE_KINDS.map(([id, name]) => ({ kind: "License", label: name, run: () => set({ lic: id }, true) })),
     ...langs.map(([l, n]) => ({ kind: "Language", label: l, n, run: () => set({ lang: l }, true) })),
     ...[...ALTS.values()].map((g) => ({ kind: "Instead of", label: g.name, n: g.repos.length, run: () => set({ alt: g.name }) })),
     ...[...$("#sort").options].filter((o) => !o.hidden).map((o) => ({ kind: "Sort by", label: o.textContent, run: () => set({ sort: o.value }, true) })),

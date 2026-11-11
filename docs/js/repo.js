@@ -1,6 +1,7 @@
 // The repo page (?page=owner/name) and the alternatives pages (?alt=Product, ?alt=all), shown inside the main app: vital signs, how it compares with its alternatives,
 // what it replaces and how to start. app.js owns the URL, saves and counting; this module only draws the page.
 import { signs, momentum } from "./vitals.js"
+import { licenseText } from "./license.js"
 import { readmeFragment } from "./readme.js"
 
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c])
@@ -51,7 +52,7 @@ function render(saved) {
     r.w > 0 ? `<li class="up">${svg(I.up)}<span><b>+${num(r.w)}</b> ${esc((r.wt ?? "a week").replace(/^~?\+\S+\s*/, ""))}</span></li>` : "",
     r.fk ? `<li>${svg(I.fork)}${num(r.fk)} forks</li>` : "",
     r.g ? `<li><span class="dot" style="background:${esc(r.gc ?? "var(--muted)")}"></span>${esc(r.g)}</li>` : "",
-    r.li ? `<li>${svg(I.law)}${esc(r.li)}</li>` : "",
+    `<li>${svg(I.law)}${esc(licenseText(r.li))}</li>`,
     r.pl?.length ? `<li>${svg(I.screen)}${r.pl.map((p) => esc(PLAT.get(p))).join(", ")}</li>` : "",
   ].join("")
   // what it replaces sits up top: "Alternative to Notion, Confluence"
@@ -133,7 +134,7 @@ function compareSection() {
       <td>${c == null ? "Not measured" : `<div class="bar"><span style="width:${(c / max) * 9}rem"></span>${c.toLocaleString("en-US")}</div>`}</td>
       <td>${rel(x)}</td>
       <td>${(x.fo ?? []).map((f) => esc(FORM.get(f))).join(", ") || "Not labelled"}</td>
-      <td>${esc(x.li ?? "None listed")}</td></tr>` }).join("")}</tbody></table></div></section>`
+      <td>${esc(licenseText(x.li))}</td></tr>` }).join("")}</tbody></table></div></section>`
 }
 
 // ---- alternatives: ?alt=Postman lists every repo that replaces it, ?alt=all lists the products ----
@@ -190,7 +191,7 @@ export function altPage(name, ctx) {
       <td data-k="Commits, 12 weeks">${c == null ? "Not measured" : `<div class="bar"><span style="width:${(c / max) * 7}rem"></span>${c.toLocaleString("en-US")}</div>`}</td>
       <td data-k="Last release">${rel}</td><td data-k="Issues closed">${iss}</td>
       <td data-k="Form">${(x.fo ?? []).map((f) => esc(FORM.get(f))).join(", ") || "Not labelled"}</td>
-      <td data-k="License">${esc(x.li ?? "None listed")}</td></tr>` }).join("")}</tbody></table></div>
+      <td data-k="License">${esc(licenseText(x.li))}</td></tr>` }).join("")}</tbody></table></div>
     <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a></p></section>
   ${related.length ? `<section aria-labelledby="also"><h2 id="also">These also replace</h2><div class="alt-chips">${related.map((x) => `<a href="?alt=${encodeURIComponent(x.name)}">${esc(x.name)}<span>${x.repos.length}</span></a>`).join("")}</div></section>` : ""}`
 }
