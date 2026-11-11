@@ -202,6 +202,11 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .news-row { display: flex; gap: 8px; }
 .news-row input[type="email"] { flex: 1; min-width: 0; height: 36px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--ink); color: var(--text); font: inherit; font-size: 14px; }
 .news-row input[type="email"]:focus { outline: 0; border-color: var(--accent); }
+.feeds .feed { display: flex; align-items: center; gap: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+.feeds .feed > div { flex: 1; min-width: 0; }
+.feeds .feed a { display: block; margin-top: 4px; font-size: 13px; color: var(--accent); text-decoration: none; overflow-wrap: anywhere; }
+.feeds .feed a:hover { text-decoration: underline; }
+@media (max-width: 640px) { #feeds-link { display: none; } } /* the top bar is full on a phone; the footer has both feed links */
 .news-trap { display: none; }
 .news-say { margin: 0; font-size: 13.5px; color: var(--muted); }
 .news-say:empty { display: none; }

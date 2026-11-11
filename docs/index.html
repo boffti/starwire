@@ -67,6 +67,7 @@
       <nav class="bar-links">
         <button class="icon-btn labeled" id="news-link" type="button" popovertarget="news" aria-label="Get the weekly email" title="Get the weekly email"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span>Newsletter</span></button>
         <a class="icon-btn labeled" href="https://github.com/boffti/starwire" aria-label="starwire on GitHub" title="starwire on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true" class="gh"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg><span>Source</span></a>
+        <button class="icon-btn" id="feeds-link" type="button" popovertarget="feeds" aria-label="RSS feeds" title="RSS feeds"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></button>
         <a class="icon-btn" href="how.html" aria-label="How starwire works" title="How starwire works"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg></a>
         <button id="open-settings" class="icon-btn" type="button" aria-label="Settings" title="Settings"></button>
         <button id="theme" class="icon-btn" type="button" aria-label="Switch light or dark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
@@ -175,6 +176,21 @@
   <ul id="cmdk-list" role="listbox"></ul>
   <p class="cmdk-foot"><kbd>↑</kbd> <kbd>↓</kbd> to move &nbsp; <kbd>Enter</kbd> to choose &nbsp; <kbd>Esc</kbd> to close</p>
 </dialog>
+<!-- RSS feeds: a small panel under the RSS button in the top bar. A feed's address is for a feed reader; opened in a
+     browser it is raw XML, so the panel offers it to copy. -->
+<div class="news feeds" id="feeds" popover>
+  <div><b>Follow starwire by RSS</b><span>Copy an address into your feed reader.</span></div>
+  <div class="feed"><div><b>The day's best</b><span>One item a day: the repos rising fastest and the biggest new picks.</span><a href="https://starwire.foo/top.xml">starwire.foo/top.xml</a></div><button class="btn" type="button" data-copy="https://starwire.foo/top.xml">Copy</button></div>
+  <div class="feed"><div><b>Every new pick</b><span>All of them as they are added, up to 60 a day.</span><a href="https://starwire.foo/feed.xml">starwire.foo/feed.xml</a></div><button class="btn" type="button" data-copy="https://starwire.foo/feed.xml">Copy</button></div>
+</div>
+<script>
+  document.getElementById("feeds").addEventListener("click", async (e) => {
+    const b = e.target.closest("[data-copy]")
+    if (!b) return
+    try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = "Copied" } catch { b.textContent = "Copy failed" }
+    setTimeout(() => (b.textContent = "Copy"), 2000)
+  })
+</script>
 <aside class="panel" id="panel" hidden aria-label="Repo details"></aside>
 <aside class="panel settings" id="settings" hidden aria-label="Settings"></aside>
 <div class="panel-scrim" id="pscrim"></div>
