@@ -1,6 +1,7 @@
 // Picks and loads the picture for a card, best first: the repo's own social preview, the first image in its README,
 // then the owner's avatar. A source that's blocked, broken, not an image or over 4 MB falls through to the next one.
 // Returns { kind, src (data URI), wide }; wide pictures get the showcase layout.
+import { avatar } from "../../docs/js/avatar.js"
 const MAX = 4 * 1024 * 1024
 
 // width and height from the first bytes of a PNG, GIF, JPEG or WebP, or from an SVG's attributes
@@ -54,8 +55,7 @@ async function load(url, fetchOpts) {
 
 // art: [kind, url] from art.json, or undefined; fetchOpts lets the Worker ask Cloudflare to cache the source images
 export async function pickArt(repo, art, fetchOpts = {}) {
-  const owner = repo.split("/")[0]
-  const tries = [...(art ? [art] : []), ["avatar", `https://avatars.githubusercontent.com/${encodeURIComponent(owner)}?s=400`]]
+  const tries = [...(art ? [art] : []), ["avatar", avatar(repo.split("/")[0], 400)]] // by account number once index.js has called knowOwners
   for (const [kind, url] of tries) {
     const got = await load(url, fetchOpts)
     if (!got) continue
