@@ -334,6 +334,18 @@ function showCollections() {
   syncURL()
   if (counted.place !== "collections") count((counted.place = "collections"), "Collections")
 }
+// How much know-how a project takes to get running, for readers who don't run servers: [level 1-3, label, what it
+// means]. Read from how the project is packaged (its form labels), easiest route first. Not tested by us.
+// ponytail: labels only. Whether a self-hosted project also sells a hosted version isn't in the data; that needs
+// the pipeline to read each README, and would move some "Needs a server" picks to easy.
+function setupOf(r) {
+  const f = new Set(r.fo ?? [])
+  if (["desktop-app", "mobile-app", "extension"].some((x) => f.has(x))) return [1, "Install like an app", "Download it and open it. No server, no terminal."]
+  if (f.has("self-hosted")) return [3, "Needs a server", "Someone technical sets it up on a server, usually with Docker."]
+  if (f.has("web-app")) return [2, "Some setup", "Runs in a browser, but you may have to start it yourself."]
+  if (f.has("cli")) return [2, "Uses the terminal", "Installed and run by typing commands."]
+  return f.size ? [3, "For developers", "A building block for people who write code."] : null
+}
 // one collection: the stack, need by need. Each row is a job to be done, the product people usually pay for, and the
 // open source project that takes its place, with how well it fits. A need nothing covers well is shown as a gap.
 function showCollection(c) {
@@ -343,12 +355,14 @@ function showCollection(c) {
   for (const id of ["#lead", "#more", "#everywhere", "#alt-hint"]) $(id).hidden = true
   document.querySelectorAll("[data-f], [data-a], [data-sa], [data-form], [data-with]").forEach((n) => n.setAttribute("aria-current", "false"))
   const by = new Map(c.picks.map((p) => [p.label, p])), repos = c.picks.map((p) => p.repo)
-  const host = repos.filter((r) => r.fo?.includes("self-hosted")).length, open = repos.filter((r) => licenseKind(r.li) === "open").length
-  const facts = [[`${c.picks.length} of ${c.needs.length}`, "needs covered"], [c.picks.reduce((n, p) => n + p.n, 0), "alternatives compared"], [open, open === 1 ? "open source license" : "open source licenses"], [host, "can be self-hosted"]]
-  const pick = (p) => { const r = p.repo, [owner, name] = r.r.split("/")
+  const easy = repos.filter((r) => setupOf(r)?.[0] === 1).length, open = repos.filter((r) => licenseKind(r.li) === "open").length
+  const facts = [[`${c.picks.length} of ${c.needs.length}`, "needs covered"], [c.picks.reduce((n, p) => n + p.n, 0), "alternatives compared"], [open, open === 1 ? "open source license" : "open source licenses"], [`${easy} of ${c.picks.length}`, "install like an app"]]
+  const pick = (p) => { const r = p.repo, [owner, name] = r.r.split("/"), su = setupOf(r)
+    const os = (r.pl ?? []).filter((x) => x !== "docker").map((x) => PLAT.get(x)).filter(Boolean).join(", ")
     return `<div class="repo st-pick" role="button" tabindex="0" data-r="${esc(r.r)}" aria-label="${esc(name)} details">
       <div class="head"><img src="${esc(avatar(owner, 80))}" alt="" loading="lazy" decoding="async" width="40" height="40"><div class="name"><strong>${esc(name)}</strong><span>${esc(owner)}</span></div>${saveBtn(r.r)}<a class="jump" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener" aria-label="Open ${esc(name)} on GitHub" title="Open on GitHub">${GH}</a></div>
       <p class="line">${esc(r.l ?? "")}</p>
+      ${su ? `<p class="st-setup lv-${su[0]}"><span class="st-bars" role="img" aria-label="Setup effort ${su[0]} of 3"><i></i><i></i><i></i></span><b>${su[1]}</b><span>${su[2]}${su[0] === 1 && os ? ` ${esc(os)}.` : ""}</span></p>` : ""}
       <div class="meta">${p.f ? `<span class="st-fit"><b>${KIND[p.f[1]]}</b> covers ${Math.round(p.f[0] * 100)}%</span>` : ""}<span class="stars">${STAR}${num(r.s)}</span><span>${esc(licenseText(r.li))}</span>${(r.fo ?? []).length ? `<span>${r.fo.map((f) => esc(FORM.get(f))).join(", ")}</span>` : ""}</div></div>` }
   const gap = (products) => { const g = products.map((x) => ALTS.get(x.toLowerCase())).find(Boolean)
     return `<div class="st-gap"><b>No strong fit yet.</b> Nothing on starwire covers enough of ${esc(g?.name ?? products[0])} to recommend. ${g ? `<a href="?alt=${encodeURIComponent(g.name)}">See the ${g.repos.length} partial ${g.repos.length === 1 ? "option" : "options"}</a>` : `<a href="https://github.com/boffti/starwire/issues/new?template=submit.yml" target="_blank" rel="noopener">Suggest a repo</a>`}</div>` }
@@ -359,7 +373,7 @@ function showCollection(c) {
       return `<li class="st-row${p ? "" : " gap"}"><div class="st-need"><span class="st-n">${String(i + 1).padStart(2, "0")}</span><div><h2>${esc(label)}</h2>
         ${p ? `<p>In place of <a href="?alt=${encodeURIComponent(p.product)}">${esc(p.product)}</a>${p.n > 1 ? `<a class="st-all" href="?alt=${encodeURIComponent(p.product)}">Compare all ${p.n}</a>` : ""}</p>` : `<p>Usually ${esc(products.slice(0, 2).join(" or "))}</p>`}</div></div>
         ${p ? pick(p) : gap(products)}</li>` }).join("")}</ol>
-    <p class="st-note">Each need gets the top-ranked open source alternative to the product people usually pay for, so the stack changes as the rankings do. <a href="how.html#fit">How fit is scored</a> &middot; <a href="?col=all">All collections</a></p>`
+    <p class="st-note">Each need gets the top-ranked open source alternative to the product people usually pay for, so the stack changes as the rankings do. Setup effort is read from how each project is packaged; we haven't installed them. <a href="how.html#fit">How fit is scored</a> &middot; <a href="?col=all">All collections</a></p>`
   syncURL()
   const place = `collection/${c.id}`
   if (place !== counted.place) count((counted.place = place), "Collection")
