@@ -175,13 +175,17 @@ export function replacesOf(x, ctx) {
 // For collections: the stack for a set of needs. Each need names the products people usually pay for to fill it, in
 // order of preference, and gets the top-ranked alternative to the first of them that has one: the same order its
 // alternatives page uses (fit, then health, then stars). A repo fills one need only. needs: [[label, ...products]]
-const MIN_FIT = 0.5
+// A collection recommends, so its pick is also vetted: at least MIN_STARS stars and half of the signal checks that
+// apply to it (signal.js). A two-week-old repo with a dozen stars can top an alternatives page on fit alone; it
+// shouldn't be the one backend a founder is told to build on. The next candidate, or the next product, gets a turn.
+const MIN_FIT = 0.5, MIN_STARS = 100
+export const vetted = (r, today) => { const c = checks(r, today).filter((x) => x[2] != null); return r.s >= MIN_STARS && c.filter((x) => x[2]).length * 2 >= c.length }
 export function stackFor(needs, ctx) {
   ({ repos, vitals, today } = ctx); fit = ctx.fit ?? fit
   const groups = altGroups(repos), taken = new Set(), out = []
   for (const [label, ...products] of needs) for (const p of products) {
-    // a repo scored under half the product's checklist doesn't fill the need; the next product gets a turn, or the need is left out
-    const g = groups.get(altKey(p)), best = g && [...g.repos].sort(byFit(g)).find((x) => !taken.has(x.r) && (fitOf(g, x)?.[0] ?? 1) >= MIN_FIT)
+    // a repo scored under half the product's checklist, or not vetted, doesn't fill the need; the next product gets a turn, or the need is left out
+    const g = groups.get(altKey(p)), best = g && [...g.repos].sort(byFit(g)).find((x) => !taken.has(x.r) && (fitOf(g, x)?.[0] ?? 1) >= MIN_FIT && vetted(x, today))
     if (!best) continue
     taken.add(best.r); out.push({ label, product: g.name, repo: best, n: g.repos.length, f: fitOf(g, best) }); break
   }

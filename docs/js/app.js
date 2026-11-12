@@ -354,7 +354,7 @@ function showCollection(c) {
       ${su ? `<p class="st-setup">${setupMark(su)}<span>${su.text}${su.id === "app" && os ? ` ${esc(os)}.` : ""}</span></p>` : ""}
       <div class="meta">${p.f ? `<span class="st-fit"><b>${KIND[p.f[1]]}</b> covers ${Math.round(p.f[0] * 100)}%</span>` : ""}<span class="stars">${STAR}${num(r.s)}</span><span>${esc(licenseText(r.li))}</span>${(r.fo ?? []).length ? `<span>${r.fo.map((f) => esc(FORM.get(f))).join(", ")}</span>` : ""}</div></div>` }
   const gap = (products) => { const g = products.map((x) => ALTS.get(x.toLowerCase())).find(Boolean)
-    return `<div class="st-gap"><b>No strong fit yet.</b> Nothing on starwire covers enough of ${esc(g?.name ?? products[0])} to recommend. ${g ? `<a href="?alt=${encodeURIComponent(g.name)}">See the ${g.repos.length} partial ${g.repos.length === 1 ? "option" : "options"}</a>` : `<a href="https://github.com/boffti/starwire/issues/new?template=submit.yml" target="_blank" rel="noopener">Suggest a repo</a>`}</div>` }
+    return `<div class="st-gap"><b>No pick yet.</b> Nothing on starwire covers enough of ${esc(g?.name ?? products[0])} and is established enough to recommend. ${g ? `<a href="?alt=${encodeURIComponent(g.name)}">See the ${g.repos.length} ${g.repos.length === 1 ? "option" : "options"} we list</a>` : `<a href="https://github.com/boffti/starwire/issues/new?template=submit.yml" target="_blank" rel="noopener">Suggest a repo</a>`}</div>` }
   const el = $("#results")
   el.className = "stack"
   el.innerHTML = `<dl class="st-facts">${facts.map(([n, k]) => `<div><dt>${k}</dt><dd>${n}</dd></div>`).join("")}</dl>
@@ -362,7 +362,7 @@ function showCollection(c) {
       return `<li class="st-row${p ? "" : " gap"}"><div class="st-need"><span class="st-n">${String(i + 1).padStart(2, "0")}</span><div><h2>${esc(label)}</h2>
         ${p ? `<p>In place of <a href="?alt=${encodeURIComponent(p.product)}">${esc(p.product)}</a>${p.n > 1 ? `<a class="st-all" href="?alt=${encodeURIComponent(p.product)}">Compare all ${p.n}</a>` : ""}</p>` : `<p>Usually ${esc(products.slice(0, 2).join(" or "))}</p>`}</div></div>
         ${p ? pick(p) : gap(products)}</li>` }).join("")}</ol>
-    <p class="st-note">Each need gets the top-ranked open source alternative to the product people usually pay for, so the stack changes as the rankings do. <a href="how.html#fit">How fit is scored</a> &middot; <a href="how.html#setup">How setup is read</a> &middot; <a href="?col=all">All collections</a></p>`
+    <p class="st-note">Each need gets the top-ranked open source alternative to the product people usually pay for, as long as it has 100 stars and passes half of its <a href="how.html#signal">signal checks</a>, so the stack changes as the rankings do. <a href="how.html#fit">How fit is scored</a> &middot; <a href="how.html#setup">How setup is read</a> &middot; <a href="?col=all">All collections</a></p>`
   syncURL()
   const place = `collection/${c.id}`
   if (place !== counted.place) count((counted.place = place), "Collection")
