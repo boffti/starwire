@@ -49,7 +49,7 @@ function render(saved) {
   const v = vitals[r.r], s = v ? signs(v, today) : null, m = momentum(r, repos)
   const crumbs = r.a ? `<nav class="rp-crumbs" aria-label="Where it sits"><a href="?a=${esc(r.a)}">${esc(AREA.get(r.a))}</a><span aria-hidden="true">/</span><a href="?a=${esc(r.a)}&amp;sa=${esc(r.sa)}">${esc(SUB.get(`${r.a}/${r.sa}`))}</a></nav>` : ""
 
-  const su = setupOf(r.fo)
+  const su = setupOf(r.fo, r.ho)
   const stats = [
     `<li class="star">${svg(I.star)}<span><b>${num(r.s)}</b> stars</span></li>`,
     r.w > 0 ? `<li class="up">${svg(I.up)}<span><b>+${num(r.w)}</b> ${esc((r.wt ?? "a week").replace(/^~?\+\S+\s*/, ""))}</span></li>` : "",
@@ -233,7 +233,7 @@ export function altPage(name, ctx) {
       ${P ? `<td data-k="Covers">${fitCell(x)}</td>` : ""}<td data-k="Stars"><span class="s">${num(x.s)}</span>${x.w > 0 ? `<small class="w">+${num(x.w)}</small>` : ""}</td>
       <td data-k="Commits, 12 weeks" class="c-commits">${c == null ? "Not measured" : `<div class="bar"><span style="width:${(c / max) * 5}rem"></span>${c.toLocaleString("en-US")}</div>`}</td>
       <td data-k="Last release" class="c-rel">${rel}</td><td data-k="Issues closed vs opened" class="c-iss">${iss}</td>
-      <td data-k="Setup" title="${esc([(x.fo ?? []).map((f) => FORM.get(f)).join(", "), setupOf(x.fo)?.text].filter(Boolean).join(". "))}">${setupOf(x.fo) ? setupMark(setupOf(x.fo)) : "Not labelled"}</td>
+      <td data-k="Setup" title="${esc([(x.fo ?? []).map((f) => FORM.get(f)).join(", "), setupOf(x.fo, x.ho)?.text].filter(Boolean).join(". "))}">${setupOf(x.fo, x.ho) ? setupMark(setupOf(x.fo, x.ho)) : "Not labelled"}</td>
       <td data-k="License" class="c-lic">${esc(licenseText(x.li))}</td></tr>${P ? evidence(x) : ""}` }).join("")}</tbody></table></div>
     <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a> &middot; <a href="how.html#setup">How setup is read</a></p></section>
   ${inCols.length ? `<section aria-labelledby="incol"><h2 id="incol">Part of ${inCols.length === 1 ? "this collection" : "these collections"}</h2><div class="alt-cols">${inCols.map(([c, [need]]) => `<a class="col-card" href="?col=${esc(c.id)}">
