@@ -434,7 +434,7 @@ html { scrollbar-gutter: stable; }
 .rp .acts .btn { height: 44px; }
 .rp .acts .icon { width: 44px; justify-content: center; padding: 0; }
 .rp .acts .btn[aria-pressed="true"] svg { fill: currentColor; }
-.rp .sec-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 14px; }
+.rp .sec-head { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; }
 .rp .chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 500; background: var(--raise); color: var(--muted); }
 .rp .chip.good { background: var(--green-soft); color: var(--green); }
 .rp .chip.good::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
