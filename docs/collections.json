@@ -1,588 +1,184 @@
 [
   {
-    "id": "self-host-everyday",
-    "title": "Self-host your everyday apps",
-    "intro": "Photos, passwords, films, notes and PDFs on a machine you own. Each of these runs in Docker on a spare computer or a small server, and stands in for a service you'd otherwise rent.",
-    "repos": [
-      [
-        "immich-app/immich",
-        "Phone photo backup and a gallery with search, in place of Google Photos"
-      ],
-      [
-        "dani-garcia/vaultwarden",
-        "A password server that works with the Bitwarden apps and fits on the smallest machine"
-      ],
-      [
-        "jellyfin/jellyfin",
-        "Streams your own films and music to any device, with no account and no fees"
-      ],
-      [
-        "usememos/memos",
-        "Quick notes on a personal timeline, in place of Google Keep"
-      ],
-      [
-        "Stirling-Tools/Stirling-PDF",
-        "Merge, split, sign and convert PDFs without uploading them anywhere"
-      ],
-      [
-        "home-assistant/core",
-        "Runs the house: lights, sensors and automations that keep working offline"
-      ],
-      [
-        "louislam/uptime-kuma",
-        "Watches all of the above and tells you when one goes down"
-      ]
+    "id": "solopreneurs",
+    "title": "For solopreneurs",
+    "intro": "Everything a one-person business runs on: a site, a way to get paid, bookings, a mailing list and the numbers.",
+    "needs": [
+      ["Build your website", "Webflow", "Framer", "Wix", "WordPress"],
+      ["Take payments", "Stripe"],
+      ["Send invoices and keep the books", "QuickBooks", "Xero", "Wave"],
+      ["Let clients book time", "Calendly"],
+      ["Run a mailing list", "Mailchimp"],
+      ["Collect answers with forms", "Typeform", "Google Forms", "SurveyMonkey"],
+      ["See who visits", "Google Analytics", "Plausible"],
+      ["Keep notes and plans", "Notion"],
+      ["Get documents signed", "DocuSign"],
+      ["Automate the busywork", "Zapier"]
     ]
   },
   {
-    "id": "replace-your-saas",
-    "title": "Replace your team's SaaS stack",
-    "intro": "The tools a small team pays for every month, each with an open source project that does the same job. Start with the one whose bill annoys you most.",
-    "repos": [
-      [
-        "makeplane/plane",
-        "Issues, sprints and docs, in place of Jira or Linear"
-      ],
-      [
-        "penpot/penpot",
-        "Design and prototyping in the browser, in place of Figma"
-      ],
-      [
-        "nocodb/nocodb",
-        "A spreadsheet face on a real database, in place of Airtable"
-      ],
-      [
-        "twentyhq/twenty",
-        "A CRM you can shape to your own sales process, in place of Salesforce"
-      ],
-      [
-        "go-gitea/gitea",
-        "Git hosting with code review and CI on your own server"
-      ],
-      [
-        "apache/superset",
-        "Dashboards and charts over your data, in place of Tableau"
-      ],
-      [
-        "supabase/supabase",
-        "Database, auth and storage for your app, in place of Firebase"
-      ]
+    "id": "small-business",
+    "title": "For a small business",
+    "intro": "The systems a team of five to fifty pays for every month, from the customer list to the accounts.",
+    "needs": [
+      ["Track customers and deals", "Salesforce", "HubSpot", "Kommo"],
+      ["Do the accounts", "QuickBooks", "Xero"],
+      ["Answer customer support", "Zendesk", "Freshdesk", "Help Scout", "Intercom"],
+      ["Plan and track work", "Asana", "Trello", "Monday", "ClickUp", "Jira"],
+      ["Talk as a team", "Slack"],
+      ["Write and share documents", "Google Docs", "Microsoft Office", "Confluence"],
+      ["Share passwords safely", "1Password", "Bitwarden"],
+      ["Sell online", "Shopify"],
+      ["Hold video meetings", "Zoom", "Google Meet"],
+      ["Run stock, orders and operations", "NetSuite", "SAP"],
+      ["Sign up new logins once", "Okta", "Auth0"]
     ]
   },
   {
-    "id": "small-and-worth-a-star",
-    "title": "Small projects worth a star",
-    "intro": "Every repo here has under 1,000 stars. They're early, focused and made by one or two people, and a star from you is one they'll notice.",
-    "repos": [
-      [
-        "halcyon-video/halcyon-video",
-        "Browse your Jellyfin or Plex library like a 1990s video rental shop"
-      ],
-      [
-        "Razee4315/Paperling",
-        "A distraction-free Markdown editor, small and quick to open"
-      ],
-      [
-        "byrencheema/airstats",
-        "CPU, memory, network and battery in the Mac menu bar"
-      ],
-      [
-        "microsoft/Procexp-Mac",
-        "Process Explorer, the Windows classic, for macOS"
-      ],
-      [
-        "hushhq/hush",
-        "End-to-end encrypted messaging with voice and video"
-      ],
-      [
-        "duriantaco/skylos",
-        "Scans a pull request for dead code and leaked secrets before it merges"
-      ],
-      [
-        "Aejkatappaja/phantom-ui",
-        "Loading skeletons generated to match the page they stand in for"
-      ]
+    "id": "agencies",
+    "title": "For marketing and creative agencies",
+    "intro": "Design, video, campaigns and reporting, plus the tools for working with clients.",
+    "needs": [
+      ["Design interfaces and layouts", "Figma"],
+      ["Edit photos", "Photoshop", "Lightroom"],
+      ["Draw vector artwork", "Adobe Illustrator", "Illustrator"],
+      ["Make quick social graphics", "Canva"],
+      ["Edit video", "Adobe Premiere Pro", "Premiere Pro", "Final Cut Pro", "CapCut"],
+      ["Animate and add effects", "After Effects"],
+      ["Schedule social posts", "Buffer", "Hootsuite", "Sendible", "SocialPilot"],
+      ["Send email campaigns", "Mailchimp"],
+      ["Research keywords and audit sites", "Ahrefs", "Semrush", "Screaming Frog"],
+      ["Report on web traffic", "Google Analytics"],
+      ["Brainstorm on a whiteboard", "Miro"],
+      ["Collect client feedback on video", "Frame.io"],
+      ["Track billable time", "Toggl"],
+      ["Manage site content", "Contentful", "Sanity", "Webflow"]
     ]
   },
   {
-    "id": "ai-on-your-machine",
-    "title": "Run AI on your own machine",
-    "intro": "From working out what your hardware can run to chatting with a model that never leaves it. In roughly the order you'd need them.",
-    "repos": [
-      [
-        "AlexsJones/llmfit",
-        "Start here: tells you which models fit your memory and GPU"
-      ],
-      [
-        "open-webui/open-webui",
-        "The chat window for local models, with history, files and users"
-      ],
-      [
-        "lyogavin/airllm",
-        "Fits large models into a small GPU by loading one layer at a time"
-      ],
-      [
-        "jundot/omlx",
-        "A fast model server made for Apple Silicon Macs"
-      ],
-      [
-        "unslothai/unsloth",
-        "Fine-tune a model on your own data without a data centre"
-      ],
-      [
-        "vllm-project/vllm",
-        "When one machine becomes a service: high-throughput serving"
-      ],
-      [
-        "jamiepine/voicebox",
-        "Voice cloning, dictation and speech, all generated locally"
-      ]
+    "id": "startup-engineering",
+    "title": "For a startup engineering team",
+    "intro": "The services a product team signs up for in its first year, from the repo to production monitoring.",
+    "needs": [
+      ["Host your code", "GitHub", "GitLab"],
+      ["Track issues", "Linear", "Jira"],
+      ["Run the backend", "Firebase", "Supabase"],
+      ["Deploy and host", "Heroku", "Vercel", "Netlify"],
+      ["Handle sign-in", "Auth0", "WorkOS", "Okta"],
+      ["Monitor production", "Datadog", "New Relic"],
+      ["Understand product usage", "Mixpanel", "Amplitude"],
+      ["Ship behind feature flags", "LaunchDarkly"],
+      ["Build internal tools", "Retool"],
+      ["Test APIs", "Postman", "Insomnia"],
+      ["Send transactional email", "SendGrid", "Resend", "Postmark", "Mailgun"],
+      ["Add search", "Algolia", "Elasticsearch"],
+      ["Replay user sessions", "LogRocket"],
+      ["Know when the site is down", "UptimeRobot"]
     ]
   },
   {
-    "id": "a-better-terminal",
-    "title": "A better terminal",
-    "intro": "Seven upgrades that make the command line faster and friendlier. None needs the others, so take them one at a time.",
-    "repos": [
-      [
-        "ghostty-org/ghostty",
-        "A fast terminal that feels native on each platform"
-      ],
-      [
-        "starship/starship",
-        "A prompt that shows what matters (branch, runtime, status) in any shell"
-      ],
-      [
-        "atuinsh/atuin",
-        "Searchable shell history, synced across your machines"
-      ],
-      [
-        "BurntSushi/ripgrep",
-        "Search a codebase in milliseconds, skipping what git ignores"
-      ],
-      [
-        "nushell/nushell",
-        "A shell where command output is tables you can filter and sort"
-      ],
-      [
-        "tldr-pages/tldr",
-        "Man pages cut down to the five examples you actually wanted"
-      ],
-      [
-        "schollz/croc",
-        "Send a file to another computer with one command and a code phrase"
-      ]
+    "id": "content-creators",
+    "title": "For content creators",
+    "intro": "Record, edit, clip, caption and publish, without a stack of monthly subscriptions.",
+    "needs": [
+      ["Record your screen", "Screen Studio", "Loom"],
+      ["Edit video", "CapCut", "Final Cut Pro", "iMovie"],
+      ["Cut long videos into clips", "Opus Clip", "OpusClip"],
+      ["Edit by transcript", "Descript"],
+      ["Generate voiceover", "ElevenLabs"],
+      ["Make thumbnails and graphics", "Canva", "Photoshop"],
+      ["Make background music", "Suno"],
+      ["Upscale footage and images", "Topaz Video AI", "Topaz Gigapixel"],
+      ["Dictate scripts", "Wispr Flow"],
+      ["Schedule posts", "Buffer", "Hootsuite"]
     ]
   },
   {
-    "id": "build-with-mcp",
-    "title": "Build with MCP",
-    "intro": "MCP is how AI agents reach outside tools. These are the servers worth plugging in first and the kit for writing your own.",
-    "repos": [
-      [
-        "modelcontextprotocol/servers",
-        "The reference servers: read these to see how one is put together"
-      ],
-      [
-        "PrefectHQ/fastmcp",
-        "The quickest way to write your own server, in Python"
-      ],
-      [
-        "github/github-mcp-server",
-        "Gives an agent your issues, pull requests and repos"
-      ],
-      [
-        "ChromeDevTools/chrome-devtools-mcp",
-        "Lets a coding agent open a page and read the console and network"
-      ],
-      [
-        "upstash/context7",
-        "Feeds agents current library docs so they stop inventing APIs"
-      ],
-      [
-        "punkpeye/awesome-mcp-servers",
-        "The directory to browse once you want more"
-      ]
+    "id": "remote-teams",
+    "title": "For remote teams",
+    "intro": "What a team that never shares a room needs to talk, meet, decide and keep a record.",
+    "needs": [
+      ["Chat", "Slack", "Discord"],
+      ["Meet on video", "Zoom", "Google Meet"],
+      ["Take meeting notes", "Otter.ai", "Granola", "Fireflies.ai", "Fireflies"],
+      ["Explain things on video", "Loom"],
+      ["Think together on a whiteboard", "Miro"],
+      ["Keep a team wiki", "Confluence", "Notion"],
+      ["Assign and track tasks", "Linear", "Asana", "Trello"],
+      ["Find a time to meet", "Calendly"],
+      ["Send large files", "WeTransfer"],
+      ["Help a colleague on their screen", "TeamViewer", "AnyDesk"],
+      ["Share passwords", "1Password", "Bitwarden"]
     ]
   },
   {
-    "id": "local-first-notes",
-    "title": "Notes that live on your device",
-    "intro": "Note apps that keep your writing in files on your own machine first, with sync as an option and no lock-in.",
-    "repos": [
-      [
-        "logseq/logseq",
-        "An outliner that links every note into a graph, stored as plain Markdown"
-      ],
-      [
-        "siyuan-note/siyuan",
-        "Block-based notes with databases, and sync you can host yourself"
-      ],
-      [
-        "fastrepl/anarlog",
-        "Records and summarises meetings on your own computer"
-      ],
-      [
-        "colanode/colanode",
-        "Team chat and a shared knowledge base that work offline"
-      ],
-      [
-        "ZhFahim/anchor",
-        "A simple offline-first notes app you can self-host"
-      ],
-      [
-        "memex-lab/memex",
-        "A phone journal that organises entries for you"
-      ]
+    "id": "data-teams",
+    "title": "For data teams",
+    "intro": "From raw tables to dashboards people actually open: storage, transformation, analysis and reporting.",
+    "needs": [
+      ["Build dashboards", "Tableau", "Power BI", "Looker"],
+      ["Store data for analysis", "Snowflake", "BigQuery", "ClickHouse"],
+      ["Transform data", "dbt"],
+      ["Query and browse databases", "DataGrip", "TablePlus", "Navicat"],
+      ["Work in notebooks", "Jupyter", "Google Colab"],
+      ["Give everyone a spreadsheet view", "Airtable"],
+      ["Analyse product usage", "Mixpanel", "Amplitude"],
+      ["Search across records", "Elasticsearch"],
+      ["Track experiments", "Weights & Biases"],
+      ["Turn analysis into an app", "Streamlit", "Retool"]
     ]
   },
   {
-    "id": "coding-agents-set-up",
-    "title": "Coding agents, set up properly",
-    "intro": "An agent is only as good as what you give it to work with. Pick one, then add the skills and habits that stop it producing slop.",
-    "repos": [
-      [
-        "anthropics/claude-code",
-        "A terminal agent that reads your codebase and carries out tasks in it"
-      ],
-      [
-        "anomalyco/opencode",
-        "The same idea, working with whichever model provider you choose"
-      ],
-      [
-        "github/spec-kit",
-        "Write the spec first and have the agent build to it"
-      ],
-      [
-        "obra/superpowers",
-        "A skills framework that gives an agent a development method to follow"
-      ],
-      [
-        "mattpocock/skills",
-        "Engineering skills for agents, taken from real day-to-day work"
-      ],
-      [
-        "DietrichGebert/ponytail",
-        "Pushes an agent toward the smallest change that works"
-      ],
-      [
-        "farion1231/cc-switch",
-        "Switch providers and settings across your coding tools from one place"
-      ]
+    "id": "freelancers",
+    "title": "For freelancers",
+    "intro": "Win the work, do the work, bill the work. The admin side of working for yourself.",
+    "needs": [
+      ["Show your portfolio", "Framer", "Webflow", "Wix"],
+      ["Track your hours", "Toggl"],
+      ["Invoice clients", "QuickBooks", "Wave", "Xero"],
+      ["Get contracts signed", "DocuSign"],
+      ["Share proposals", "DocSend"],
+      ["Book calls", "Calendly"],
+      ["Keep a to-do list", "Todoist", "Trello"],
+      ["Log expenses", "Expensify"],
+      ["Record walkthroughs for clients", "Loom"],
+      ["Check your writing", "Grammarly"]
     ]
   },
   {
-    "id": "creative-suite",
-    "title": "A creative suite without the subscription",
-    "intro": "Photo editing, vector art, video, audio and streaming, each from a project you can use for free and keep.",
-    "repos": [
-      [
-        "storytold/photocraft",
-        "A photo editor written from scratch, in place of Photoshop"
-      ],
-      [
-        "GraphiteEditor/Graphite",
-        "Node-based vector and motion design, in place of Illustrator"
-      ],
-      [
-        "OpenCut-app/OpenCut",
-        "A timeline video editor, in place of CapCut"
-      ],
-      [
-        "audacity/audacity",
-        "The long-standing audio editor for recording and clean-up"
-      ],
-      [
-        "obsproject/obs-studio",
-        "Screen recording and live streaming, the standard tool for both"
-      ],
-      [
-        "upscayl/upscayl",
-        "Enlarges and sharpens images on your own machine"
-      ],
-      [
-        "excalidraw/excalidraw",
-        "Hand-drawn style diagrams and whiteboards in the browser"
-      ]
+    "id": "students-researchers",
+    "title": "For students and researchers",
+    "intro": "Read, take notes, write up and revise, with tools that cost nothing and keep your work in your hands.",
+    "needs": [
+      ["Write papers", "Overleaf"],
+      ["Take notes", "Obsidian", "Notion", "Evernote"],
+      ["Question your sources", "NotebookLM"],
+      ["Revise with flashcards", "Quizlet"],
+      ["Save reading for later", "Pocket", "Instapaper"],
+      ["Check your writing", "Grammarly"],
+      ["Translate", "DeepL", "Google Translate"],
+      ["Run code in notebooks", "Google Colab", "Jupyter"],
+      ["Manage e-books", "Calibre", "Kindle"],
+      ["Learn a language", "Duolingo"],
+      ["Write documents", "Microsoft Word", "Microsoft Office", "Google Docs"]
     ]
   },
   {
-    "id": "video-for-programmers",
-    "title": "Video, the programmer's way",
-    "intro": "Download it, cut it, convert it and generate it from code. Five tools that between them cover most things you'd open a video editor for.",
-    "repos": [
-      [
-        "yt-dlp/yt-dlp",
-        "Downloads video and audio from YouTube and a great many other sites"
-      ],
-      [
-        "FFmpeg/FFmpeg",
-        "Converts and processes any audio or video format; most other tools are built on it"
-      ],
-      [
-        "mifi/lossless-cut",
-        "Trims and joins clips without re-encoding, so it's instant and exact"
-      ],
-      [
-        "remotion-dev/remotion",
-        "Write videos as React components and render them"
-      ],
-      [
-        "heygen-com/hyperframes",
-        "Write HTML that renders to video, designed for agents to drive"
-      ]
-    ]
-  },
-  {
-    "id": "collect-web-data",
-    "title": "Collect data from the web",
-    "intro": "From a single page to a full crawl, and from hand-written selectors to letting a model find the fields for you.",
-    "repos": [
-      [
-        "D4Vinci/Scrapling",
-        "A Python framework that scales from one request to a full crawl"
-      ],
-      [
-        "apify/crawlee",
-        "Reliable crawlers and browser automation in Node.js"
-      ],
-      [
-        "unclecode/crawl4ai",
-        "Crawls pages and hands back clean Markdown for LLM pipelines"
-      ],
-      [
-        "ScrapeGraphAI/Scrapegraph-ai",
-        "Describe the data you want and let a model extract it"
-      ],
-      [
-        "getmaxun/maxun",
-        "Turns pages into structured feeds without writing code"
-      ],
-      [
-        "dgtlmoon/changedetection.io",
-        "Watches pages and alerts you when a price or a word changes"
-      ]
-    ]
-  },
-  {
-    "id": "lock-down-your-digital-life",
-    "title": "Lock down your digital life",
-    "intro": "A checklist to follow, then the tools to act on it: block trackers, encrypt your connection, and see what your computer is talking to.",
-    "repos": [
-      [
-        "lissy93/personal-security-checklist",
-        "Start here: 300 or so steps, ordered by how much each one matters"
-      ],
-      [
-        "AdguardTeam/AdGuardHome",
-        "Blocks ads and trackers for every device on your network"
-      ],
-      [
-        "amnezia-vpn/amnezia-client",
-        "Run a VPN on a server you control"
-      ],
-      [
-        "drduh/YubiKey-Guide",
-        "Move your keys onto a hardware token, step by step"
-      ],
-      [
-        "GyulyVGC/sniffnet",
-        "Shows live which hosts your machine is connecting to"
-      ],
-      [
-        "pluja/awesome-privacy",
-        "A directory of privacy-respecting alternatives to the apps you use"
-      ]
-    ]
-  },
-  {
-    "id": "desktop-keepers",
-    "title": "Desktop apps you'll keep installed",
-    "intro": "Small utilities that solve one everyday annoyance each and then stay out of the way.",
-    "repos": [
-      [
-        "localsend/localsend",
-        "Send files to a nearby device on any platform, like AirDrop for everything"
-      ],
-      [
-        "Genymobile/scrcpy",
-        "Mirror and control an Android phone from your desktop"
-      ],
-      [
-        "rclone/rclone",
-        "Sync files with dozens of cloud storage providers from one command"
-      ],
-      [
-        "utmapp/UTM",
-        "Run virtual machines on a Mac without buying Parallels"
-      ],
-      [
-        "zen-browser/desktop",
-        "A Firefox-based browser with a calmer, tidier interface"
-      ],
-      [
-        "tw93/Pake",
-        "Turn any website into a lightweight desktop app"
-      ],
-      [
-        "agalwood/Motrix",
-        "A download manager for HTTP, FTP and torrents"
-      ]
-    ]
-  },
-  {
-    "id": "own-your-money",
-    "title": "Take control of your money",
-    "intro": "Budgeting, subscriptions, shared bills and receipts, with your financial data kept on a machine you control.",
-    "repos": [
-      [
-        "actualbudget/actual",
-        "Envelope budgeting that keeps your data local, in place of YNAB"
-      ],
-      [
-        "ellite/Wallos",
-        "Tracks every subscription and when it next charges you"
-      ],
-      [
-        "spliit-app/spliit",
-        "Split shared expenses with friends, in place of Splitwise"
-      ],
-      [
-        "vas3k/TaxHacker",
-        "Reads receipts and invoices with an LLM and files them for you"
-      ],
-      [
-        "mayswind/ezbookkeeping",
-        "Simple personal bookkeeping you host yourself"
-      ],
-      [
-        "Open-Dev-Society/OpenStock",
-        "Follow stocks with live prices and alerts"
-      ]
-    ]
-  },
-  {
-    "id": "learn-by-building",
-    "title": "Learn by building",
-    "intro": "Courses and guides that teach by having you make the thing, from a first project to your own language model.",
-    "repos": [
-      [
-        "codecrafters-io/build-your-own-x",
-        "Rebuild Git, a database or a browser from scratch, with a guide for each"
-      ],
-      [
-        "practical-tutorials/project-based-learning",
-        "Hands-on tutorials grouped by language, each ending in a working project"
-      ],
-      [
-        "ossu/computer-science",
-        "A free, ordered path through a full computer science degree"
-      ],
-      [
-        "TheAlgorithms/Python",
-        "Every classic algorithm, implemented clearly enough to read"
-      ],
-      [
-        "rasbt/LLMs-from-scratch",
-        "Build a GPT-style model step by step in notebooks"
-      ],
-      [
-        "microsoft/ai-agents-for-beginners",
-        "Eighteen lessons that take you from nothing to a working agent"
-      ]
-    ]
-  },
-  {
-    "id": "tinker-with-hardware",
-    "title": "Tinker with hardware",
-    "intro": "Firmware and projects for the devices on your desk and around your house. Bring a soldering iron for some, only curiosity for others.",
-    "repos": [
-      [
-        "qmk/qmk_firmware",
-        "Firmware for custom keyboards: remap every key and layer"
-      ],
-      [
-        "openwrt/openwrt",
-        "Replace your router's firmware with a full Linux system"
-      ],
-      [
-        "blakeblackshear/frigate",
-        "A camera recorder that detects people and cars locally"
-      ],
-      [
-        "francescopace/espectre",
-        "Motion sensing through Wi-Fi signals on a cheap ESP32"
-      ],
-      [
-        "DarkFlippers/unleashed-firmware",
-        "Custom firmware for the Flipper Zero"
-      ],
-      [
-        "librepods-org/librepods",
-        "AirPods features such as battery and ear detection on Android and Linux"
-      ]
-    ]
-  },
-  {
-    "id": "homelab-plumbing",
-    "title": "Homelab plumbing",
-    "intro": "The unglamorous layer under a self-hosted setup: getting traffic in, keeping logins in one place and seeing what's running.",
-    "repos": [
-      [
-        "caddyserver/caddy",
-        "A web server that gets and renews HTTPS certificates by itself"
-      ],
-      [
-        "fatedier/frp",
-        "Reach a server at home from outside without opening your router"
-      ],
-      [
-        "goauthentik/authentik",
-        "One login for all your self-hosted apps"
-      ],
-      [
-        "pi-hole/pi-hole",
-        "Network-wide ad and tracker blocking on a spare Raspberry Pi"
-      ],
-      [
-        "jesseduffield/lazydocker",
-        "See and manage every container from one terminal screen"
-      ],
-      [
-        "rustdesk/rustdesk",
-        "Remote desktop into your machines through a relay you host"
-      ]
-    ]
-  },
-  {
-    "id": "make-a-game",
-    "title": "Make a game",
-    "intro": "Engines and building blocks for a first game or a serious one, from retro pixel art to physics and multiplayer.",
-    "repos": [
-      [
-        "kitao/pyxel",
-        "A retro engine for pixel-art games in Python; the friendliest place to start"
-      ],
-      [
-        "mxgmn/WaveFunctionCollapse",
-        "Generates levels and tilemaps from a small example"
-      ],
-      [
-        "jrouwe/JoltPhysics",
-        "Rigid-body physics and collisions for 3D games"
-      ],
-      [
-        "ValveSoftware/GameNetworkingSockets",
-        "Valve's networking layer for multiplayer"
-      ],
-      [
-        "Facepunch/sbox-public",
-        "The source of the s&box engine, to read or build on"
-      ],
-      [
-        "htdt/godogen",
-        "Has a coding agent build a Godot game for you"
-      ]
+    "id": "households",
+    "title": "For your household",
+    "intro": "The family's photos, films, passwords and budget, on a machine at home.",
+    "needs": [
+      ["Back up everyone's photos", "Google Photos"],
+      ["Stream your films", "Plex"],
+      ["Play your music", "Spotify", "YouTube Music"],
+      ["Keep passwords", "1Password", "Bitwarden"],
+      ["Budget together", "YNAB", "Mint"],
+      ["Keep track of subscriptions", "Rocket Money"],
+      ["Split shared bills", "Splitwise"],
+      ["Run the smart home", "Google Home", "SmartThings"],
+      ["Block ads on every device", "Pi-hole", "AdGuard"],
+      ["Share notes and lists", "Google Keep"],
+      ["Share where everyone is", "Life360", "Find My"]
     ]
   }
 ]

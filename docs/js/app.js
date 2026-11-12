@@ -17,7 +17,7 @@ import { readmeFragment, followTheme } from "./readme.js"
 import { count } from "./count.js"
 import { signs, summary } from "./vitals.js"
 import { LICENSE_KINDS, licenseKind, licenseText } from "./license.js"
-import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups, replacesOf } from "./repo.js"
+import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups, replacesOf, stackFor } from "./repo.js"
 
 // collections.json is written by hand (see CONTRIBUTING.md); the site works the same without it
 const [data, collections] = await Promise.all([fetch("data/data.json").then((r) => r.json()), fetch("collections.json").then((r) => (r.ok ? r.json() : [])).catch(() => [])])
@@ -36,12 +36,22 @@ for (const r of repos) for (const t of r.tg ?? []) TAG.set(t, (TAG.get(t) ?? 0) 
 let index
 const search = (q, pool) => (q.trim() ? (index ??= makeIndex(repos, fieldsFor(TX)))(q, pool) : null)
 const byName = new Map(repos.map((r) => [r.r.toLowerCase(), r]))
-// Collections: hand-picked sets for one job ("A better terminal"), each repo with a line on why it's in. A repo that has
-// left the list drops out of its set, and a set left with fewer than three isn't shown. "all" is the index of them.
-const COL = new Map(collections.map((c) => { const picks = c.repos.filter(([r]) => byName.has(r.toLowerCase()))
-  return [c.id, { ...c, picks, why: new Map(picks.map(([r, w]) => [r.toLowerCase(), w])), order: new Map(picks.map(([r], i) => [r.toLowerCase(), i])) }] }).filter(([, c]) => c.picks.length >= 3))
-const inCol = () => COL.get(state.col) // the collection being shown, if any
-const lineOf = (r) => inCol()?.why.get(r.r.toLowerCase()) ?? r.l // inside a collection a repo shows why it was picked
+// Collections: the open source stack for one kind of reader ("For solopreneurs"). collections.json only says who it's
+// for and what they need, each need as the products people usually pay for. The repos are not hand-picked: every need
+// gets the top-ranked alternative on starwire (stackFor in repo.js), so a collection updates itself as rankings move.
+// Ranking needs the fit and vitals files, so the stacks are worked out the first time a collection is opened.
+const COL = new Map(collections.map((c) => [c.id, c]))
+let stacks = null // id -> { ...collection, picks, why, order }, once loaded
+async function loadStacks() {
+  vitals ??= fetch("data/vitals.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
+  fits ??= fetch("data/fit.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
+  const [v, f] = await Promise.all([vitals, fits]), ctx = { repos, vitals: v, fit: f, today: data.updated.slice(0, 10) }
+  stacks = new Map(collections.map((c) => { const picks = stackFor(c.needs, ctx)
+    return [c.id, { ...c, picks, order: new Map(picks.map((p, i) => [p.repo.r, i])),
+      why: new Map(picks.map((p) => [p.repo.r, `${p.label}, in place of ${p.product}. ${p.repo.l ?? ""}`])) }] }).filter(([, c]) => c.picks.length >= 3))
+}
+const inCol = () => stacks?.get(state.col) // the collection being shown, if any
+const lineOf = (r) => inCol()?.why.get(r.r) ?? r.l // inside a collection a repo says which need it fills
 
 // ---- saved for later: repo names in localStorage, oldest first. No accounts, so saves live in this browser,
 // and a share link (?saved=a/b,c/d) carries them to another device or person ----
@@ -295,7 +305,7 @@ const PROMO_ROW = 3 + Math.floor(Math.random() * 5), PROMO_COL = Math.random()
 
 const facetMatch = (r) =>
   (!state.a || areaPairs(r).some((p) => (state.sa ? p === `${state.a}/${state.sa}` : p.startsWith(state.a + "/")))) &&
-  (!state.form || r.fo?.includes(state.form)) && (!state.plat || r.pl?.includes(state.plat)) && (!state.with || r.ww?.includes(state.with)) && (!state.tag || r.tg?.includes(state.tag)) && (!state.lic || licenseKind(r.li) === state.lic) && (!inCol() || inCol().order.has(r.r.toLowerCase()))
+  (!state.form || r.fo?.includes(state.form)) && (!state.plat || r.pl?.includes(state.plat)) && (!state.with || r.ww?.includes(state.with)) && (!state.tag || r.tg?.includes(state.tag)) && (!state.lic || licenseKind(r.li) === state.lic) && (!inCol() || inCol().order.has(r.r))
 const anyFacet = () => state.a || state.form || state.plat || state.with || state.tag || state.lic
 
 const PHONE = matchMedia("(max-width: 760px)")
@@ -305,14 +315,14 @@ PHONE.addEventListener("change", () => render())
 function showCollections() {
   document.body.dataset.cols = "all" // the sort, filters and layout controls mean nothing here: style.css hides them
   $("#title").textContent = "Collections"
-  $("#sub").textContent = `${COL.size} hand-picked sets, each for one job. Open one to see why every repo is in it.`
+  $("#sub").textContent = `The open source stack for ${stacks.size} kinds of work. Nothing is hand-picked: each need gets the top-ranked alternative to the product people usually pay for.`
   for (const id of ["#lead", "#more", "#everywhere", "#alt-hint"]) $(id).hidden = true
   document.querySelectorAll("[data-f], [data-a], [data-sa], [data-form], [data-with]").forEach((n) => n.setAttribute("aria-current", "false"))
   const el = $("#results")
   el.className = "cols"
-  el.innerHTML = [...COL.values()].map((c) => `<a class="col-card" href="?col=${esc(c.id)}">
+  el.innerHTML = [...stacks.values()].map((c) => `<a class="col-card" href="?col=${esc(c.id)}">
     <strong>${esc(c.title)}</strong><p>${esc(c.intro)}</p>
-    <span class="col-faces">${c.picks.map(([r]) => `<img src="${esc(avatar(r.split("/")[0], 56))}" alt="" width="26" height="26" loading="lazy" decoding="async">`).join("")}<small>${c.picks.length} repos</small></span></a>`).join("")
+    <span class="col-faces">${c.picks.map((p) => `<img src="${esc(avatar(p.repo.r.split("/")[0], 56))}" alt="" width="26" height="26" loading="lazy" decoding="async">`).join("")}<small>${c.picks.length} tools</small></span></a>`).join("")
   syncURL()
   if (counted.place !== "collections") count((counted.place = "collections"), "Collections")
 }
@@ -324,6 +334,7 @@ function render() {
   if (onPage) { if (state.alt) document.querySelectorAll("[data-f]").forEach((n) => n.setAttribute("aria-current", "false")); return showPage(), syncURL() }
   if (shownPage) { shownPage = ""; document.title = TITLE }
   document.querySelectorAll("[data-col]").forEach((n) => n.setAttribute("aria-current", String(!!state.col)))
+  if (state.col && !stacks) return void loadStacks().then(render) // the stacks need two more files; draw when they're in
   if (state.col === "all") return showCollections()
   const view = VIEWS.find((v) => v.f === state.f) ?? VIEWS[0]
   let list = repos.filter((r) => visible(r) && view.test(r) && facetMatch(r) && (!state.lang || r.g === state.lang))
@@ -337,7 +348,7 @@ function render() {
   $("#everywhere").textContent = `${elsewhere.toLocaleString("en-US")} more ${elsewhere === 1 ? "match" : "matches"} in all repos`
   const col = inCol() // a collection keeps the order it was written in
   document.body.dataset.cols = col ? "one" : ""
-  list.sort(scores && state.sort === "match" ? (a, b) => scores.get(b) - scores.get(a) : col ? (a, b) => col.order.get(a.r.toLowerCase()) - col.order.get(b.r.toLowerCase()) : sorters[state.sort] ?? sorters.picked)
+  list.sort(scores && state.sort === "match" ? (a, b) => scores.get(b) - scores.get(a) : col ? (a, b) => col.order.get(a.r) - col.order.get(b.r) : sorters[state.sort] ?? sorters.picked)
   // saved repos that dropped off the list stay, at the end, so a save is never lost silently
   const gone = state.f === "saved" && !anyFacet() && !state.lang && !scores ? saved.filter((n) => !byName.has(n.toLowerCase())) : []
   const el = $("#results")
@@ -905,7 +916,7 @@ if (params.has("settings")) openSettings()
     ...TX.forms.map(([id, name]) => ({ kind: "Form", label: name, run: () => set({ form: id }, true) })),
     ...TX.platforms.map(([id, name]) => ({ kind: "Platform", label: name, run: () => set({ plat: id }, true) })),
     ...TX.worksWith.map(([id, name]) => ({ kind: "Works with", label: name, run: () => set({ with: id }, true) })),
-    ...[...COL.values()].map((c) => ({ kind: "Collection", label: c.title, n: c.picks.length, run: () => set({ ...clear, col: c.id }, true) })),
+    ...[...COL.values()].map((c) => ({ kind: "Collection", label: c.title, run: () => set({ ...clear, col: c.id }, true) })),
     ...LICENSE_KINDS.map(([id, name]) => ({ kind: "License", label: name, run: () => set({ lic: id }, true) })),
     ...langs.map(([l, n]) => ({ kind: "Language", label: l, n, run: () => set({ lang: l }, true) })),
     ...[...ALTS.values()].map((g) => ({ kind: "Instead of", label: g.name, n: g.repos.length, run: () => set({ alt: g.name }) })),

@@ -20,7 +20,7 @@ The badge updates itself and shows the best true thing about the repo that day: 
 
 ## Suggest a collection
 
-Collections are short hand-picked sets for one job, like "A better terminal". They live in [`docs/collections.json`](docs/collections.json), which is written by hand, so a pull request is welcome. Each one needs an `id`, a `title`, a one or two sentence `intro`, and five to eight repos that are already on starwire, each with a plain line on why it's in the set. A repo that leaves the list drops out of its collection on its own.
+A collection is the open source stack for one kind of reader, like "For solopreneurs". [`docs/collections.json`](docs/collections.json) only says who it's for and what they need: each need is a short label followed by the products people usually pay for to fill it, in order of preference. Nobody picks the repos. Each need gets the top-ranked alternative to the first of those products that has a good one, in the same order its alternatives page uses, so a collection updates itself as rankings change. To propose one, add an entry with an `id`, a `title`, an `intro` and eight to fourteen `needs`.
 
 ## Please don't edit the list files by hand
 
