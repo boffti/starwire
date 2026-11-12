@@ -96,6 +96,10 @@ applyLook()
 // a static alternatives page (/alternatives/notion/, written by the pipeline's build) names its product in <body data-alt>:
 // carry on as ?alt= so the app works as everywhere else; the page's canonical link keeps the clean address for search
 if (document.body.dataset.alt) { history.replaceState(null, "", `/?alt=${encodeURIComponent(document.body.dataset.alt)}`); delete document.body.dataset.alt; document.title = "starwire" }
+// a static landing page (/open-source/databases/, also from the build) names its filters in <body data-list>, the same way.
+// Its title stays until the reader moves on, since it describes exactly this list
+let landed = document.body.dataset.list != null
+if (landed) { history.replaceState(null, "", `/?${document.body.dataset.list}`); delete document.body.dataset.list }
 const params = new URLSearchParams(location.search)
 // a shared list opens as its own view, with a button to add it to your saves
 const shared = [...new Set((params.get("saved") ?? "").split(",").map((n) => n.trim()).filter((n) => NAME.test(n)).map(canon))].slice(0, 500)
@@ -421,7 +425,7 @@ function syncURL() {
 }
 
 // ---- repo page: ?page=owner/name shows the repo in the main column, sidebar and search stay ----
-const TITLE = document.title
+const TITLE = landed ? "starwire" : document.title
 let shownPage = "", vitals, fits
 async function showPage() {
   const key = state.alt ? `alt:${state.alt}` : state.page
@@ -464,6 +468,7 @@ addEventListener("popstate", fromURL)
 const inApp = (e) => { const a = e.target.closest('a[href^="?"]'); return a && !e.metaKey && !e.ctrlKey && !e.shiftKey && e.button === 0 ? a : null }
 
 function set(patch, syncInputs) {
+  if (landed) { landed = false; document.title = TITLE }
   const hadQ = state.q
   if (state.col && !("col" in patch) && ["f", "a", "sa", "form", "with"].some((k) => k in patch)) patch = { ...patch, col: "" } // moving to another view or area leaves the collection
   if (!("page" in patch || "alt" in patch)) patch = { ...patch, page: "", alt: "" } // any change to the list leaves the repo page

@@ -565,6 +565,13 @@ body[data-cols="all"] .controls, body[data-cols="one"] .controls, body[data-cols
 .col-faces img { flex: none; }
 .col-faces img { border-radius: 6px; margin-right: -6px; border: 2px solid var(--panel); background: var(--raise); }
 .col-faces small { margin-left: 16px; color: var(--muted); font-size: 13px; white-space: nowrap; }
+/* a landing page as the build writes it, before the app redraws the list: plain and readable without JavaScript */
+.static-list { margin: 0; padding: 14px 18px 14px 44px; display: grid; gap: 10px; }
+.static-list a { color: var(--text); font-weight: 600; }
+.static-list span { color: var(--muted); }
+.static-more { padding: 14px 18px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14px; }
+.static-more b { flex-basis: 100%; }
+.static-more a { color: var(--muted); }
 .wire { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--panel); }
 .wire .wrow { display: grid; grid-template-columns: 3.4rem 28px minmax(9rem, 15rem) minmax(0, 1fr) 7rem 120px 5.5rem 6.5rem auto auto; align-items: center; gap: 0 16px; padding: 10px 16px; border: 0; border-radius: 0; background: none; cursor: pointer; }
 .wire .wrow + .wrow { border-top: 1px solid var(--line); }
