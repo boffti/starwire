@@ -556,7 +556,7 @@ html { scrollbar-gutter: stable; }
 /* ranked wire: one row per repo, momentum first. Columns: rank, avatar, name, description, 2-week curve, stars today, total */
 /* the index of collections */
 body[data-cols="all"] .controls, body[data-cols="one"] .controls, body[data-cols="all"] #savedbar, body[data-cols="all"] .more-wrap { display: none; }
-#results.cols { display: grid; grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr)); gap: 14px; }
+#results.cols { display: grid; grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr)); gap: 14px; margin-bottom: 48px; } /* the Show more row, hidden here, is what normally keeps the footer off the list */
 .col-card { display: flex; flex-direction: column; gap: 8px; padding: 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); color: var(--text); text-decoration: none; }
 .col-card:hover { border-color: var(--muted); }
 .col-card strong { font-size: 17px; }
