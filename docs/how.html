@@ -65,6 +65,7 @@
     <li><a href="#trending">How Trending works</a></li>
     <li><a href="#sorts">The other sorts and labels</a></li>
     <li><a href="#neutral">What never affects ranking</a></li>
+    <li><a href="#signal">Worth a look, the default order</a></li>
     <li><a href="#vitals">Vital signs on repo pages</a></li>
     <li><a href="#data">Use the data</a></li>
     <li><a href="#counts">What we count</a></li>
@@ -123,7 +124,8 @@
   <h2 id="sorts">The other sorts and labels</h2>
   <table>
     <tr><th>Sort</th><th>Order</th></tr>
-    <tr><td>Most stars today</td><td>Stars gained in the latest day of our daily counts. The arrow beside the rank compares it with the day before.</td></tr>
+    <tr><td>Worth a look</td><td>The default. Stars gained in the latest day, weighted by five signal checks. <a href="#signal">How it works</a></td></tr>
+    <tr><td>Most stars today</td><td>Stars gained in the latest day of our daily counts, with no weighting. The arrow beside the rank compares it with the day before.</td></tr>
     <tr><td>Most picked</td><td>Number of different sources that picked the repo. Each source counts once, however often it posts. Ties go to more stars.</td></tr>
     <tr><td>Trending</td><td>Heat, as above</td></tr>
     <tr><td>Most stars</td><td>Current stars</td></tr>
@@ -148,6 +150,21 @@
     <li>Visit counts (below) don't change the ranking. If they ever do, it will be listed under changes first.</li>
     <li>The README previews load from GitHub, and the two libraries that render them load from cdnjs with integrity checks, so a tampered copy is refused.</li>
   </ul>
+
+  <h2 id="signal">Worth a look, the default order</h2>
+  <p>Stars are easy to get for a week. A new repo with a polished README can collect thousands before anyone has used it. So the default order isn't raw star gain. It is stars gained per day, weighted by five checks on whether that attention looks earned:</p>
+  <table>
+    <thead><tr><th>Check</th><th>Passes when</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Picked</td><td>More than one independent source picked it</td><td>One mention can be luck or a friend; two rarely are</td></tr>
+      <tr><td>Aged</td><td>The repo is older than 90 days</td><td>It has outlived its launch week</td></tr>
+      <tr><td>Active</td><td>Code was pushed in the last 30 days</td><td>Someone is still working on it</td></tr>
+      <tr><td>Forked</td><td>At least 3 forks for every 100 stars (repos with 200 stars or more)</td><td>People who use a project fork it; stars with almost no forks are attention, not use</td></tr>
+      <tr><td>Steady</td><td>No single day holds more than 60% of the week's new stars (when the week brought 50 or more)</td><td>A one-day spike is a post going round, not a trend</td></tr>
+    </tbody>
+  </table>
+  <p>A repo that passes every check it can be judged on keeps its full daily gain. Each one it fails takes an equal share off, down to a quarter of its gain for a repo that passes none. A check with too little to go on is left out instead of counted against the repo. Nothing is hidden or removed: a repo with weak signal sinks in this one order, and still shows in search, in its area and in every other sort. "Most stars today" is the same list without the weighting.</p>
+  <p>The checks say whether attention looks earned. They don't say a project is good, and a young project from one source can be excellent. Every repo page shows which checks it passed, and the rules are in <a href="https://github.com/boffti/starwire/blob/main/docs/js/signal.js">one short file</a> you can read or challenge.</p>
 
   <h2 id="vitals">Vital signs on repo pages</h2>
   <p>Each repo page shows four signs, measured from GitHub about once a week. They describe the project's recent activity; they aren't a rating of its quality. They only break ties on alternatives pages, and never change the order of any other list.</p>
@@ -177,7 +194,7 @@
     <li>The score is the share of the checklist covered. Core jobs count double, partly counts half.</li>
     <li>A project that doesn't show one of the core jobs is held under 50%, so one that does the main thing always ranks above one that doesn't.</li>
     <li>Each project is also tagged as replacing the product, covering one part of it, or doing the same job a different way.</li>
-    <li>Stars and activity play no part in the score. Ties go to the healthier project.</li>
+    <li>Stars and activity play no part in the score. Ties go to the more active project.</li>
   </ul>
   <p>The checklists and the reading are done with Claude and checked against a hand-made set of pairs before each change. A feature that neither the README nor the website mentions scores as missing, so a project that documents little can rank lower than it deserves. A project is read again when its README or website changes.</p>
 
@@ -231,6 +248,8 @@
 
   <h2 id="changes">Changes to the method</h2>
   <ul class="log">
+    <li><b>Nov 12, 2026.</b> The default order is "Worth a look": daily star gain weighted by five signal checks, so repos with a burst of stars and little else sink. "Most stars today" keeps the unweighted order. <a href="#signal">How it works</a>.</li>
+    <li><b>Nov 12, 2026.</b> Vital signs are no longer called "healthy", and the issues sign is worded as issues closed against issues opened, which is what it measures. Alternatives pages show the reading in words, with the line behind each mark one tap away.</li>
     <li><b>Nov 8, 2026.</b> "New this week" and the new label only cover repos created in the last 90 days. Before, any repo picked for the first time counted, so long-established projects showed up as new.</li>
     <li><b>Nov 8, 2026.</b> Picks from Reddit communities where developers share projects.</li>
     <li><b>Nov 8, 2026.</b> Repo pages with vital signs, how a repo compares with its alternatives, and how to get started. <a href="#vitals">How the signs are read</a>.</li>

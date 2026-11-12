@@ -1,7 +1,8 @@
 // The repo page (?page=owner/name) and the alternatives pages (?alt=Product, ?alt=all), shown inside the main app: vital signs, how it compares with its alternatives,
 // what it replaces and how to start. app.js owns the URL, saves and counting; this module only draws the page.
-import { signs, momentum } from "./vitals.js"
+import { signs, momentum, issuesText } from "./vitals.js"
 import { avatar } from "./avatar.js"
+import { checks } from "./signal.js"
 import { licenseText } from "./license.js"
 import { readmeFragment } from "./readme.js"
 
@@ -74,6 +75,7 @@ function render(saved) {
     </div>
   </section>
   ${vitalsSection(s, m, v)}
+  ${signalSection()}
   ${compareSection()}
   <div class="pair">${swapCard()}${startCard(v)}</div>
   <div class="tail">
@@ -83,11 +85,19 @@ function render(saved) {
   <section class="rp-readme" hidden><h2>README</h2><div class="readme" style="margin-top:14px"></div></section>`
 }
 
+// the five checks behind "Worth a look", each one shown as passed, not passed or not judged
+function signalSection() {
+  const cs = checks(r, today), judged = cs.filter((c) => c[2] != null), ok = judged.filter((c) => c[2]).length
+  return `<section aria-labelledby="sg"><h2 id="sg">Signal <span class="chip${ok === judged.length && ok ? " good" : ""}">${ok} of ${judged.length} checks</span></h2>
+    <ul class="sg-list">${cs.map(([, label, pass]) => `<li class="${pass == null ? "na" : pass ? "yes" : "no"}">${esc(label)}<small>${pass == null ? "too little to judge" : pass ? "yes" : "no"}</small></li>`).join("")}</ul>
+    <p class="foot-note">These weigh a repo's daily star gain in the default order, Worth a look. They say whether the attention looks earned, not whether the project is good. <a href="how.html#signal">How this works</a></p></section>`
+}
+
 function vitalsSection(s, m, v) {
   if (!s) return `<section aria-labelledby="vs"><h2 id="vs">Vital signs</h2><p class="foot-note">Not measured yet. Every repo is checked once a week, so this fills in within a few days.</p></section>`
   const levels = [m.level, s.activity.level, s.release.level, s.issues.level].filter((l) => l !== "none")
   const good = levels.filter((l) => l === "good").length
-  const chip = good === levels.length ? `<span class="chip good">Healthy on all ${levels.length === 4 ? "four" : levels.length}</span>` : `<span class="chip">${good} of ${levels.length} healthy</span>`
+  const chip = good === levels.length ? `<span class="chip good">All ${levels.length === 4 ? "four" : levels.length} signs green</span>` : `<span class="chip">${good} of ${levels.length} signs green</span>`
   const max = Math.max(...v.weeks, 1)
   const tiles = [
     m.level !== "none" ? `<div class="tile lvl-${m.level}"><div class="k"><span>Momentum</span>${svg(I.up)}</div>
@@ -105,7 +115,7 @@ function vitalsSection(s, m, v) {
       <div class="n">${esc(s.release.tag)}, ${new Date(s.release.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: s.release.ago > 300 ? "numeric" : undefined, timeZone: "UTC" })}</div>`}</div>`,
     `<div class="tile lvl-${s.issues.level}"><div class="k"><span>Issues</span>${svg(I.check)}</div>
       ${s.issues.level === "none" ? `<div class="v">${s.issues.opened} <small>new</small></div><div class="n">issues opened in 90 days, too few to read much into</div>` : `
-      <div class="ring"><svg viewBox="0 0 56 56" role="img" aria-label="${Math.round(s.issues.pct * 100)} percent of new issues closed"><circle cx="28" cy="28" r="22" fill="none" stroke="var(--raise)" stroke-width="7"/><circle cx="28" cy="28" r="22" fill="none" stroke="var(--c)" stroke-width="7" stroke-linecap="round" stroke-dasharray="${(s.issues.pct * 138.2).toFixed(1)} 138.2" transform="rotate(-90 28 28)"/></svg><div class="v">${Math.round(s.issues.pct * 100)}%</div></div>
+      <div class="ring"><svg viewBox="0 0 56 56" role="img" aria-label="${esc(issuesText(s.issues.pct))}"><circle cx="28" cy="28" r="22" fill="none" stroke="var(--raise)" stroke-width="7"/><circle cx="28" cy="28" r="22" fill="none" stroke="var(--c)" stroke-width="7" stroke-linecap="round" stroke-dasharray="${(s.issues.pct * 138.2).toFixed(1)} 138.2" transform="rotate(-90 28 28)"/></svg><div class="v">${Math.round(s.issues.pct * 100)}%</div></div>
       <div class="n">${s.issues.closed} closed, ${s.issues.opened} opened in 90 days</div>`}</div>`,
   ].join("")
   return `<section aria-labelledby="vs"><div class="sec-head"><h2 id="vs">Vital signs</h2>${chip}</div><div class="tiles">${tiles}</div>
@@ -182,7 +192,17 @@ export function altPage(name, ctx) {
   const rows = [...g.repos].sort(byFit(g)), P = fit.products?.[altKey(g.name)]
   const jobs = P?.jobs ?? []
   const dots = (f) => `<span class="fit-dots">${jobs.map(([j, w], i) => `<i class="m-${f[2][i]}${w === 2 ? " core" : ""}" title="${esc(`${j}: ${f[2][i] === "y" ? "yes" : f[2][i] === "p" ? "partly" : "not shown"}${f[3][i] ? `. "${f[3][i]}"` : ""}`)}"></i>`).join("")}</span>`
-  const fitCell = (x) => { const f = fitOf(g, x); return f ? `<span class="fit"><b>${Math.round(f[0] * 100)}%</b><small>${KIND[f[1]]}</small></span>${dots(f)}` : `<span class="muted">Not checked yet</span>` }
+  // what it is comes first, the score second: 86% of a checklist is not 86% suitable
+  const fitCell = (x) => { const f = fitOf(g, x); return f ? `<span class="fit"><b>${KIND[f[1]]}</b><small>covers ${Math.round(f[0] * 100)}%</small></span>${dots(f)}` : `<span class="muted">Not checked yet</span>` }
+  // the reading in words under each project: the core jobs, then what is partial or absent. The line behind every
+  // mark opens underneath (a <details>, so it works by tap and keyboard, not only on hover)
+  const at = (f, c) => jobs.filter((_, i) => f[2][i] === c).map(([j]) => esc(j)).join("; ")
+  const say = (f) => { const core = jobs.map(([, w], i) => [w, f[2][i]]).filter(([w]) => w === 2), got = core.filter(([, m]) => m === "y").length
+    const lead = !/[pn]/.test(f[2]) ? "Covers everything on the checklist." : !core.length ? `Covers ${[...f[2]].filter((m) => m === "y").length} of ${jobs.length} jobs.` : got === core.length ? `Covers ${got === 1 ? "the core job" : `all ${got} core jobs`}.` : `Covers ${got} of ${core.length} core jobs.`
+    return `<b>${lead}</b>${at(f, "p") ? ` Partly: ${at(f, "p")}.` : ""}${at(f, "n") ? ` Not shown: ${at(f, "n")}.` : ""}` }
+  const WORD = { y: "Yes", p: "Partly", n: "Not shown" }
+  const evidence = (x) => { const f = fitOf(g, x); return f ? `<tr class="ev"><td colspan="8"><details><summary><span>${say(f)}</span><u>See the evidence</u></summary>
+      <ul class="ev-list">${jobs.map(([j, w], i) => `<li class="m-${f[2][i]}"><i class="${w === 2 ? "core" : ""}"></i><div><b>${esc(j)}</b>${w === 2 ? "<small>core</small>" : ""}<em>${WORD[f[2][i]]}</em>${f[3][i] ? `<q>${esc(f[3][i])}</q>` : f[2][i] === "n" ? "<span>Neither the README nor the website mentions it.</span>" : ""}</div></li>`).join("")}</ul></details></td></tr>` : "" }
   const commits = (x) => vitals[x.r]?.weeks.reduce((a, b) => a + b, 0)
   const max = Math.max(...rows.map((x) => commits(x) ?? 0), 1)
   const cell = (x) => { const v = vitals[x.r]; if (!v) return ["Not measured", "Not measured"]; const s = signs(v, today)
@@ -194,19 +214,19 @@ export function altPage(name, ctx) {
   return `<div class="rp-top">${BACK}${crumbs}</div>
   <section class="hero alt-hero"><div class="who">
     <h1>Open source alternatives to ${esc(g.name)}</h1>
-    <p class="line">${rows.length === 1 ? "One project on starwire does the same job." : `${rows.length} projects on starwire do the same job.`} ${P ? `Ranked by how much of what ${esc(g.name)} does each one covers, read from its README and website. Ties go to the healthiest.` : "The healthiest come first: steady commits, recent releases and issues getting closed."}</p>
+    <p class="line">${rows.length === 1 ? "One project on starwire does the same job." : `${rows.length} projects on starwire do the same job.`} ${P ? `Ranked by how much of what ${esc(g.name)} does each one covers, read from its README and website. Ties go to the most active.` : "The most active come first: steady commits, recent releases and issues getting closed."}</p>
   </div>
     <div class="acts"><button type="button" class="btn" data-share="instead-of/${esc(g.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""))}" aria-label="Copy a share link">${svg(I.share).replace("<svg", '<svg style="fill:none;stroke:currentColor;stroke-width:2"')}<span>Share</span></button></div></section>
-  ${P ? `<section class="jobs" aria-labelledby="jobs"><h2 id="jobs">What ${esc(g.name)} does</h2><ol class="job-list">${jobs.map(([j, w]) => `<li class="${w === 2 ? "core" : ""}">${esc(j)}${w === 2 ? "<small>core</small>" : ""}</li>`).join("")}</ol><p class="foot-note">Each dot in the table is one job, in this order. Square dots are core jobs and count double. Full means yes, half means partly. Hover a dot for the line behind it. <a href="how.html#fit">How we score this</a></p></section>` : ""}
+  ${P ? `<section class="jobs" aria-labelledby="jobs"><h2 id="jobs">What ${esc(g.name)} does</h2><ol class="job-list">${jobs.map(([j, w]) => `<li class="${w === 2 ? "core" : ""}">${esc(j)}${w === 2 ? "<small>core</small>" : ""}</li>`).join("")}</ol><p class="foot-note">Each dot in the table is one job, in this order. Square dots are core jobs and count double. Full means yes, half means partly. "See the evidence" under a project shows the line behind each one. Coverage is what a project documents, not how well it works or how hard it is to move to. <a href="how.html#fit">How we score this</a></p></section>` : ""}
   <section aria-label="Alternatives to ${esc(g.name)}"><div class="cmp alt-table"><table>
-    <thead><tr><th scope="col">Project</th>${P ? `<th scope="col">Covers</th>` : ""}<th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
+    <thead><tr><th scope="col">Project</th>${P ? `<th scope="col">Covers</th>` : ""}<th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Closed vs opened</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody>${rows.map((x) => { const c = commits(x), [rel, iss] = cell(x), [owner, nm] = x.r.split("/"); return `<tr>
       <th scope="row"><a class="alt-name" href="?page=${encodeURIComponent(x.r)}"><img src="${esc(avatar(owner, 56))}" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>${esc(nm)}</b><small>${esc(x.l || owner)}</small></span></a></th>
       ${P ? `<td data-k="Covers">${fitCell(x)}</td>` : ""}<td data-k="Stars"><span class="s">${num(x.s)}</span>${x.w > 0 ? `<small class="w">+${num(x.w)}</small>` : ""}</td>
       <td data-k="Commits, 12 weeks">${c == null ? "Not measured" : `<div class="bar"><span style="width:${(c / max) * 7}rem"></span>${c.toLocaleString("en-US")}</div>`}</td>
-      <td data-k="Last release">${rel}</td><td data-k="Issues closed">${iss}</td>
+      <td data-k="Last release">${rel}</td><td data-k="Issues closed vs opened">${iss}</td>
       <td data-k="Form">${(x.fo ?? []).map((f) => esc(FORM.get(f))).join(", ") || "Not labelled"}</td>
-      <td data-k="License">${esc(licenseText(x.li))}</td></tr>` }).join("")}</tbody></table></div>
+      <td data-k="License">${esc(licenseText(x.li))}</td></tr>${P ? evidence(x) : ""}` }).join("")}</tbody></table></div>
     <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a></p></section>
   ${related.length ? `<section aria-labelledby="also"><h2 id="also">These also replace</h2><div class="alt-chips">${related.map((x) => `<a href="?alt=${encodeURIComponent(x.name)}">${esc(x.name)}<span>${x.repos.length}</span></a>`).join("")}</div></section>` : ""}`
 }

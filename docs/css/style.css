@@ -528,6 +528,10 @@ html { scrollbar-gutter: stable; }
   .rp .alt-table th, .rp .alt-table th:first-child, .rp .alt-table td, .rp .alt-table td:last-child { padding: 0; }
   .rp .alt-table tbody th { grid-column: 1 / -1; }
   .rp .alt-table td::before { content: attr(data-k); display: block; margin-bottom: 2px; font-size: 12px; color: var(--muted); }
+  .rp .alt-table tbody tr.ev { display: block; padding: 0 16px 16px; }
+  .rp .alt-table tbody tr.ev td { display: block; padding: 0; }
+  .rp .alt-table tbody tr.ev td::before { display: none; }
+  .rp .alt-table tbody .ev details { position: static; width: auto; }
   .rp .alt-table .w { display: inline; margin-left: 6px; }
   .rp .alt-name { max-width: none; min-width: 0; }
     }
@@ -650,6 +654,32 @@ body[data-cols="all"] .controls, body[data-cols="one"] .controls, body[data-cols
 .rp .fit-dots i.m-y { background: var(--green); }
 .rp .fit-dots i.m-p { background: linear-gradient(90deg, var(--green) 50%, transparent 50%); }
 .rp .fit-dots i.m-n { border-color: var(--line); }
+/* the reading in words under each alternative, and the line behind every mark */
+.rp .alt-table tr.ev { border-top: 0; }
+.rp .alt-table tr.ev:hover { background: none; }
+.rp .alt-table tr.ev td { padding: 0 18px 16px; font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+.rp .alt-table tr.ev b { color: var(--text); font-weight: 600; }
+/* the table can scroll sideways on a narrow screen; the words stay put, as wide as what is visible */
+.rp .alt-table { container-type: inline-size; }
+.rp .ev details { position: sticky; left: 18px; width: calc(100cqi - 36px); }
+.rp .ev summary { display: block; cursor: pointer; list-style: none; }
+.rp .ev summary::-webkit-details-marker { display: none; }
+.rp .ev summary u { margin-left: 8px; color: var(--green); text-decoration: none; white-space: nowrap; }
+.rp .ev summary u::after { content: " +"; }
+.rp .ev details[open] summary u::after { content: " \2212"; }
+.rp .ev summary:hover u { text-decoration: underline; }
+.rp .ev-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); gap: 12px 24px; margin: 14px 0 4px; padding: 14px 0 0; border-top: 1px solid var(--line); list-style: none; }
+.rp .ev-list li { display: flex; gap: 10px; }
+.rp .ev-list i { flex: none; width: 10px; height: 10px; margin-top: 5px; border-radius: 50%; border: 1.5px solid color-mix(in srgb, var(--green) 70%, var(--line)); }
+.rp .ev-list i.core { border-radius: 3px; }
+.rp .ev-list .m-y i { background: var(--green); }
+.rp .ev-list .m-p i { background: linear-gradient(90deg, var(--green) 50%, transparent 50%); }
+.rp .ev-list .m-n i { border-color: var(--line); }
+.rp .ev-list small { margin-left: 6px; font-size: 11px; color: var(--green); }
+.rp .ev-list em { display: block; font-style: normal; font-size: 12.5px; }
+.rp .ev-list .m-n em { color: var(--amber); }
+.rp .ev-list q, .rp .ev-list div > span { display: block; margin-top: 2px; font-size: 13px; }
+.rp .ev-list q { font-style: italic; }
 
 /* alternatives index: a swap list, "Instead of" on the left, the best replacements on the right */
 .rp .swaplist { margin-top: 18px; }
@@ -709,3 +739,12 @@ body[data-cols="all"] .controls, body[data-cols="one"] .controls, body[data-cols
 .rail-tip { position: fixed; z-index: 60; transform: translateY(-50%); padding: 5px 10px; border-radius: 8px; background: var(--text); color: var(--ink); font-size: 13px; font-weight: 500; white-space: pre; pointer-events: none; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); }
 .rail-tip[hidden] { display: none; }
 @media (prefers-reduced-motion: reduce) { .rail .cat svg, .rail .side-link svg { transition: none; } }
+
+/* signal checks on a repo page */
+.rp .sg-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); gap: 10px 24px; margin: 16px 0 0; padding: 0; list-style: none; font-size: 14px; }
+.rp .sg-list li { display: flex; align-items: baseline; gap: 8px; }
+.rp .sg-list li::before { content: "\2713"; flex: none; width: 1em; color: var(--green); font-weight: 700; }
+.rp .sg-list li.no::before { content: "\2715"; color: var(--amber); }
+.rp .sg-list li.na::before { content: "\2013"; color: var(--muted); }
+.rp .sg-list li.na { color: var(--muted); }
+.rp .sg-list small { margin-left: auto; font-size: 12px; color: var(--muted); white-space: nowrap; }

@@ -14,6 +14,7 @@ import { readmeFragment, followTheme } from "./readme.js"
 import { count } from "./count.js"
 import { avatar, knowOwners } from "./avatar.js"
 import { signs, summary } from "./vitals.js"
+import { weight } from "./signal.js"
 import { LICENSE_KINDS, licenseKind, licenseText } from "./license.js"
 import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups, replacesOf, stackFor } from "./repo.js"
 
@@ -71,13 +72,14 @@ function setSaved(list) {
 // ---- settings: per-browser preferences in localStorage. They pick the defaults; a link's own parameters still win,
 // so a shared link shows the same thing for everyone. Versioned so later settings can be added without breaking old ones.
 const PREFS_KEY = "starwire-prefs"
-const DEFAULT_PREFS = { v: 1, sort: "today", layout: "wire", topics: true, gain: true, picked: true, stardash: true, listCard: true, sidebar: "area", hideAI: false }
-const SORTS = ["today", "picked", "trending", "stars", "new", "active"]
+const DEFAULT_PREFS = { v: 2, sort: "worth", layout: "wire", topics: true, gain: true, picked: true, stardash: true, listCard: true, sidebar: "area", hideAI: false }
+const SORTS = ["worth", "today", "picked", "trending", "stars", "new", "active"]
 function readPrefs() {
   let p = {}
   try { p = JSON.parse(localStorage.getItem(PREFS_KEY) ?? "{}") ?? {} } catch {}
   const out = { ...DEFAULT_PREFS }
-  if (SORTS.includes(p.sort)) out.sort = p.sort
+  // "today" saved under v1 was the default nobody chose, so it moves to the new default; picking it again sticks
+  if (SORTS.includes(p.sort) && !(p.v === 1 && p.sort === "today")) out.sort = p.sort
   if (["wire", "cards", "list"].includes(p.layout)) out.layout = p.layout
   for (const k of ["topics", "gain", "picked", "stardash", "listCard", "hideAI"]) if (typeof p[k] === "boolean") out[k] = p[k]
   if (["area", "form", "with"].includes(p.sidebar)) out.sidebar = p.sidebar
@@ -238,7 +240,7 @@ function spark(hs, w = 120, h = 32, cls = "wspark") {
 // rank change: position by a score now vs the day before, within the list on screen. Most stars today ranks by stars
 // per day; Trending by heat, with the pipeline's heat as of yesterday in hy (none = wasn't trending, so "new")
 let moves = null
-const MOVE_SCORES = { today: (r, back) => day(r, back), trending: (r, back) => (back ? r.hy : r.h) || null }
+const MOVE_SCORES = { worth: (r, back) => worth(r, back), today: (r, back) => day(r, back), trending: (r, back) => (back ? r.hy : r.h) || null }
 function rankMoves(list, score) {
   const pos = (f) => new Map(list.filter((r) => f(r) != null).sort((a, b) => f(b) - f(a)).map((r, i) => [r.r, i]))
   const now = pos((r) => score(r, 0)), then = pos((r) => score(r, 1))
@@ -293,7 +295,10 @@ const promo = `<a class="promo" href="https://github.com/boffti/stardash" target
   <span>Try StarDash for free</span>
 </a>`
 
+// Worth a look: stars per day, kept in full by a repo that passes every signal check and cut for each one it fails
+const worth = (r, back = 0) => { const d = day(r, back); return d == null ? null : d * (r.sg ??= weight(r, TODAY)) }
 const sorters = {
+  worth: (a, b) => (worth(b) ?? -1) - (worth(a) ?? -1) || b.h - a.h,
   saved: (a, b) => (savedAt.get(b.r) ?? -1) - (savedAt.get(a.r) ?? -1),
   today: (a, b) => (day(b) ?? -1) - (day(a) ?? -1) || b.h - a.h,
   trending: (a, b) => b.h - a.h,
@@ -632,7 +637,7 @@ function openSettings() {
   <form class="p-body s-body">
     ${seg("sidebar", "Sidebar shows", prefs.sidebar, [["area", "Areas"], ["form", "Forms"], ["with", "Works with"]])}
     <fieldset class="s-row"><legend>Repos</legend>${check("hideAI", "Hide AI repos (AI tools, agents and anything built around AI)")}</fieldset>
-    ${dropdown("sort", "Default sort", prefs.sort, [["today", "Most stars today"], ["picked", "Most picked"], ["trending", "Trending"], ["stars", "Most stars"], ["new", "Newest picks"]])}
+    ${dropdown("sort", "Default sort", prefs.sort, [["worth", "Worth a look"], ["today", "Most stars today"], ["picked", "Most picked"], ["trending", "Trending"], ["stars", "Most stars"], ["new", "Newest picks"]])}
     <div class="s-layout">${seg("layout", "Default layout", prefs.layout, [["wire", "Ranked"], ["cards", "Cards"], ["list", "List"]])}</div>
     ${seg("theme", "Theme", themeNow(), [["system", "System"], ["light", "Light"], ["dark", "Dark"]])}
     <fieldset class="s-row"><legend>On each repo card</legend>${check("topics", "Topics")}${check("gain", "Stars gained")}${check("picked", "How many times it was picked")}</fieldset>
