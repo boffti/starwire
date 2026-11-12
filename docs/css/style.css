@@ -411,7 +411,11 @@ html { scrollbar-gutter: stable; }
 .clone-ico svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; }
 
 /* repo page (?page=owner/name), drawn by repo.js inside the main column; everything scoped to .rp */
-.rp { max-width: 74rem; width: 100%; margin: 0 auto; padding: 0 0 48px; display: flex; flex-direction: column; gap: 36px; }
+/* the back button and breadcrumbs sit at the page's own edge on every detail page, where the list's title sits;
+   the content under them keeps a reading width, centred */
+.rp { width: 100%; padding: 0 0 48px; display: flex; flex-direction: column; gap: 36px; }
+.rp > * { width: 100%; max-width: 74rem; margin-inline: auto; }
+.rp > .rp-top { max-width: none; }
 .rp[hidden], .page > [hidden] { display: none !important; } /* the list and the repo page swap places; their own display rules would beat hidden */
 .rp h2 { margin: 0; font-size: 21px; font-weight: 600; letter-spacing: -0.01em; }
 .rp a:not(.btn) { color: var(--accent); text-decoration: none; }
@@ -744,7 +748,7 @@ body[data-cols="one"] #savedbar { display: none; }
 
 /* alternatives index: a swap list, "Instead of" on the left, the best replacements on the right */
 .rp .swaplist { margin-top: 18px; }
-.rp.wide { max-width: 110rem; } /* the alternatives index uses the whole width: its rows flow into 2 or 3 columns */
+.rp.wide > * { max-width: 110rem; } /* the alternatives index uses the whole width: its rows flow into 2 or 3 columns */
 .rp .sw-row { display: grid; grid-template-columns: minmax(7rem, 10rem) minmax(0, 1fr); gap: 0 18px; }
 .rp .sw-cols { display: none; } /* one "Instead of / Use" header can't sit over several columns; the row reads without it */
 .rp .sw-group h2 { margin: 28px 0 4px; padding: 0 12px 8px; border-bottom: 1px solid var(--line); font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
