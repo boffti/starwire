@@ -82,20 +82,22 @@
       <section class="rp" id="repo-page" aria-live="polite"><div class="rp-top"><button type="button" class="rp-back" data-back><svg style="fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Back to the list</button><nav class="rp-crumbs" aria-label="Where it sits"><a href="?alt=all">Alternatives</a></nav></div>
   <section class="hero alt-hero"><div class="who">
     <h1>Open source alternatives to TextMeshPro</h1>
-    <p class="line">One project on starwire does the same job. Ranked by how much of what TextMeshPro does each one covers, read from its README and website. Ties go to the healthiest.</p>
+    <p class="line">One project on starwire does the same job. Ranked by how much of what TextMeshPro does each one covers, read from its README and website. Ties go to the most active.</p>
   </div>
     <div class="acts"><button type="button" class="btn" data-share="instead-of/textmeshpro" aria-label="Copy a share link"><svg style="fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 3v13M7 8l5-5 5 5"/></svg><span>Share</span></button></div></section>
-  <section class="jobs" aria-labelledby="jobs"><h2 id="jobs">What TextMeshPro does</h2><ol class="job-list"><li class="core">Sharp text rendering in Unity<small>core</small></li><li class="core">Rich text styling<small>core</small></li><li class="">Font assets and fallbacks</li><li class="">Sprites and emoji in text</li><li class="">Text effects like outlines and shadows</li></ol><p class="foot-note">Each dot in the table is one job, in this order. Square dots are core jobs and count double. Full means yes, half means partly. Hover a dot for the line behind it. <a href="how.html#fit">How we score this</a></p></section>
+  <section class="jobs" aria-labelledby="jobs"><h2 id="jobs">What TextMeshPro does</h2><ol class="job-list"><li class="core">Sharp text rendering in Unity<small>core</small></li><li class="core">Rich text styling<small>core</small></li><li class="">Font assets and fallbacks</li><li class="">Sprites and emoji in text</li><li class="">Text effects like outlines and shadows</li></ol><p class="foot-note">Each dot in the table is one job, in this order. Square dots are core jobs and count double. Full means yes, half means partly. "See the evidence" under a project shows the line behind each one. Coverage is what a project documents, not how well it works or how hard it is to move to. <a href="how.html#fit">How we score this</a></p></section>
   <section aria-label="Alternatives to TextMeshPro"><div class="cmp alt-table"><table>
-    <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
+    <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" class="c-commits">Commits, 12 weeks</th><th scope="col" class="c-rel">Last release</th><th scope="col" class="c-iss">Closed vs opened</th><th scope="col">Setup</th><th scope="col" class="c-lic">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=LightSideKittens%2FUniText"><img src="https://avatars.githubusercontent.com/u/159572104?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>UniText</b><small>Unity text rendering engine with emoji and multi-language support</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>93%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Sharp text rendering in Unity: yes. &quot;Open-source Unicode text engine for Unity&quot;"></i><i class="m-y core" title="Rich text styling: yes. &quot;15+ built-in modifiers, custom parse rules&quot;"></i><i class="m-y" title="Font assets and fallbacks: yes. &quot;One component, automatic font fallback&quot;"></i><i class="m-y" title="Sprites and emoji in text: yes. &quot;ZWJ sequences, skin tones, flags via system fonts&quot;"></i><i class="m-p" title="Text effects like outlines and shadows: partly. &quot;Fills, outlines, shadows, glow, gradients and textures&quot;"></i></span></td><td data-k="Stars"><span class="s">718</span></td>
-      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>14</div></td>
-      <td data-k="Last release">None</td><td data-k="Issues closed">Too few</td>
-      <td data-k="Form">Library or framework</td>
-      <td data-k="License">MIT</td></tr></tbody></table></div>
-    <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a></p></section>
+      <td data-k="Covers"><span class="fit"><b>Replaces it</b></span><span class="fit-row"><span class="fit-dots"><i class="m-y core" title="Sharp text rendering in Unity: yes. &quot;Open-source Unicode text engine for Unity&quot;"></i><i class="m-y core" title="Rich text styling: yes. &quot;15+ built-in modifiers, custom parse rules&quot;"></i><i class="m-y" title="Font assets and fallbacks: yes. &quot;One component, automatic font fallback&quot;"></i><i class="m-y" title="Sprites and emoji in text: yes. &quot;ZWJ sequences, skin tones, flags via system fonts&quot;"></i><i class="m-p" title="Text effects like outlines and shadows: partly. &quot;Fills, outlines, shadows, glow, gradients and textures&quot;"></i></span><small>93%</small></span></td><td data-k="Stars"><span class="s">718</span></td>
+      <td data-k="Commits, 12 weeks" class="c-commits"><div class="bar"><span style="width:5rem"></span>14</div></td>
+      <td data-k="Last release" class="c-rel">None</td><td data-k="Issues closed vs opened" class="c-iss">Too few</td>
+      <td data-k="Setup" title="Library or framework. A building block for people who write code."><span class="su lv-3"><span class="su-bars" role="img" aria-label="Setup effort 3 of 3"><i></i><i></i><i></i></span><b>For developers</b></span></td>
+      <td data-k="License" class="c-lic">MIT</td></tr><tr class="ev"><td colspan="8"><details><summary><span><b>Covers all 2 core jobs.</b> Partly: Text effects like outlines and shadows.</span><u>See the evidence</u></summary>
+      <ul class="ev-list"><li class="m-y"><i class="core"></i><div><b>Sharp text rendering in Unity</b><small>core</small><em>Yes</em><q>Open-source Unicode text engine for Unity</q></div></li><li class="m-y"><i class="core"></i><div><b>Rich text styling</b><small>core</small><em>Yes</em><q>15+ built-in modifiers, custom parse rules</q></div></li><li class="m-y"><i class=""></i><div><b>Font assets and fallbacks</b><em>Yes</em><q>One component, automatic font fallback</q></div></li><li class="m-y"><i class=""></i><div><b>Sprites and emoji in text</b><em>Yes</em><q>ZWJ sequences, skin tones, flags via system fonts</q></div></li><li class="m-p"><i class=""></i><div><b>Text effects like outlines and shadows</b><em>Partly</em><q>Fills, outlines, shadows, glow, gradients and textures</q></div></li></ul></details></td></tr></tbody></table></div>
+    <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a> &middot; <a href="how.html#setup">How setup is read</a></p></section>
+  
   </section>
       <div class="page-head">
         <div>
@@ -108,6 +110,7 @@
           <label class="select"><span>Sort</span>
             <select id="sort">
               <option value="match" id="sort-match" hidden disabled>Best match</option>
+              <option value="worth">Worth a look</option>
               <option value="today">Most stars today</option>
               <option value="picked">Most picked</option>
               <option value="trending">Trending</option>
@@ -124,6 +127,7 @@
             <label class="select"><span>Works with</span><select id="f-with"></select></label>
             <label class="select"><span>Theme</span><select id="f-tag"></select></label>
             <label class="select"><span>License</span><select id="f-lic"></select></label>
+            <label class="select"><span>Setup</span><select id="f-setup"></select></label>
             <label class="select"><span>Language</span><select id="lang"><option value="">Any</option></select></label>
           </div>
           <div class="view" role="group" aria-label="Layout">

@@ -82,20 +82,22 @@
       <section class="rp" id="repo-page" aria-live="polite"><div class="rp-top"><button type="button" class="rp-back" data-back><svg style="fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Back to the list</button><nav class="rp-crumbs" aria-label="Where it sits"><a href="?alt=all">Alternatives</a></nav></div>
   <section class="hero alt-hero"><div class="who">
     <h1>Open source alternatives to GeForce NOW</h1>
-    <p class="line">One project on starwire does the same job. Ranked by how much of what GeForce NOW does each one covers, read from its README and website. Ties go to the healthiest.</p>
+    <p class="line">One project on starwire does the same job. Ranked by how much of what GeForce NOW does each one covers, read from its README and website. Ties go to the most active.</p>
   </div>
     <div class="acts"><button type="button" class="btn" data-share="instead-of/geforce-now" aria-label="Copy a share link"><svg style="fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 3v13M7 8l5-5 5 5"/></svg><span>Share</span></button></div></section>
-  <section class="jobs" aria-labelledby="jobs"><h2 id="jobs">What GeForce NOW does</h2><ol class="job-list"><li class="core">Stream PC games from the cloud<small>core</small></li><li class="core">Play on low-end devices, TVs and phones<small>core</small></li><li class="core">Use games you already own on stores like Steam<small>core</small></li><li class="">High resolution and frame rate streaming</li><li class="">Controller and keyboard support</li><li class="">Cloud saves and session resume</li></ol><p class="foot-note">Each dot in the table is one job, in this order. Square dots are core jobs and count double. Full means yes, half means partly. Hover a dot for the line behind it. <a href="how.html#fit">How we score this</a></p></section>
+  <section class="jobs" aria-labelledby="jobs"><h2 id="jobs">What GeForce NOW does</h2><ol class="job-list"><li class="core">Stream PC games from the cloud<small>core</small></li><li class="core">Play on low-end devices, TVs and phones<small>core</small></li><li class="core">Use games you already own on stores like Steam<small>core</small></li><li class="">High resolution and frame rate streaming</li><li class="">Controller and keyboard support</li><li class="">Cloud saves and session resume</li></ol><p class="foot-note">Each dot in the table is one job, in this order. Square dots are core jobs and count double. Full means yes, half means partly. "See the evidence" under a project shows the line behind each one. Coverage is what a project documents, not how well it works or how hard it is to move to. <a href="how.html#fit">How we score this</a></p></section>
   <section aria-label="Alternatives to GeForce NOW"><div class="cmp alt-table"><table>
-    <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
+    <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" class="c-commits">Commits, 12 weeks</th><th scope="col" class="c-rel">Last release</th><th scope="col" class="c-iss">Closed vs opened</th><th scope="col">Setup</th><th scope="col" class="c-lic">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=8borane8%2Fs2pipe"><img src="https://avatars.githubusercontent.com/u/74107604?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>s2pipe</b><small>Self-hosted cloud game streaming to a Nintendo Switch 2 on your home network</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>33%</b><small>Same job, different way</small></span><span class="fit-dots"><i class="m-p core" title="Stream PC games from the cloud: partly. &quot;Self-hosted cloud gaming for a Nintendo Switch 2&quot;"></i><i class="m-p core" title="Play on low-end devices, TVs and phones: partly. &quot;play from any browser on the LAN&quot;"></i><i class="m-n core" title="Use games you already own on stores like Steam: not shown"></i><i class="m-n" title="High resolution and frame rate streaming: not shown"></i><i class="m-y" title="Controller and keyboard support: yes. &quot;Use virtual controller** (keyboard and mouse)&quot;"></i><i class="m-n" title="Cloud saves and session resume: not shown"></i></span></td><td data-k="Stars"><span class="s">120</span></td>
-      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>75</div></td>
-      <td data-k="Last release">23 days ago</td><td data-k="Issues closed">Too few</td>
-      <td data-k="Form">Self-hostable service</td>
-      <td data-k="License">MIT</td></tr></tbody></table></div>
-    <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a></p></section>
+      <td data-k="Covers"><span class="fit"><b>Same job, different way</b></span><span class="fit-row"><span class="fit-dots"><i class="m-p core" title="Stream PC games from the cloud: partly. &quot;Self-hosted cloud gaming for a Nintendo Switch 2&quot;"></i><i class="m-p core" title="Play on low-end devices, TVs and phones: partly. &quot;play from any browser on the LAN&quot;"></i><i class="m-n core" title="Use games you already own on stores like Steam: not shown"></i><i class="m-n" title="High resolution and frame rate streaming: not shown"></i><i class="m-y" title="Controller and keyboard support: yes. &quot;Use virtual controller** (keyboard and mouse)&quot;"></i><i class="m-n" title="Cloud saves and session resume: not shown"></i></span><small>33%</small></span></td><td data-k="Stars"><span class="s">120</span></td>
+      <td data-k="Commits, 12 weeks" class="c-commits"><div class="bar"><span style="width:5rem"></span>75</div></td>
+      <td data-k="Last release" class="c-rel">23 days ago</td><td data-k="Issues closed vs opened" class="c-iss">Too few</td>
+      <td data-k="Setup" title="Self-hostable service. Someone technical sets it up on a server, usually with Docker."><span class="su lv-3"><span class="su-bars" role="img" aria-label="Setup effort 3 of 3"><i></i><i></i><i></i></span><b>Needs a server</b></span></td>
+      <td data-k="License" class="c-lic">MIT</td></tr><tr class="ev"><td colspan="8"><details><summary><span><b>Covers 0 of 3 core jobs.</b> Partly: Stream PC games from the cloud; Play on low-end devices, TVs and phones. Not shown: Use games you already own on stores like Steam; High resolution and frame rate streaming; Cloud saves and session resume.</span><u>See the evidence</u></summary>
+      <ul class="ev-list"><li class="m-p"><i class="core"></i><div><b>Stream PC games from the cloud</b><small>core</small><em>Partly</em><q>Self-hosted cloud gaming for a Nintendo Switch 2</q></div></li><li class="m-p"><i class="core"></i><div><b>Play on low-end devices, TVs and phones</b><small>core</small><em>Partly</em><q>play from any browser on the LAN</q></div></li><li class="m-n"><i class="core"></i><div><b>Use games you already own on stores like Steam</b><small>core</small><em>Not shown</em><span>Neither the README nor the website mentions it.</span></div></li><li class="m-n"><i class=""></i><div><b>High resolution and frame rate streaming</b><em>Not shown</em><span>Neither the README nor the website mentions it.</span></div></li><li class="m-y"><i class=""></i><div><b>Controller and keyboard support</b><em>Yes</em><q>Use virtual controller** (keyboard and mouse)</q></div></li><li class="m-n"><i class=""></i><div><b>Cloud saves and session resume</b><em>Not shown</em><span>Neither the README nor the website mentions it.</span></div></li></ul></details></td></tr></tbody></table></div>
+    <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a> &middot; <a href="how.html#setup">How setup is read</a></p></section>
+  
   </section>
       <div class="page-head">
         <div>
@@ -108,6 +110,7 @@
           <label class="select"><span>Sort</span>
             <select id="sort">
               <option value="match" id="sort-match" hidden disabled>Best match</option>
+              <option value="worth">Worth a look</option>
               <option value="today">Most stars today</option>
               <option value="picked">Most picked</option>
               <option value="trending">Trending</option>
@@ -124,6 +127,7 @@
             <label class="select"><span>Works with</span><select id="f-with"></select></label>
             <label class="select"><span>Theme</span><select id="f-tag"></select></label>
             <label class="select"><span>License</span><select id="f-lic"></select></label>
+            <label class="select"><span>Setup</span><select id="f-setup"></select></label>
             <label class="select"><span>Language</span><select id="lang"><option value="">Any</option></select></label>
           </div>
           <div class="view" role="group" aria-label="Layout">

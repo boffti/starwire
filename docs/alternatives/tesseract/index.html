@@ -82,20 +82,21 @@
       <section class="rp" id="repo-page" aria-live="polite"><div class="rp-top"><button type="button" class="rp-back" data-back><svg style="fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Back to the list</button><nav class="rp-crumbs" aria-label="Where it sits"><a href="?alt=all">Alternatives</a></nav></div>
   <section class="hero alt-hero"><div class="who">
     <h1>Open source alternatives to Tesseract</h1>
-    <p class="line">One project on starwire does the same job. The healthiest come first: steady commits, recent releases and issues getting closed.</p>
+    <p class="line">One project on starwire does the same job. The most active come first: steady commits, recent releases and issues getting closed.</p>
   </div>
     <div class="acts"><button type="button" class="btn" data-share="instead-of/tesseract" aria-label="Copy a share link"><svg style="fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 3v13M7 8l5-5 5 5"/></svg><span>Share</span></button></div></section>
   
   <section aria-label="Alternatives to Tesseract"><div class="cmp alt-table"><table>
-    <thead><tr><th scope="col">Project</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
+    <thead><tr><th scope="col">Project</th><th scope="col">Stars</th><th scope="col" class="c-commits">Commits, 12 weeks</th><th scope="col" class="c-rel">Last release</th><th scope="col" class="c-iss">Closed vs opened</th><th scope="col">Setup</th><th scope="col" class="c-lic">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=datalab-to%2Findra"><img src="https://avatars.githubusercontent.com/u/176631703?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>indra</b><small>1M-parameter OCR model that runs on CPU</small></span></a></th>
-      <td data-k="Stars"><span class="s">1.8k</span><small class="w">+368</small></td>
-      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>18</div></td>
-      <td data-k="Last release">22 days ago</td><td data-k="Issues closed"><span class="lvl-ok"><i class="dot"></i>47%</span></td>
-      <td data-k="Form">Model or dataset</td>
-      <td data-k="License">Apache-2.0</td></tr></tbody></table></div>
-    <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a></p></section>
+      <td data-k="Stars"><span class="s">1.8k</span><small class="w">+379</small></td>
+      <td data-k="Commits, 12 weeks" class="c-commits"><div class="bar"><span style="width:5rem"></span>18</div></td>
+      <td data-k="Last release" class="c-rel">22 days ago</td><td data-k="Issues closed vs opened" class="c-iss"><span class="lvl-ok"><i class="dot"></i>47%</span></td>
+      <td data-k="Setup" title="Model or dataset. A building block for people who write code."><span class="su lv-3"><span class="su-bars" role="img" aria-label="Setup effort 3 of 3"><i></i><i></i><i></i></span><b>For developers</b></span></td>
+      <td data-k="License" class="c-lic">Apache-2.0</td></tr></tbody></table></div>
+    <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a> &middot; <a href="how.html#setup">How setup is read</a></p></section>
+  
   </section>
       <div class="page-head">
         <div>
@@ -108,6 +109,7 @@
           <label class="select"><span>Sort</span>
             <select id="sort">
               <option value="match" id="sort-match" hidden disabled>Best match</option>
+              <option value="worth">Worth a look</option>
               <option value="today">Most stars today</option>
               <option value="picked">Most picked</option>
               <option value="trending">Trending</option>
@@ -124,6 +126,7 @@
             <label class="select"><span>Works with</span><select id="f-with"></select></label>
             <label class="select"><span>Theme</span><select id="f-tag"></select></label>
             <label class="select"><span>License</span><select id="f-lic"></select></label>
+            <label class="select"><span>Setup</span><select id="f-setup"></select></label>
             <label class="select"><span>Language</span><select id="lang"><option value="">Any</option></select></label>
           </div>
           <div class="view" role="group" aria-label="Layout">

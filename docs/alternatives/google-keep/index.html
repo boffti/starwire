@@ -82,26 +82,28 @@
       <section class="rp" id="repo-page" aria-live="polite"><div class="rp-top"><button type="button" class="rp-back" data-back><svg style="fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Back to the list</button><nav class="rp-crumbs" aria-label="Where it sits"><a href="?alt=all">Alternatives</a></nav></div>
   <section class="hero alt-hero"><div class="who">
     <h1>Open source alternatives to Google Keep</h1>
-    <p class="line">2 projects on starwire do the same job. Ranked by how much of what Google Keep does each one covers, read from its README and website. Ties go to the healthiest.</p>
+    <p class="line">2 projects on starwire do the same job. Ranked by how much of what Google Keep does each one covers, read from its README and website. Ties go to the most active.</p>
   </div>
     <div class="acts"><button type="button" class="btn" data-share="instead-of/google-keep" aria-label="Copy a share link"><svg style="fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 3v13M7 8l5-5 5 5"/></svg><span>Share</span></button></div></section>
-  <section class="jobs" aria-labelledby="jobs"><h2 id="jobs">What Google Keep does</h2><ol class="job-list"><li class="core">Quick notes<small>core</small></li><li class="core">Checklists<small>core</small></li><li class="">Reminders</li><li class="">Labels and colors</li><li class="">Image and voice notes</li><li class="">Sync across devices</li><li class="">Share notes with others</li></ol><p class="foot-note">Each dot in the table is one job, in this order. Square dots are core jobs and count double. Full means yes, half means partly. Hover a dot for the line behind it. <a href="how.html#fit">How we score this</a></p></section>
+  <section class="jobs" aria-labelledby="jobs"><h2 id="jobs">What Google Keep does</h2><ol class="job-list"><li class="core">Quick notes<small>core</small></li><li class="core">Checklists<small>core</small></li><li class="">Reminders</li><li class="">Labels and colors</li><li class="">Image and voice notes</li><li class="">Sync across devices</li><li class="">Share notes with others</li></ol><p class="foot-note">Each dot in the table is one job, in this order. Square dots are core jobs and count double. Full means yes, half means partly. "See the evidence" under a project shows the line behind each one. Coverage is what a project documents, not how well it works or how hard it is to move to. <a href="how.html#fit">How we score this</a></p></section>
   <section aria-label="Alternatives to Google Keep"><div class="cmp alt-table"><table>
-    <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
+    <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" class="c-commits">Commits, 12 weeks</th><th scope="col" class="c-rel">Last release</th><th scope="col" class="c-iss">Closed vs opened</th><th scope="col">Setup</th><th scope="col" class="c-lic">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=usememos%2Fmemos"><img src="https://avatars.githubusercontent.com/u/95764151?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>memos</b><small>Self-hosted note-taking app organized as a personal timeline</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>61%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Quick notes: yes. &quot;A single sentence can be a whole memo&quot;"></i><i class="m-y core" title="Checklists: yes. &quot;You can add a checklist&quot;"></i><i class="m-n" title="Reminders: not shown"></i><i class="m-p" title="Labels and colors: partly. &quot;Tags connect related thoughts across those days&quot;"></i><i class="m-n" title="Image and voice notes: not shown"></i><i class="m-n" title="Sync across devices: not shown"></i><i class="m-y" title="Share notes with others: yes. &quot;what to share with family and friends&quot;"></i></span></td><td data-k="Stars"><span class="s">64k</span><small class="w">+109</small></td>
-      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>247</div></td>
-      <td data-k="Last release">10 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>98%</span></td>
-      <td data-k="Form">Self-hostable service, Web app</td>
-      <td data-k="License">MIT</td></tr><tr>
+      <td data-k="Covers"><span class="fit"><b>Replaces it</b></span><span class="fit-row"><span class="fit-dots"><i class="m-y core" title="Quick notes: yes. &quot;A single sentence can be a whole memo&quot;"></i><i class="m-y core" title="Checklists: yes. &quot;You can add a checklist&quot;"></i><i class="m-n" title="Reminders: not shown"></i><i class="m-p" title="Labels and colors: partly. &quot;Tags connect related thoughts across those days&quot;"></i><i class="m-n" title="Image and voice notes: not shown"></i><i class="m-n" title="Sync across devices: not shown"></i><i class="m-y" title="Share notes with others: yes. &quot;what to share with family and friends&quot;"></i></span><small>61%</small></span></td><td data-k="Stars"><span class="s">64k</span><small class="w">+119</small></td>
+      <td data-k="Commits, 12 weeks" class="c-commits"><div class="bar"><span style="width:5rem"></span>247</div></td>
+      <td data-k="Last release" class="c-rel">10 days ago</td><td data-k="Issues closed vs opened" class="c-iss"><span class="lvl-good"><i class="dot"></i>98%</span></td>
+      <td data-k="Setup" title="Self-hostable service, Web app. Someone technical sets it up on a server, usually with Docker."><span class="su lv-3"><span class="su-bars" role="img" aria-label="Setup effort 3 of 3"><i></i><i></i><i></i></span><b>Needs a server</b></span></td>
+      <td data-k="License" class="c-lic">MIT</td></tr><tr class="ev"><td colspan="8"><details><summary><span><b>Covers all 2 core jobs.</b> Partly: Labels and colors. Not shown: Reminders; Image and voice notes; Sync across devices.</span><u>See the evidence</u></summary>
+      <ul class="ev-list"><li class="m-y"><i class="core"></i><div><b>Quick notes</b><small>core</small><em>Yes</em><q>A single sentence can be a whole memo</q></div></li><li class="m-y"><i class="core"></i><div><b>Checklists</b><small>core</small><em>Yes</em><q>You can add a checklist</q></div></li><li class="m-n"><i class=""></i><div><b>Reminders</b><em>Not shown</em><span>Neither the README nor the website mentions it.</span></div></li><li class="m-p"><i class=""></i><div><b>Labels and colors</b><em>Partly</em><q>Tags connect related thoughts across those days</q></div></li><li class="m-n"><i class=""></i><div><b>Image and voice notes</b><em>Not shown</em><span>Neither the README nor the website mentions it.</span></div></li><li class="m-n"><i class=""></i><div><b>Sync across devices</b><em>Not shown</em><span>Neither the README nor the website mentions it.</span></div></li><li class="m-y"><i class=""></i><div><b>Share notes with others</b><em>Yes</em><q>what to share with family and friends</q></div></li></ul></details></td></tr><tr>
       <th scope="row"><a class="alt-name" href="?page=ZhFahim%2Fanchor"><img src="https://avatars.githubusercontent.com/u/50145591?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>anchor</b><small>Offline-first, self-hostable note taking app</small></span></a></th>
-      <td data-k="Covers"><span class="muted">Not checked yet</span></td><td data-k="Stars"><span class="s">1.7k</span><small class="w">+23</small></td>
-      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:1.8137651821862348rem"></span>64</div></td>
-      <td data-k="Last release">6 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>68%</span></td>
-      <td data-k="Form">Self-hostable service, Mobile app</td>
-      <td data-k="License">AGPL-3.0</td></tr></tbody></table></div>
-    <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a></p></section>
+      <td data-k="Covers"><span class="muted">Not checked yet</span></td><td data-k="Stars"><span class="s">1.7k</span><small class="w">+29</small></td>
+      <td data-k="Commits, 12 weeks" class="c-commits"><div class="bar"><span style="width:1.2955465587044535rem"></span>64</div></td>
+      <td data-k="Last release" class="c-rel">6 days ago</td><td data-k="Issues closed vs opened" class="c-iss"><span class="lvl-good"><i class="dot"></i>68%</span></td>
+      <td data-k="Setup" title="Self-hostable service, Mobile app. Download it and open it. No server, no terminal."><span class="su lv-1"><span class="su-bars" role="img" aria-label="Setup effort 1 of 3"><i></i><i></i><i></i></span><b>Install like an app</b></span></td>
+      <td data-k="License" class="c-lic">AGPL-3.0</td></tr></tbody></table></div>
+    <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a> &middot; <a href="how.html#setup">How setup is read</a></p></section>
+  
   </section>
       <div class="page-head">
         <div>
@@ -114,6 +116,7 @@
           <label class="select"><span>Sort</span>
             <select id="sort">
               <option value="match" id="sort-match" hidden disabled>Best match</option>
+              <option value="worth">Worth a look</option>
               <option value="today">Most stars today</option>
               <option value="picked">Most picked</option>
               <option value="trending">Trending</option>
@@ -130,6 +133,7 @@
             <label class="select"><span>Works with</span><select id="f-with"></select></label>
             <label class="select"><span>Theme</span><select id="f-tag"></select></label>
             <label class="select"><span>License</span><select id="f-lic"></select></label>
+            <label class="select"><span>Setup</span><select id="f-setup"></select></label>
             <label class="select"><span>Language</span><select id="lang"><option value="">Any</option></select></label>
           </div>
           <div class="view" role="group" aria-label="Layout">

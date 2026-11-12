@@ -82,20 +82,22 @@
       <section class="rp" id="repo-page" aria-live="polite"><div class="rp-top"><button type="button" class="rp-back" data-back><svg style="fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Back to the list</button><nav class="rp-crumbs" aria-label="Where it sits"><a href="?alt=all">Alternatives</a></nav></div>
   <section class="hero alt-hero"><div class="who">
     <h1>Open source alternatives to htop</h1>
-    <p class="line">One project on starwire does the same job. Ranked by how much of what htop does each one covers, read from its README and website. Ties go to the healthiest.</p>
+    <p class="line">One project on starwire does the same job. Ranked by how much of what htop does each one covers, read from its README and website. Ties go to the most active.</p>
   </div>
     <div class="acts"><button type="button" class="btn" data-share="instead-of/htop" aria-label="Copy a share link"><svg style="fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 3v13M7 8l5-5 5 5"/></svg><span>Share</span></button></div></section>
-  <section class="jobs" aria-labelledby="jobs"><h2 id="jobs">What htop does</h2><ol class="job-list"><li class="core">Live list of running processes<small>core</small></li><li class="core">CPU and memory usage per core and process<small>core</small></li><li class="core">Kill or renice processes<small>core</small></li><li class="">Sort and filter processes</li><li class="">Tree view of process parents</li><li class="">Customizable meters and columns</li></ol><p class="foot-note">Each dot in the table is one job, in this order. Square dots are core jobs and count double. Full means yes, half means partly. Hover a dot for the line behind it. <a href="how.html#fit">How we score this</a></p></section>
+  <section class="jobs" aria-labelledby="jobs"><h2 id="jobs">What htop does</h2><ol class="job-list"><li class="core">Live list of running processes<small>core</small></li><li class="core">CPU and memory usage per core and process<small>core</small></li><li class="core">Kill or renice processes<small>core</small></li><li class="">Sort and filter processes</li><li class="">Tree view of process parents</li><li class="">Customizable meters and columns</li></ol><p class="foot-note">Each dot in the table is one job, in this order. Square dots are core jobs and count double. Full means yes, half means partly. "See the evidence" under a project shows the line behind each one. Coverage is what a project documents, not how well it works or how hard it is to move to. <a href="how.html#fit">How we score this</a></p></section>
   <section aria-label="Alternatives to htop"><div class="cmp alt-table"><table>
-    <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
+    <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" class="c-commits">Commits, 12 weeks</th><th scope="col" class="c-rel">Last release</th><th scope="col" class="c-iss">Closed vs opened</th><th scope="col">Setup</th><th scope="col" class="c-lic">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=Abdenasser%2Fneohtop"><img src="https://avatars.githubusercontent.com/u/8364240?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>neohtop</b><small>Desktop system monitor in the style of htop, built with Tauri and Svelte</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>49%</b><small>Same job, different way</small></span><span class="fit-dots"><i class="m-y core" title="Live list of running processes: yes. &quot;Expand process families, see their combined CPU and RAM&quot;"></i><i class="m-y core" title="CPU and memory usage per core and process: yes. &quot;CPU cores, memory breakdowns&quot;"></i><i class="m-n core" title="Kill or renice processes: not shown"></i><i class="m-y" title="Sort and filter processes: yes. &quot;Sort the table, filter by usage&quot;"></i><i class="m-y" title="Tree view of process parents: yes. &quot;Switch to **Tree** and expand its process family&quot;"></i><i class="m-y" title="Customizable meters and columns: yes. &quot;controls columns&quot;"></i></span></td><td data-k="Stars"><span class="s">9.5k</span><small class="w">+44</small></td>
-      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>22</div></td>
-      <td data-k="Last release">13 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>100%</span></td>
-      <td data-k="Form">Desktop app</td>
-      <td data-k="License">MIT</td></tr></tbody></table></div>
-    <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a></p></section>
+      <td data-k="Covers"><span class="fit"><b>Same job, different way</b></span><span class="fit-row"><span class="fit-dots"><i class="m-y core" title="Live list of running processes: yes. &quot;Expand process families, see their combined CPU and RAM&quot;"></i><i class="m-y core" title="CPU and memory usage per core and process: yes. &quot;CPU cores, memory breakdowns&quot;"></i><i class="m-n core" title="Kill or renice processes: not shown"></i><i class="m-y" title="Sort and filter processes: yes. &quot;Sort the table, filter by usage&quot;"></i><i class="m-y" title="Tree view of process parents: yes. &quot;Switch to **Tree** and expand its process family&quot;"></i><i class="m-y" title="Customizable meters and columns: yes. &quot;controls columns&quot;"></i></span><small>49%</small></span></td><td data-k="Stars"><span class="s">9.5k</span><small class="w">+46</small></td>
+      <td data-k="Commits, 12 weeks" class="c-commits"><div class="bar"><span style="width:5rem"></span>22</div></td>
+      <td data-k="Last release" class="c-rel">13 days ago</td><td data-k="Issues closed vs opened" class="c-iss"><span class="lvl-good"><i class="dot"></i>100%</span></td>
+      <td data-k="Setup" title="Desktop app. Download it and open it. No server, no terminal."><span class="su lv-1"><span class="su-bars" role="img" aria-label="Setup effort 1 of 3"><i></i><i></i><i></i></span><b>Install like an app</b></span></td>
+      <td data-k="License" class="c-lic">MIT</td></tr><tr class="ev"><td colspan="8"><details><summary><span><b>Covers 2 of 3 core jobs.</b> Not shown: Kill or renice processes.</span><u>See the evidence</u></summary>
+      <ul class="ev-list"><li class="m-y"><i class="core"></i><div><b>Live list of running processes</b><small>core</small><em>Yes</em><q>Expand process families, see their combined CPU and RAM</q></div></li><li class="m-y"><i class="core"></i><div><b>CPU and memory usage per core and process</b><small>core</small><em>Yes</em><q>CPU cores, memory breakdowns</q></div></li><li class="m-n"><i class="core"></i><div><b>Kill or renice processes</b><small>core</small><em>Not shown</em><span>Neither the README nor the website mentions it.</span></div></li><li class="m-y"><i class=""></i><div><b>Sort and filter processes</b><em>Yes</em><q>Sort the table, filter by usage</q></div></li><li class="m-y"><i class=""></i><div><b>Tree view of process parents</b><em>Yes</em><q>Switch to **Tree** and expand its process family</q></div></li><li class="m-y"><i class=""></i><div><b>Customizable meters and columns</b><em>Yes</em><q>controls columns</q></div></li></ul></details></td></tr></tbody></table></div>
+    <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a> &middot; <a href="how.html#setup">How setup is read</a></p></section>
+  
   </section>
       <div class="page-head">
         <div>
@@ -108,6 +110,7 @@
           <label class="select"><span>Sort</span>
             <select id="sort">
               <option value="match" id="sort-match" hidden disabled>Best match</option>
+              <option value="worth">Worth a look</option>
               <option value="today">Most stars today</option>
               <option value="picked">Most picked</option>
               <option value="trending">Trending</option>
@@ -124,6 +127,7 @@
             <label class="select"><span>Works with</span><select id="f-with"></select></label>
             <label class="select"><span>Theme</span><select id="f-tag"></select></label>
             <label class="select"><span>License</span><select id="f-lic"></select></label>
+            <label class="select"><span>Setup</span><select id="f-setup"></select></label>
             <label class="select"><span>Language</span><select id="lang"><option value="">Any</option></select></label>
           </div>
           <div class="view" role="group" aria-label="Layout">
