@@ -14,8 +14,10 @@ import { readmeFragment, followTheme } from "./readme.js"
 import { count } from "./count.js"
 import { avatar, knowOwners } from "./avatar.js"
 import { signs, summary } from "./vitals.js"
+import { weight } from "./signal.js"
+import { SETUP_KINDS, setupOf, setupMark } from "./setup.js"
 import { LICENSE_KINDS, licenseKind, licenseText } from "./license.js"
-import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups, replacesOf, stackFor } from "./repo.js"
+import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups, replacesOf, stackFor, KIND } from "./repo.js"
 
 // collections.json is written by hand (see CONTRIBUTING.md); the site works the same without it
 const [data, collections] = await Promise.all([fetch("data/data.json").then((r) => r.json()), fetch("collections.json").then((r) => (r.ok ? r.json() : [])).catch(() => [])])
@@ -24,7 +26,7 @@ const now = Date.parse(data.updated)
 const TX = data.taxonomy ?? { areas: [], forms: [], platforms: [], worksWith: [] }
 const AREA = new Map(TX.areas.map((a) => [a.id, a]))
 const SUB = new Map(TX.areas.flatMap((a) => a.subs.map(([id, name]) => [`${a.id}/${id}`, name])))
-const FORM = new Map(TX.forms), PLAT = new Map(TX.platforms), WITH = new Map(TX.worksWith), LIC = new Map(LICENSE_KINDS)
+const FORM = new Map(TX.forms), PLAT = new Map(TX.platforms), WITH = new Map(TX.worksWith), LIC = new Map(LICENSE_KINDS), SETUP = new Map(SETUP_KINDS)
 const areaPairs = (r) => (r.a ? [`${r.a}/${r.sa}`, ...(r.mo ?? [])] : [])
 knowOwners(data.repos)
 const repos = data.repos.map((r) => ({ ...r, age: (now - Date.parse(r.p)) / 864e5 }))
@@ -71,13 +73,14 @@ function setSaved(list) {
 // ---- settings: per-browser preferences in localStorage. They pick the defaults; a link's own parameters still win,
 // so a shared link shows the same thing for everyone. Versioned so later settings can be added without breaking old ones.
 const PREFS_KEY = "starwire-prefs"
-const DEFAULT_PREFS = { v: 1, sort: "today", layout: "wire", topics: true, gain: true, picked: true, stardash: true, listCard: true, sidebar: "area", hideAI: false }
-const SORTS = ["today", "picked", "trending", "stars", "new", "active"]
+const DEFAULT_PREFS = { v: 2, sort: "worth", layout: "wire", topics: true, gain: true, picked: true, stardash: true, listCard: true, sidebar: "area", hideAI: false }
+const SORTS = ["worth", "today", "picked", "trending", "stars", "new", "active"]
 function readPrefs() {
   let p = {}
   try { p = JSON.parse(localStorage.getItem(PREFS_KEY) ?? "{}") ?? {} } catch {}
   const out = { ...DEFAULT_PREFS }
-  if (SORTS.includes(p.sort)) out.sort = p.sort
+  // "today" saved under v1 was the default nobody chose, so it moves to the new default; picking it again sticks
+  if (SORTS.includes(p.sort) && !(p.v === 1 && p.sort === "today")) out.sort = p.sort
   if (["wire", "cards", "list"].includes(p.layout)) out.layout = p.layout
   for (const k of ["topics", "gain", "picked", "stardash", "listCard", "hideAI"]) if (typeof p[k] === "boolean") out[k] = p[k]
   if (["area", "form", "with"].includes(p.sidebar)) out.sidebar = p.sidebar
@@ -114,7 +117,7 @@ const OLD_CATEGORY = {
 const old = OLD_CATEGORY[params.get("c")] ?? {}
 const pick = (k, map) => { const v = params.get(k) ?? old[k] ?? ""; return !map || map.has(v) ? v : "" }
 const state = {
-  a: pick("a", AREA), sa: "", form: pick("form", FORM), plat: pick("plat", PLAT), with: pick("with", WITH), tag: pick("tag", TAG), lic: pick("lic", LIC), col: pick("col", new Map([...COL, ["all"]])),
+  a: pick("a", AREA), sa: "", form: pick("form", FORM), plat: pick("plat", PLAT), with: pick("with", WITH), tag: pick("tag", TAG), lic: pick("lic", LIC), setup: pick("setup", SETUP), col: pick("col", new Map([...COL, ["all"]])),
   f: params.get("f") ?? (shared.length ? "shared" : params.has("multi") ? "multi" : ""), q: params.get("q") ?? "",
   repo: params.get("repo") ?? "", page: params.get("page") ?? "", alt: params.get("alt") ?? "", sort: params.get("sort") ?? (params.get("q") ? "match" : viewSort(params.get("f")) || prefs.sort), lang: params.get("lang") ?? "", view: params.get("view") ?? prefs.layout, shown: PAGE,
 }
@@ -238,7 +241,7 @@ function spark(hs, w = 120, h = 32, cls = "wspark") {
 // rank change: position by a score now vs the day before, within the list on screen. Most stars today ranks by stars
 // per day; Trending by heat, with the pipeline's heat as of yesterday in hy (none = wasn't trending, so "new")
 let moves = null
-const MOVE_SCORES = { today: (r, back) => day(r, back), trending: (r, back) => (back ? r.hy : r.h) || null }
+const MOVE_SCORES = { worth: (r, back) => worth(r, back), today: (r, back) => day(r, back), trending: (r, back) => (back ? r.hy : r.h) || null }
 function rankMoves(list, score) {
   const pos = (f) => new Map(list.filter((r) => f(r) != null).sort((a, b) => f(b) - f(a)).map((r, i) => [r.r, i]))
   const now = pos((r) => score(r, 0)), then = pos((r) => score(r, 1))
@@ -262,7 +265,7 @@ const DATE = new Date(now).toLocaleDateString("en-US", { month: "long", day: "nu
 // above the list: the day's biggest mover on the plain views, the area's top three of the week inside an area
 function lead(list) {
   const el = $("#lead")
-  if (state.q || state.form || state.plat || state.with || state.tag || state.lic || state.lang || ["saved", "shared"].includes(state.f)) return (el.hidden = true)
+  if (state.q || state.form || state.plat || state.with || state.tag || state.lic || state.setup || state.lang || ["saved", "shared"].includes(state.f)) return (el.hidden = true)
   if (state.a) {
     const top = list.filter((r) => r.w > 0).sort((a, b) => b.w - a.w).slice(0, 3)
     if (top.length < 3) return (el.hidden = true)
@@ -293,7 +296,10 @@ const promo = `<a class="promo" href="https://github.com/boffti/stardash" target
   <span>Try StarDash for free</span>
 </a>`
 
+// Worth a look: stars per day, kept in full by a repo that passes every signal check and cut for each one it fails
+const worth = (r, back = 0) => { const d = day(r, back); return d == null ? null : d * (r.sg ??= weight(r, TODAY)) }
 const sorters = {
+  worth: (a, b) => (worth(b) ?? -1) - (worth(a) ?? -1) || b.h - a.h,
   saved: (a, b) => (savedAt.get(b.r) ?? -1) - (savedAt.get(a.r) ?? -1),
   today: (a, b) => (day(b) ?? -1) - (day(a) ?? -1) || b.h - a.h,
   trending: (a, b) => b.h - a.h,
@@ -308,8 +314,8 @@ const PROMO_ROW = 3 + Math.floor(Math.random() * 5), PROMO_COL = Math.random()
 
 const facetMatch = (r) =>
   (!state.a || areaPairs(r).some((p) => (state.sa ? p === `${state.a}/${state.sa}` : p.startsWith(state.a + "/")))) &&
-  (!state.form || r.fo?.includes(state.form)) && (!state.plat || r.pl?.includes(state.plat)) && (!state.with || r.ww?.includes(state.with)) && (!state.tag || r.tg?.includes(state.tag)) && (!state.lic || licenseKind(r.li) === state.lic) && (!inCol() || inCol().order.has(r.r))
-const anyFacet = () => state.a || state.form || state.plat || state.with || state.tag || state.lic
+  (!state.form || r.fo?.includes(state.form)) && (!state.plat || r.pl?.includes(state.plat)) && (!state.with || r.ww?.includes(state.with)) && (!state.tag || r.tg?.includes(state.tag)) && (!state.lic || licenseKind(r.li) === state.lic) && (!state.setup || setupOf(r.fo)?.id === state.setup) && (!inCol() || inCol().order.has(r.r))
+const anyFacet = () => state.a || state.form || state.plat || state.with || state.tag || state.lic || state.setup
 
 const PHONE = matchMedia("(max-width: 760px)")
 PHONE.addEventListener("change", () => render())
@@ -318,7 +324,7 @@ PHONE.addEventListener("change", () => render())
 function showCollections() {
   document.body.dataset.cols = "all" // the sort, filters and layout controls mean nothing here: style.css hides them
   $("#title").textContent = "Collections"
-  $("#sub").textContent = `The open source stack for ${stacks.size} kinds of work. Nothing is hand-picked: each need gets the top-ranked alternative to the product people usually pay for.`
+  $("#sub").textContent = `The open source stack for ${stacks.size} kinds of work. Each need gets the top-ranked alternative to the product people usually pay for.`
   for (const id of ["#lead", "#more", "#everywhere", "#alt-hint"]) $(id).hidden = true
   document.querySelectorAll("[data-f], [data-a], [data-sa], [data-form], [data-with]").forEach((n) => n.setAttribute("aria-current", "false"))
   const el = $("#results")
@@ -328,6 +334,38 @@ function showCollections() {
     <span class="col-faces">${c.picks.slice(0, 8).map((p) => `<img src="${esc(avatar(p.repo.r.split("/")[0], 56))}" alt="" width="26" height="26" loading="lazy" decoding="async">`).join("")}<small>${c.picks.length} tools</small></span></a>`).join("")
   syncURL()
   if (counted.place !== "collections") count((counted.place = "collections"), "Collections")
+}
+// one collection: the stack, need by need. Each row is a job to be done, the product people usually pay for, and the
+// open source project that takes its place, with how well it fits. A need nothing covers well is shown as a gap.
+function showCollection(c) {
+  document.body.dataset.cols = "one"
+  $("#title").textContent = c.title
+  $("#sub").textContent = c.intro
+  for (const id of ["#lead", "#more", "#everywhere", "#alt-hint"]) $(id).hidden = true
+  document.querySelectorAll("[data-f], [data-a], [data-sa], [data-form], [data-with]").forEach((n) => n.setAttribute("aria-current", "false"))
+  const by = new Map(c.picks.map((p) => [p.label, p])), repos = c.picks.map((p) => p.repo)
+  const easy = repos.filter((r) => setupOf(r.fo)?.level === 1).length, open = repos.filter((r) => licenseKind(r.li) === "open").length
+  const facts = [[`${c.picks.length} of ${c.needs.length}`, "needs covered"], [c.picks.reduce((n, p) => n + p.n, 0), "alternatives compared"], [open, open === 1 ? "open source license" : "open source licenses"], [`${easy} of ${c.picks.length}`, "install like an app"]]
+  const pick = (p) => { const r = p.repo, [owner, name] = r.r.split("/"), su = setupOf(r.fo)
+    const os = (r.pl ?? []).filter((x) => x !== "docker").map((x) => PLAT.get(x)).filter(Boolean).join(", ")
+    return `<div class="repo st-pick" role="button" tabindex="0" data-r="${esc(r.r)}" aria-label="${esc(name)} details">
+      <div class="head"><img src="${esc(avatar(owner, 80))}" alt="" loading="lazy" decoding="async" width="40" height="40"><div class="name"><strong>${esc(name)}</strong><span>${esc(owner)}</span></div>${saveBtn(r.r)}<a class="jump" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener" aria-label="Open ${esc(name)} on GitHub" title="Open on GitHub">${GH}</a></div>
+      <p class="line">${esc(r.l ?? "")}</p>
+      ${su ? `<p class="st-setup">${setupMark(su)}<span>${su.text}${su.level === 1 && os ? ` ${esc(os)}.` : ""}</span></p>` : ""}
+      <div class="meta">${p.f ? `<span class="st-fit"><b>${KIND[p.f[1]]}</b> covers ${Math.round(p.f[0] * 100)}%</span>` : ""}<span class="stars">${STAR}${num(r.s)}</span><span>${esc(licenseText(r.li))}</span>${(r.fo ?? []).length ? `<span>${r.fo.map((f) => esc(FORM.get(f))).join(", ")}</span>` : ""}</div></div>` }
+  const gap = (products) => { const g = products.map((x) => ALTS.get(x.toLowerCase())).find(Boolean)
+    return `<div class="st-gap"><b>No strong fit yet.</b> Nothing on starwire covers enough of ${esc(g?.name ?? products[0])} to recommend. ${g ? `<a href="?alt=${encodeURIComponent(g.name)}">See the ${g.repos.length} partial ${g.repos.length === 1 ? "option" : "options"}</a>` : `<a href="https://github.com/boffti/starwire/issues/new?template=submit.yml" target="_blank" rel="noopener">Suggest a repo</a>`}</div>` }
+  const el = $("#results")
+  el.className = "stack"
+  el.innerHTML = `<dl class="st-facts">${facts.map(([n, k]) => `<div><dt>${k}</dt><dd>${n}</dd></div>`).join("")}</dl>
+    <ol class="st-rows">${c.needs.map(([label, ...products], i) => { const p = by.get(label)
+      return `<li class="st-row${p ? "" : " gap"}"><div class="st-need"><span class="st-n">${String(i + 1).padStart(2, "0")}</span><div><h2>${esc(label)}</h2>
+        ${p ? `<p>In place of <a href="?alt=${encodeURIComponent(p.product)}">${esc(p.product)}</a>${p.n > 1 ? `<a class="st-all" href="?alt=${encodeURIComponent(p.product)}">Compare all ${p.n}</a>` : ""}</p>` : `<p>Usually ${esc(products.slice(0, 2).join(" or "))}</p>`}</div></div>
+        ${p ? pick(p) : gap(products)}</li>` }).join("")}</ol>
+    <p class="st-note">Each need gets the top-ranked open source alternative to the product people usually pay for, so the stack changes as the rankings do. <a href="how.html#fit">How fit is scored</a> &middot; <a href="how.html#setup">How setup is read</a> &middot; <a href="?col=all">All collections</a></p>`
+  syncURL()
+  const place = `collection/${c.id}`
+  if (place !== counted.place) count((counted.place = place), "Collection")
 }
 function render() {
   const onPage = !!(state.page || state.alt)
@@ -339,6 +377,7 @@ function render() {
   document.querySelectorAll("[data-col]").forEach((n) => n.setAttribute("aria-current", String(!!state.col)))
   if (state.col && !stacks) return void loadStacks().then(render) // the stacks need two more files; draw when they're in
   if (state.col === "all") return showCollections()
+  if (inCol() && !state.q) return showCollection(inCol()) // a search from inside a collection falls through to the plain list
   const view = VIEWS.find((v) => v.f === state.f) ?? VIEWS[0]
   let list = repos.filter((r) => visible(r) && view.test(r) && facetMatch(r) && (!state.lang || r.g === state.lang))
   const scores = search(state.q, list)
@@ -383,6 +422,7 @@ function render() {
   if (state.with && !(prefs.sidebar === "with" && !state.a)) parts.push(`works with ${WITH.get(state.with)}`)
   if (state.tag) parts.push(`tagged ${state.tag}`)
   if (state.lic) parts.push(LIC.get(state.lic).toLowerCase())
+  if (state.setup) parts.push(`setup: ${SETUP.get(state.setup).toLowerCase()}`)
   if (state.lang) parts.push(`in ${state.lang}`)
   if (prefs.hideAI) parts.push("AI repos hidden")
   if (!anyFacet() && !state.f && !state.lang && !state.q) parts.push(`updated ${new Date(now).toLocaleDateString("en-US", { month: "long", day: "numeric" })}`)
@@ -393,7 +433,7 @@ function render() {
   hint.hidden = !g
   if (g) { hint.href = `?alt=${encodeURIComponent(g.name)}`; hint.textContent = `See all ${g.repos.length} open source ${g.repos.length === 1 ? "alternative" : "alternatives"} to ${g.name}` }
   // phones keep the filters behind one button; it shows how many are on
-  const on = ["form", "plat", "with", "tag", "lic", "lang"].filter((k) => state[k]).length
+  const on = ["form", "plat", "with", "tag", "lic", "setup", "lang"].filter((k) => state[k]).length
   $("#filters-n").hidden = !on; $("#filters-n").textContent = on
   $("#more").hidden = list.length <= shown
   $("#more").textContent = `Show more (${(list.length - shown).toLocaleString("en-US")} left)`
@@ -402,7 +442,7 @@ function render() {
   for (const k of ["a", "form", "with"]) document.querySelectorAll(`[data-${k}]`).forEach((n) => n.setAttribute("aria-current", String(n.dataset[k] === state[k] && !(k === "a" && state.sa))))
   document.querySelectorAll("[data-sa]").forEach((n) => n.setAttribute("aria-current", String(n.dataset.sa === state.sa)))
   document.querySelectorAll(".view button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.view === state.view)))
-  $("#reset")?.addEventListener("click", () => set({ f: "", a: "", sa: "", form: "", plat: "", with: "", tag: "", lic: "", q: "", lang: "" }, true))
+  $("#reset")?.addEventListener("click", () => set({ f: "", a: "", sa: "", form: "", plat: "", with: "", tag: "", lic: "", setup: "", q: "", lang: "" }, true))
   syncURL()
   const place = col ? `collection/${col.id}` : state.a ? `area/${state.a}${state.sa ? `/${state.sa}` : ""}` : `view/${state.f || "all"}`
   if (place !== counted.place) count((counted.place = place), col ? "Collection" : state.a ? "Area" : "View")
@@ -415,7 +455,7 @@ const counted = { place: "", q: "", t: 0 }
 
 function syncURL() {
   const p = new URLSearchParams()
-  for (const k of ["f", "a", "sa", "form", "plat", "with", "tag", "lic", "col", "q", "lang", "repo", "page", "alt"]) if (state[k] && !(k === "f" && state.f === "shared")) p.set(k, state[k])
+  for (const k of ["f", "a", "sa", "form", "plat", "with", "tag", "lic", "setup", "col", "q", "lang", "repo", "page", "alt"]) if (state[k] && !(k === "f" && state.f === "shared")) p.set(k, state[k])
   if (state.f === "shared") p.set("saved", shared.join(","))
   // left out only when it's what this browser falls back to on load, so a reload lands where you were
   if (state.sort !== prefs.sort && !(state.sort === "match" && state.q)) p.set("sort", state.sort)
@@ -438,7 +478,9 @@ async function showPage() {
   if (state.alt) {
     const [v, f] = await Promise.all([vitals, fits])
     if (shownPage !== key) return
-    el.innerHTML = altPage(state.alt, { repos, vitals: v, fit: f, today: data.updated.slice(0, 10), TX })
+    if (!stacks) await loadStacks() // the page ends with the collections this product is part of
+    if (shownPage !== key) return
+    el.innerHTML = altPage(state.alt, { repos, vitals: v, fit: f, today: data.updated.slice(0, 10), TX, cols: [...stacks.values()] })
     document.title = `Open source alternatives to ${state.alt} | starwire`
     return count(`alt/${state.alt.toLowerCase()}`, "Alternatives page")
   }
@@ -460,7 +502,7 @@ function navigate(href) {
 }
 function fromURL() {
   const p = new URLSearchParams(location.search)
-  set(Object.fromEntries(["f", "a", "sa", "form", "plat", "with", "tag", "lic", "col", "q", "lang", "page", "alt"].map((k) => [k, p.get(k) ?? ""])), true)
+  set(Object.fromEntries(["f", "a", "sa", "form", "plat", "with", "tag", "lic", "setup", "col", "q", "lang", "page", "alt"].map((k) => [k, p.get(k) ?? ""])), true)
   scrollTo({ top: 0 })
 }
 addEventListener("popstate", fromURL)
@@ -476,7 +518,7 @@ function set(patch, syncInputs) {
   if (state.q && !hadQ && !("sort" in patch)) state.sort = "match", (syncInputs = true)
   if (!state.q && state.sort === "match") state.sort = viewSort(state.f) || prefs.sort, (syncInputs = true)
   $("#sort-match").hidden = $("#sort-match").disabled = !state.q
-  if (syncInputs) { $("#q").value = state.q; $("#lang").value = state.lang; $("#sort").value = state.sort; for (const k of ["form", "plat", "with", "tag", "lic"]) $(`#f-${k}`).value = state[k] }
+  if (syncInputs) { $("#q").value = state.q; $("#lang").value = state.lang; $("#sort").value = state.sort; for (const k of ["form", "plat", "with", "tag", "lic", "setup"]) $(`#f-${k}`).value = state[k] }
   renderSidebar()
   render()
 }
@@ -511,6 +553,15 @@ for (const [k, label, map, has] of [["form", "Form", TX.forms, (r, id) => r.fo?.
   el.value = state.lic
   el.addEventListener("change", (e) => set({ lic: e.target.value }))
 }
+// Setup: how much know-how it takes to get running, easiest first (rules in setup.js)
+{
+  // pages drawn before this filter existed (a cached page, or a landing page not rebuilt yet) get the dropdown added
+  if (!$("#f-setup")) $("#f-lic").closest("label").insertAdjacentHTML("afterend", '<label class="select"><span>Setup</span><select id="f-setup"></select></label>')
+  const el = $("#f-setup")
+  el.innerHTML = `<option value="">Any</option>` + SETUP_KINDS.map(([id, name]) => [id, name, repos.filter((r) => setupOf(r.fo)?.id === id).length]).filter((x) => x[2]).map(([id, name, n]) => `<option value="${id}">${name} (${n})</option>`).join("")
+  el.value = state.setup
+  el.addEventListener("change", (e) => set({ setup: e.target.value }))
+}
 $("#sidebar").addEventListener("click", (e) => {
   const n = e.target.closest(".cat")
   if (!n) return
@@ -540,7 +591,7 @@ $("#filters-btn").addEventListener("click", (e) => {
 $("#menu").addEventListener("click", () => $("#app").classList.add("open"))
 $("#scrim").addEventListener("click", closeMenu)
 document.querySelector(".view").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; prefs.layout = b.dataset.view; savePrefs(); set({ view: b.dataset.view, shown: state.shown }) }) // the layout you pick is remembered, like the setting
-$("#everywhere").addEventListener("click", () => set({ f: "", a: "", sa: "", form: "", plat: "", with: "", tag: "", lic: "", lang: "", sort: "match" }, true))
+$("#everywhere").addEventListener("click", () => set({ f: "", a: "", sa: "", form: "", plat: "", with: "", tag: "", lic: "", setup: "", lang: "", sort: "match" }, true))
 $("#more").addEventListener("click", () => set({ shown: state.shown + PAGE }))
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeMenu()
@@ -632,7 +683,7 @@ function openSettings() {
   <form class="p-body s-body">
     ${seg("sidebar", "Sidebar shows", prefs.sidebar, [["area", "Areas"], ["form", "Forms"], ["with", "Works with"]])}
     <fieldset class="s-row"><legend>Repos</legend>${check("hideAI", "Hide AI repos (AI tools, agents and anything built around AI)")}</fieldset>
-    ${dropdown("sort", "Default sort", prefs.sort, [["today", "Most stars today"], ["picked", "Most picked"], ["trending", "Trending"], ["stars", "Most stars"], ["new", "Newest picks"]])}
+    ${dropdown("sort", "Default sort", prefs.sort, [["worth", "Worth a look"], ["today", "Most stars today"], ["picked", "Most picked"], ["trending", "Trending"], ["stars", "Most stars"], ["new", "Newest picks"]])}
     <div class="s-layout">${seg("layout", "Default layout", prefs.layout, [["wire", "Ranked"], ["cards", "Cards"], ["list", "List"]])}</div>
     ${seg("theme", "Theme", themeNow(), [["system", "System"], ["light", "Light"], ["dark", "Dark"]])}
     <fieldset class="s-row"><legend>On each repo card</legend>${check("topics", "Topics")}${check("gain", "Stars gained")}${check("picked", "How many times it was picked")}</fieldset>
@@ -854,7 +905,7 @@ $("#results").addEventListener("click", (e) => {
   if (e.metaKey || e.ctrlKey) return void window.open(`https://github.com/${c.dataset.r}`, "_blank", "noopener")
   openPanel(c.dataset.r)
 })
-$("#results").addEventListener("click", (e) => { const a = e.target.closest(".col-card") && inApp(e); if (a) { e.preventDefault(); navigate(a.getAttribute("href")) } }) // a collection opens without a reload
+$("#results").addEventListener("click", (e) => { const a = e.target.closest(".col-card, .stack") && inApp(e); if (a) { e.preventDefault(); navigate(a.getAttribute("href")) } }) // a collection opens without a reload
 $("#results").addEventListener("auxclick", (e) => { const c = e.target.closest(".repo[data-r]"); if (c && e.button === 1 && !e.target.closest(".jump, [data-save]")) window.open(`https://github.com/${c.dataset.r}`, "_blank", "noopener") })
 $("#results").addEventListener("keydown", (e) => { const c = e.target.closest(".repo[data-r]"); if (c && (e.key === "Enter" || e.key === " ") && e.target === c) { e.preventDefault(); openPanel(c.dataset.r) } })
 panel.addEventListener("click", async (e) => {
@@ -911,7 +962,7 @@ if (params.has("settings")) openSettings()
 // A filter picked here is added to what is already on, so "local-first" then "Rust" gives both; views start over.
 {
   const dlg = $("#cmdk"), inp = $("#cmdk-q"), out = $("#cmdk-list"), opener = $("#cmdk-open")
-  const clear = { f: "", a: "", sa: "", form: "", plat: "", with: "", tag: "", lic: "", col: "", lang: "", q: "" }
+  const clear = { f: "", a: "", sa: "", form: "", plat: "", with: "", tag: "", lic: "", setup: "", col: "", lang: "", q: "" }
   let all = null, items = [], at = 0
   const commands = () => (all ??= [
     ...VIEWS.filter((v) => !v.hidden).map((v) => ({ kind: "View", label: v.label, run: () => set({ ...clear, f: v.f, ...(viewSort(v.f) ? { sort: viewSort(v.f) } : {}) }, true) })),
@@ -922,6 +973,7 @@ if (params.has("settings")) openSettings()
     ...TX.worksWith.map(([id, name]) => ({ kind: "Works with", label: name, run: () => set({ with: id }, true) })),
     ...[...COL.values()].map((c) => ({ kind: "Collection", label: c.title, run: () => set({ ...clear, col: c.id }, true) })),
     ...LICENSE_KINDS.map(([id, name]) => ({ kind: "License", label: name, run: () => set({ lic: id }, true) })),
+    ...SETUP_KINDS.map(([id, name]) => ({ kind: "Setup", label: name, run: () => set({ setup: id }, true) })),
     ...langs.map(([l, n]) => ({ kind: "Language", label: l, n, run: () => set({ lang: l }, true) })),
     ...[...ALTS.values()].map((g) => ({ kind: "Instead of", label: g.name, n: g.repos.length, run: () => set({ alt: g.name }) })),
     ...[...$("#sort").options].filter((o) => !o.hidden).map((o) => ({ kind: "Sort by", label: o.textContent, run: () => set({ sort: o.value }, true) })),

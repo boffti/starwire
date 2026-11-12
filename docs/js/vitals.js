@@ -26,11 +26,15 @@ export function momentum(r, repos) {
   return { rank, n, level: rank <= Math.max(1, Math.ceil(n / 4)) ? "good" : rank <= Math.ceil(n * 0.6) ? "ok" : "low" }
 }
 
+// issues closed in the period against issues opened in it. They are not the same issues, so this is a pace, never
+// "N% of new issues closed": closing an old backlog would read as 100% while every new one sat unanswered.
+export const issuesText = (pct) => (pct >= 1 ? "issues closed as fast as they open" : `${Math.round(pct * 100)}% as many issues closed as opened`)
+
 // one plain line for the side panel: what the numbers say, no verdict words
 export function summary(s) {
   const a = s.activity.level === "good" ? "Steady commits" : s.activity.total ? `${s.activity.total} commits in 12 weeks` : "No commits in 12 weeks"
   const r = s.release.ago == null ? "no releases" : `last release ${s.release.ago < 1 ? "today" : s.release.ago === 1 ? "yesterday" : `${s.release.ago} days ago`}`
-  const i = s.issues.level === "none" ? "few new issues" : `${Math.round(s.issues.pct * 100)}% of new issues closed`
+  const i = s.issues.level === "none" ? "few new issues" : issuesText(s.issues.pct)
   return `${a}, ${r}, ${i}`
 }
 
@@ -45,6 +49,7 @@ if (typeof process !== "undefined" && import.meta.url === `file://${process.argv
   assert.equal(signs({ release: null, weeks: Array(12).fill(1), opened: 10, closed: 30 }, "2026-11-07").issues.pct, 1) // old issues closed count, capped
   const rs = Array.from({ length: 8 }, (_, i) => ({ a: "dev", sa: "apis", w: 80 - i * 10 }))
   assert.deepEqual([momentum(rs[0], rs).level, momentum(rs[3], rs).level, momentum(rs[7], rs).level, momentum(rs[1], rs).rank], ["good", "ok", "low", 2])
-  assert.equal(summary(busy), "Steady commits, last release 16 days ago, 74% of new issues closed")
+  assert.equal(summary(busy), "Steady commits, last release 16 days ago, 74% as many issues closed as opened")
+  assert.equal(issuesText(1), "issues closed as fast as they open")
   console.log("vitals rules ok")
 }
