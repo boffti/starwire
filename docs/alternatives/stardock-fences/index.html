@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=DayuanJiang%2FPecoFence"><img src="https://avatars.githubusercontent.com/u/34411969?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>PecoFence</b><small>Windows desktop organizer with glass fences, live folders and tabs</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>100%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Group desktop icons into boxes: yes. &quot;Keep files in glass panels&quot;"></i><i class="m-y core" title="Keep the desktop tidy: yes. &quot;Give everything a place&quot;"></i><i class="m-y" title="Rules to sort new files automatically: yes. &quot;add rules that sort new files automatically&quot;"></i><i class="m-y" title="Folder portals: yes. &quot;Put a live folder on your desktop.&quot;"></i><i class="m-y" title="Roll up and hide groups: yes. &quot;Roll a fence up to its title.&quot;"></i><i class="m-y" title="Quick hide of all icons: yes. &quot;Double-click the desktop to hide your fences.&quot;"></i></span></td><td data-k="Stars"><span class="s">892</span><small class="w">+82</small></td>
+      <td data-k="Covers"><span class="fit"><b>100%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Group desktop icons into boxes: yes. &quot;Keep files in glass panels&quot;"></i><i class="m-y core" title="Keep the desktop tidy: yes. &quot;Give everything a place&quot;"></i><i class="m-y" title="Rules to sort new files automatically: yes. &quot;add rules that sort new files automatically&quot;"></i><i class="m-y" title="Folder portals: yes. &quot;Put a live folder on your desktop.&quot;"></i><i class="m-y" title="Roll up and hide groups: yes. &quot;Roll a fence up to its title.&quot;"></i><i class="m-y" title="Quick hide of all icons: yes. &quot;Double-click the desktop to hide your fences.&quot;"></i></span></td><td data-k="Stars"><span class="s">902</span><small class="w">+92</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>1,171</div></td>
       <td data-k="Last release">2 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>68%</span></td>
       <td data-k="Form">Desktop app</td>
@@ -189,8 +189,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

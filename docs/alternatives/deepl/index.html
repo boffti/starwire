@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=google-gemma%2Fgemma-translator"><img src="https://avatars.githubusercontent.com/u/271369873?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>gemma-translator</b><small>Translation tool built on Gemma models</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>17%</b><small>Same job, different way</small></span><span class="fit-dots"><i class="m-p core" title="Translate text between languages: partly. &quot;transcribed (Moonshine STT), translated (Gemma)&quot;"></i><i class="m-n core" title="Natural sounding translations: not shown"></i><i class="m-n" title="Document translation: not shown"></i><i class="m-n" title="Writing improvements: not shown"></i><i class="m-n" title="Glossaries: not shown"></i><i class="m-p" title="Translation API: partly. &quot;a Python API server&quot;"></i><i class="m-n" title="Desktop apps: not shown"></i></span></td><td data-k="Stars"><span class="s">1.7k</span><small class="w">+5</small></td>
+      <td data-k="Covers"><span class="fit"><b>17%</b><small>Same job, different way</small></span><span class="fit-dots"><i class="m-p core" title="Translate text between languages: partly. &quot;transcribed (Moonshine STT), translated (Gemma)&quot;"></i><i class="m-n core" title="Natural sounding translations: not shown"></i><i class="m-n" title="Document translation: not shown"></i><i class="m-n" title="Writing improvements: not shown"></i><i class="m-n" title="Glossaries: not shown"></i><i class="m-p" title="Translation API: partly. &quot;a Python API server&quot;"></i><i class="m-n" title="Desktop apps: not shown"></i></span></td><td data-k="Stars"><span class="s">1.7k</span><small class="w">+6</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:0rem"></span>0</div></td>
       <td data-k="Last release">None</td><td data-k="Issues closed">Too few</td>
       <td data-k="Form">Web app</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

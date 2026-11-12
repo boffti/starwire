@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=secluso%2Fcore"><img src="https://avatars.githubusercontent.com/u/271067237?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>core</b><small>Privacy focused Raspberry Pi home security camera with end-to-end encryption</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>56%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-p core" title="Video doorbell with live view: partly. &quot;Watch live video, get alerts, and open recordings&quot;"></i><i class="m-y core" title="Motion alerts on your phone: yes. &quot;get alerts&quot;"></i><i class="m-y" title="Recorded video history: yes. &quot;open recordings from your phone&quot;"></i><i class="m-n" title="Two-way talk: not shown"></i><i class="m-p" title="Security cameras and alarm: partly. &quot;private home security camera system for Raspberry Pi&quot;"></i><i class="m-n" title="Neighborhood alerts: not shown"></i></span></td><td data-k="Stars"><span class="s">1.7k</span></td>
+      <td data-k="Covers"><span class="fit"><b>56%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-p core" title="Video doorbell with live view: partly. &quot;Watch live video, get alerts, and open recordings&quot;"></i><i class="m-y core" title="Motion alerts on your phone: yes. &quot;get alerts&quot;"></i><i class="m-y" title="Recorded video history: yes. &quot;open recordings from your phone&quot;"></i><i class="m-n" title="Two-way talk: not shown"></i><i class="m-p" title="Security cameras and alarm: partly. &quot;private home security camera system for Raspberry Pi&quot;"></i><i class="m-n" title="Neighborhood alerts: not shown"></i></span></td><td data-k="Stars"><span class="s">1.7k</span><small class="w">+2</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:0rem"></span>0</div></td>
       <td data-k="Last release">6 months ago</td><td data-k="Issues closed">Too few</td>
       <td data-k="Form">Self-hostable service</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

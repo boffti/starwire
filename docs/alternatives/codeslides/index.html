@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=codewiththiha%2FOpenSlides"><img src="https://avatars.githubusercontent.com/u/188610884?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>OpenSlides</b><small>Offline desktop app for animated code slides, built with Tauri and Svelte</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>81%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Code slides with syntax highlighting: yes. &quot;Turn source code into presentation-ready slides.&quot;"></i><i class="m-y core" title="Animated transitions between code steps: yes. &quot;smooth Magic Move transitions&quot;"></i><i class="m-p" title="Presenter mode for talks: partly. &quot;Present in full screen with optional autoplay and per-slide timing&quot;"></i><i class="m-y" title="Themes and fonts: yes. &quot;Choose light or dark presentation themes&quot;"></i><i class="m-n" title="Export to video or images: not shown"></i><i class="m-y" title="Offline use: yes. &quot;present without a subscription or internet connection&quot;"></i></span></td><td data-k="Stars"><span class="s">242</span><small class="w">+1</small></td>
+      <td data-k="Covers"><span class="fit"><b>81%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Code slides with syntax highlighting: yes. &quot;Turn source code into presentation-ready slides.&quot;"></i><i class="m-y core" title="Animated transitions between code steps: yes. &quot;smooth Magic Move transitions&quot;"></i><i class="m-p" title="Presenter mode for talks: partly. &quot;Present in full screen with optional autoplay and per-slide timing&quot;"></i><i class="m-y" title="Themes and fonts: yes. &quot;Choose light or dark presentation themes&quot;"></i><i class="m-n" title="Export to video or images: not shown"></i><i class="m-y" title="Offline use: yes. &quot;present without a subscription or internet connection&quot;"></i></span></td><td data-k="Stars"><span class="s">243</span><small class="w">+2</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>4</div></td>
       <td data-k="Last release">3 months ago</td><td data-k="Issues closed">Too few</td>
       <td data-k="Form">Desktop app</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

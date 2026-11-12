@@ -96,7 +96,7 @@
       <td data-k="Form">Self-hostable service, Web app</td>
       <td data-k="License">AGPL-3.0</td></tr><tr>
       <th scope="row"><a class="alt-name" href="?page=gitroomhq%2Fpostiz-app"><img src="https://avatars.githubusercontent.com/u/128401275?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>postiz-app</b><small>Social media post scheduler built on Next.js with Redis</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>81%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Schedule social media posts: yes. &quot;Schedule all your social media posts&quot;"></i><i class="m-y core" title="Publish to many platforms from one place: yes. &quot;Publish to 30+ social media channels&quot;"></i><i class="m-y" title="Content calendar: yes. &quot;you review everything in one visual calendar&quot;"></i><i class="m-y" title="Post analytics: yes. &quot;Measure your work with analytics.&quot;"></i><i class="m-p" title="Team approvals: partly. &quot;Invite your team members to collaborate, comment, and schedule posts.&quot;"></i><i class="m-n" title="Link in bio page: not shown"></i></span></td><td data-k="Stars"><span class="s">41k</span><small class="w">+408</small></td>
+      <td data-k="Covers"><span class="fit"><b>81%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Schedule social media posts: yes. &quot;Schedule all your social media posts&quot;"></i><i class="m-y core" title="Publish to many platforms from one place: yes. &quot;Publish to 30+ social media channels&quot;"></i><i class="m-y" title="Content calendar: yes. &quot;you review everything in one visual calendar&quot;"></i><i class="m-y" title="Post analytics: yes. &quot;Measure your work with analytics.&quot;"></i><i class="m-p" title="Team approvals: partly. &quot;Invite your team members to collaborate, comment, and schedule posts.&quot;"></i><i class="m-n" title="Link in bio page: not shown"></i></span></td><td data-k="Stars"><span class="s">41k</span><small class="w">+445</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>734</div></td>
       <td data-k="Last release">18 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>100%</span></td>
       <td data-k="Form">Self-hostable service, Web app</td>
@@ -195,8 +195,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

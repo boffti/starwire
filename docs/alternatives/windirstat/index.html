@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=tobi%2Fdisktree"><img src="https://avatars.githubusercontent.com/u/347?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>disktree</b><small>Treemap view for finding and removing what fills your disk</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>81%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Visualize disk usage: yes. &quot;It draws every directory as a nested mosaic&quot;"></i><i class="m-y core" title="Find large files and folders: yes. &quot;Find what is filling a disk&quot;"></i><i class="m-n" title="Usage by file type: not shown"></i><i class="m-y" title="Delete files from the view: yes. &quot;mark what should go, and remove it&quot;"></i><i class="m-y" title="Scan drives and folders: yes. &quot;the whole disk it lives on&quot;"></i><i class="m-p" title="Cleanup actions: partly. &quot;nothing happens until you review the list and commit&quot;"></i></span></td><td data-k="Stars"><span class="s">4.1k</span><small class="w">+94</small></td>
+      <td data-k="Covers"><span class="fit"><b>81%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Visualize disk usage: yes. &quot;It draws every directory as a nested mosaic&quot;"></i><i class="m-y core" title="Find large files and folders: yes. &quot;Find what is filling a disk&quot;"></i><i class="m-n" title="Usage by file type: not shown"></i><i class="m-y" title="Delete files from the view: yes. &quot;mark what should go, and remove it&quot;"></i><i class="m-y" title="Scan drives and folders: yes. &quot;the whole disk it lives on&quot;"></i><i class="m-p" title="Cleanup actions: partly. &quot;nothing happens until you review the list and commit&quot;"></i></span></td><td data-k="Stars"><span class="s">4.1k</span><small class="w">+114</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>132</div></td>
       <td data-k="Last release">38 days ago</td><td data-k="Issues closed"><span class="lvl-ok"><i class="dot"></i>34%</span></td>
       <td data-k="Form">Desktop app</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

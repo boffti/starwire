@@ -102,7 +102,7 @@
       <td data-k="Form">Desktop app</td>
       <td data-k="License">Custom license</td></tr><tr>
       <th scope="row"><a class="alt-name" href="?page=xtool-org%2Fxtool"><img src="https://avatars.githubusercontent.com/u/210473630?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>xtool</b><small>Builds and deploys Swift iOS apps with SwiftPM on Linux and Windows</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>28%</b><small>Same job, different way</small></span><span class="fit-dots"><i class="m-y core" title="Build and run iOS and macOS apps: yes. &quot;Build a SwiftPM package into an iOS app&quot;"></i><i class="m-n core" title="Code editor for Swift and Objective-C: not shown"></i><i class="m-n core" title="Simulators for Apple devices: not shown"></i><i class="m-n" title="Interface design and SwiftUI previews: not shown"></i><i class="m-n" title="Debugger and performance tools: not shown"></i><i class="m-p" title="Signing and App Store upload: partly. &quot;Sign and install iOS apps&quot;"></i></span></td><td data-k="Stars"><span class="s">15k</span><small class="w">+510</small></td>
+      <td data-k="Covers"><span class="fit"><b>28%</b><small>Same job, different way</small></span><span class="fit-dots"><i class="m-y core" title="Build and run iOS and macOS apps: yes. &quot;Build a SwiftPM package into an iOS app&quot;"></i><i class="m-n core" title="Code editor for Swift and Objective-C: not shown"></i><i class="m-n core" title="Simulators for Apple devices: not shown"></i><i class="m-n" title="Interface design and SwiftUI previews: not shown"></i><i class="m-n" title="Debugger and performance tools: not shown"></i><i class="m-p" title="Signing and App Store upload: partly. &quot;Sign and install iOS apps&quot;"></i></span></td><td data-k="Stars"><span class="s">15k</span><small class="w">+537</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>78</div></td>
       <td data-k="Last release">16 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>69%</span></td>
       <td data-k="Form">Command-line tool</td>
@@ -195,8 +195,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

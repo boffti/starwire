@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=mozilla-ai%2Fotari"><img src="https://avatars.githubusercontent.com/u/129804596?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>otari</b><small>Self-run AI gateway with one endpoint for 40+ providers, keys and budgets</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>94%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="One API for many LLM providers: yes. &quot;One OpenAI and Anthropic-compatible endpoint for many providers&quot;"></i><i class="m-y core" title="Self-hosted LLM gateway: yes. &quot;Run Otari with your own database and provider keys.&quot;"></i><i class="m-y" title="Virtual keys and budgets: yes. &quot;issue virtual keys, enforce budgets&quot;"></i><i class="m-y" title="Cost and usage tracking: yes. &quot;Cost, tokens and requests by model, person or API key&quot;"></i><i class="m-y" title="Fallbacks, retries and load balancing: yes. &quot;Local routing policies for failover, conditional selection, traffic splitting&quot;"></i><i class="m-p" title="Logging and observability hooks: partly. &quot;Every request with its tokens, cost and errors.&quot;"></i></span></td><td data-k="Stars"><span class="s">921</span><small class="w">+73</small></td>
+      <td data-k="Covers"><span class="fit"><b>94%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="One API for many LLM providers: yes. &quot;One OpenAI and Anthropic-compatible endpoint for many providers&quot;"></i><i class="m-y core" title="Self-hosted LLM gateway: yes. &quot;Run Otari with your own database and provider keys.&quot;"></i><i class="m-y" title="Virtual keys and budgets: yes. &quot;issue virtual keys, enforce budgets&quot;"></i><i class="m-y" title="Cost and usage tracking: yes. &quot;Cost, tokens and requests by model, person or API key&quot;"></i><i class="m-y" title="Fallbacks, retries and load balancing: yes. &quot;Local routing policies for failover, conditional selection, traffic splitting&quot;"></i><i class="m-p" title="Logging and observability hooks: partly. &quot;Every request with its tokens, cost and errors.&quot;"></i></span></td><td data-k="Stars"><span class="s">924</span><small class="w">+76</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>1,817</div></td>
       <td data-k="Last release">today</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>80%</span></td>
       <td data-k="Form">Self-hostable service</td>
@@ -189,8 +189,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

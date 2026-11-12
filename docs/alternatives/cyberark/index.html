@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=jumpserver%2Fjumpserver"><img src="https://avatars.githubusercontent.com/u/6006570?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>jumpserver</b><small>Privileged access management platform for SSH, RDP, Kubernetes and database access</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>89%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Privileged account vault: yes. &quot;Encrypted credential vault&quot;"></i><i class="m-y core" title="Controlled access to servers and databases: yes. &quot;secure access to SSH, RDP, Kubernetes, databases, websites&quot;"></i><i class="m-y" title="Session recording and audit: yes. &quot;Full session video recording &amp; playback&quot;"></i><i class="m-y" title="Credential rotation: yes. &quot;Automated password rotation &amp; policy&quot;"></i><i class="m-y" title="Just-in-time access: yes. &quot;Just-in-time access with time-boxed approval&quot;"></i><i class="m-n" title="Secrets for apps and pipelines: not shown"></i><i class="m-y" title="Compliance reporting: yes. &quot;Compliance-ready audit reports&quot;"></i></span></td><td data-k="Stars"><span class="s">32k</span><small class="w">+36</small></td>
+      <td data-k="Covers"><span class="fit"><b>89%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Privileged account vault: yes. &quot;Encrypted credential vault&quot;"></i><i class="m-y core" title="Controlled access to servers and databases: yes. &quot;secure access to SSH, RDP, Kubernetes, databases, websites&quot;"></i><i class="m-y" title="Session recording and audit: yes. &quot;Full session video recording &amp; playback&quot;"></i><i class="m-y" title="Credential rotation: yes. &quot;Automated password rotation &amp; policy&quot;"></i><i class="m-y" title="Just-in-time access: yes. &quot;Just-in-time access with time-boxed approval&quot;"></i><i class="m-n" title="Secrets for apps and pipelines: not shown"></i><i class="m-y" title="Compliance reporting: yes. &quot;Compliance-ready audit reports&quot;"></i></span></td><td data-k="Stars"><span class="s">32k</span><small class="w">+40</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>535</div></td>
       <td data-k="Last release">22 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>100%</span></td>
       <td data-k="Form">Self-hostable service</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=KatrielMoses%2Fvoidaccess"><img src="https://avatars.githubusercontent.com/u/62929744?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>voidaccess</b><small>Self-hosted dark web OSINT platform that builds threat intel graphs from queries</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>79%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-y core" title="Search dark web content: yes. &quot;12+ Tor search engines and curated `.onion` seeds&quot;"></i><i class="m-p core" title="Dark web monitoring and alerts: partly. &quot;Is your company on a leak site?&quot;"></i><i class="m-y" title="Leaked credential detection: yes. &quot;stealer-log and combo-list entries (masked)&quot;"></i><i class="m-y" title="Historical dark web archive: yes. &quot;Findings from earlier investigations stay in the VoidAccess archive&quot;"></i><i class="m-p" title="API access to dark web data: partly. &quot;full stack (PostgreSQL, Tor, API and web UI)&quot;"></i></span></td><td data-k="Stars"><span class="s">1.1k</span><small class="w">+64</small></td>
+      <td data-k="Covers"><span class="fit"><b>79%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-y core" title="Search dark web content: yes. &quot;12+ Tor search engines and curated `.onion` seeds&quot;"></i><i class="m-p core" title="Dark web monitoring and alerts: partly. &quot;Is your company on a leak site?&quot;"></i><i class="m-y" title="Leaked credential detection: yes. &quot;stealer-log and combo-list entries (masked)&quot;"></i><i class="m-y" title="Historical dark web archive: yes. &quot;Findings from earlier investigations stay in the VoidAccess archive&quot;"></i><i class="m-p" title="API access to dark web data: partly. &quot;full stack (PostgreSQL, Tor, API and web UI)&quot;"></i></span></td><td data-k="Stars"><span class="s">1.1k</span><small class="w">+66</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>78</div></td>
       <td data-k="Last release">24 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>100%</span></td>
       <td data-k="Form">Self-hostable service</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

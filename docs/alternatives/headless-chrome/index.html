@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=lightpanda-io%2Fbrowser"><img src="https://avatars.githubusercontent.com/u/145980012?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>browser</b><small>Headless browser in Zig that speaks the Chrome DevTools protocol</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>86%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Browser automation: yes. &quot;The headless browser built from scratch for AI agents and automation.&quot;"></i><i class="m-y core" title="Web scraping: yes. &quot;A fast, lightweight browser engine for automation, crawling&quot;"></i><i class="m-p" title="Automated testing: partly. &quot;Your automation client (Puppeteer, Playwright, etc.)&quot;"></i><i class="m-p" title="Screenshots and PDFs of pages: partly. &quot;`--dump pdf &gt; page.pdf` for a text-only rendering&quot;"></i><i class="m-y" title="DevTools protocol control: yes. &quot;Start a CDP server&quot;"></i></span></td><td data-k="Stars"><span class="s">42k</span><small class="w">+491</small></td>
+      <td data-k="Covers"><span class="fit"><b>86%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Browser automation: yes. &quot;The headless browser built from scratch for AI agents and automation.&quot;"></i><i class="m-y core" title="Web scraping: yes. &quot;A fast, lightweight browser engine for automation, crawling&quot;"></i><i class="m-p" title="Automated testing: partly. &quot;Your automation client (Puppeteer, Playwright, etc.)&quot;"></i><i class="m-p" title="Screenshots and PDFs of pages: partly. &quot;`--dump pdf &gt; page.pdf` for a text-only rendering&quot;"></i><i class="m-y" title="DevTools protocol control: yes. &quot;Start a CDP server&quot;"></i></span></td><td data-k="Stars"><span class="s">42k</span><small class="w">+523</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>3,258</div></td>
       <td data-k="Last release">6 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>100%</span></td>
       <td data-k="Form">Command-line tool</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

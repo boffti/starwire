@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=kitao%2Fpyxel"><img src="https://avatars.githubusercontent.com/u/678802?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>pyxel</b><small>Retro game engine for making pixel-art games in Python</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>29%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-y core" title="Make small retro games: yes. &quot;A retro game engine for Python&quot;"></i><i class="m-n core" title="Built-in code, sprite, map and sound editors: not shown"></i><i class="m-n" title="Play and share games: not shown"></i><i class="m-n" title="Export to web and desktop: not shown"></i><i class="m-n" title="Lua scripting: not shown"></i></span></td><td data-k="Stars"><span class="s">19k</span><small class="w">+78</small></td>
+      <td data-k="Covers"><span class="fit"><b>29%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-y core" title="Make small retro games: yes. &quot;A retro game engine for Python&quot;"></i><i class="m-n core" title="Built-in code, sprite, map and sound editors: not shown"></i><i class="m-n" title="Play and share games: not shown"></i><i class="m-n" title="Export to web and desktop: not shown"></i><i class="m-n" title="Lua scripting: not shown"></i></span></td><td data-k="Stars"><span class="s">19k</span><small class="w">+80</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>109</div></td>
       <td data-k="Last release">yesterday</td><td data-k="Issues closed">Too few</td>
       <td data-k="Form">Library or framework</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

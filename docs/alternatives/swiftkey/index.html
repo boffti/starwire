@@ -91,7 +91,7 @@
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=AnySoftKeyboard%2FAnySoftKeyboard"><img src="https://avatars.githubusercontent.com/u/1655410?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>AnySoftKeyboard</b><small>Offline on-screen keyboard for Android with support for many languages</small></span></a></th>
       <td data-k="Covers"><span class="fit"><b>83%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="On-screen typing: yes. &quot;on screen keyboard for multiple languages&quot;"></i><i class="m-y core" title="Predictive text that learns from you: yes. &quot;Word suggestions, and Next-Word suggestions&quot;"></i><i class="m-y" title="Swipe typing: yes. &quot;Gesture typing.&quot;"></i><i class="m-y" title="Multiple languages at once: yes. &quot;get suggestions for German and Russian&quot;"></i><i class="m-y" title="Themes: yes. &quot;Theme add-ons in this repo&quot;"></i><i class="m-p" title="Emoji and GIFs: partly. &quot;Plenty of emojis&quot;"></i><i class="m-n" title="Clipboard: not shown"></i></span></td><td data-k="Stars"><span class="s">3.4k</span></td>
-      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>207</div></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>209</div></td>
       <td data-k="Last release">2 months ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>66%</span></td>
       <td data-k="Form">Mobile app</td>
       <td data-k="License">Apache-2.0</td></tr></tbody></table></div>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

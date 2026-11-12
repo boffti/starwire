@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=OpenHands%2FOpenHands"><img src="https://avatars.githubusercontent.com/u/225919603?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>OpenHands</b><small>Agent platform that writes and runs code from natural language tasks</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>94%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Complete coding tasks from plain language: yes. &quot;Agent platform that writes and runs code from natural language tasks&quot;"></i><i class="m-y core" title="Run code in its own dev environment: yes. &quot;running agents in Docker containers, on VMs&quot;"></i><i class="m-y" title="Open pull requests: yes. &quot;open a pull request with the remediation&quot;"></i><i class="m-y" title="Slack and ticket integration: yes. &quot;Trigger workflows from GitHub, Slack, Jira, Linear&quot;"></i><i class="m-p" title="Plan and report progress: partly. &quot;generating reports that publish to Slack&quot;"></i><i class="m-y" title="Fix bugs and write tests: yes. &quot;Fix CI failures automatically&quot;"></i></span></td><td data-k="Stars"><span class="s">93k</span><small class="w">+492</small></td>
+      <td data-k="Covers"><span class="fit"><b>94%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Complete coding tasks from plain language: yes. &quot;Agent platform that writes and runs code from natural language tasks&quot;"></i><i class="m-y core" title="Run code in its own dev environment: yes. &quot;running agents in Docker containers, on VMs&quot;"></i><i class="m-y" title="Open pull requests: yes. &quot;open a pull request with the remediation&quot;"></i><i class="m-y" title="Slack and ticket integration: yes. &quot;Trigger workflows from GitHub, Slack, Jira, Linear&quot;"></i><i class="m-p" title="Plan and report progress: partly. &quot;generating reports that publish to Slack&quot;"></i><i class="m-y" title="Fix bugs and write tests: yes. &quot;Fix CI failures automatically&quot;"></i></span></td><td data-k="Stars"><span class="s">93k</span><small class="w">+545</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>999</div></td>
       <td data-k="Last release">today</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>73%</span></td>
       <td data-k="Form">Web app, Self-hostable service</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

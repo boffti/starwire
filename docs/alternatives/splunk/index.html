@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=grafana%2Floki"><img src="https://avatars.githubusercontent.com/u/7195757?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>loki</b><small>Log aggregation system that indexes labels rather than full text</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>72%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-y core" title="Log search and analysis: yes. &quot;Use LogQL to explore&quot;"></i><i class="m-y core" title="Log ingestion from many sources: yes. &quot;send logs in any format, from any source&quot;"></i><i class="m-p" title="Dashboards: partly. &quot;Grafana for querying and displaying the logs.&quot;"></i><i class="m-y" title="Alerts: yes. &quot;Set up alerting rules for Loki&quot;"></i><i class="m-n" title="Security monitoring and SIEM: not shown"></i><i class="m-y" title="Query language: yes. &quot;powerful query language, LogQL&quot;"></i><i class="m-n" title="Reports: not shown"></i></span></td><td data-k="Stars"><span class="s">29k</span><small class="w">+28</small></td>
+      <td data-k="Covers"><span class="fit"><b>72%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-y core" title="Log search and analysis: yes. &quot;Use LogQL to explore&quot;"></i><i class="m-y core" title="Log ingestion from many sources: yes. &quot;send logs in any format, from any source&quot;"></i><i class="m-p" title="Dashboards: partly. &quot;Grafana for querying and displaying the logs.&quot;"></i><i class="m-y" title="Alerts: yes. &quot;Set up alerting rules for Loki&quot;"></i><i class="m-n" title="Security monitoring and SIEM: not shown"></i><i class="m-y" title="Query language: yes. &quot;powerful query language, LogQL&quot;"></i><i class="m-n" title="Reports: not shown"></i></span></td><td data-k="Stars"><span class="s">29k</span><small class="w">+33</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>1,328</div></td>
       <td data-k="Last release">22 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>100%</span></td>
       <td data-k="Form">Self-hostable service</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

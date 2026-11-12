@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=jupyterlite%2Fjupyterlite"><img src="https://avatars.githubusercontent.com/u/81094398?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>jupyterlite</b><small>Jupyter distribution that runs fully in the browser using WebAssembly</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>31%</b><small>Same job, different way</small></span><span class="fit-dots"><i class="m-y core" title="Notebooks in the browser: yes. &quot;runs entirely in the browser&quot;"></i><i class="m-n core" title="Free and paid GPUs and TPUs: not shown"></i><i class="m-p" title="Python with ML libraries preinstalled: partly. &quot;Python kernels running in a Web Worker&quot;"></i><i class="m-n" title="Share notebooks via Drive: not shown"></i><i class="m-n" title="Mount Google Drive for data: not shown"></i><i class="m-n" title="AI code help: not shown"></i></span></td><td data-k="Stars"><span class="s">4.9k</span><small class="w">+1</small></td>
+      <td data-k="Covers"><span class="fit"><b>31%</b><small>Same job, different way</small></span><span class="fit-dots"><i class="m-y core" title="Notebooks in the browser: yes. &quot;runs entirely in the browser&quot;"></i><i class="m-n core" title="Free and paid GPUs and TPUs: not shown"></i><i class="m-p" title="Python with ML libraries preinstalled: partly. &quot;Python kernels running in a Web Worker&quot;"></i><i class="m-n" title="Share notebooks via Drive: not shown"></i><i class="m-n" title="Mount Google Drive for data: not shown"></i><i class="m-n" title="AI code help: not shown"></i></span></td><td data-k="Stars"><span class="s">4.9k</span></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>49</div></td>
       <td data-k="Last release">12 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>100%</span></td>
       <td data-k="Form">Web app</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

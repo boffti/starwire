@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=DuarteSantos8%2FopenGym"><img src="https://avatars.githubusercontent.com/u/171949022?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>openGym</b><small>Workout and body-weight tracker with routines, muscle coverage and data import</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>94%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Log sets, reps and weights: yes. &quot;weights are pre-filled from last time&quot;"></i><i class="m-y core" title="Workout routines: yes. &quot;A routine per weekday&quot;"></i><i class="m-y" title="Exercise library: yes. &quot;over 5,600 exercises&quot;"></i><i class="m-y" title="Progress charts and records: yes. &quot;PRs are detected as you go&quot;"></i><i class="m-y" title="Rest timer: yes. &quot;a rest timer runs between sets&quot;"></i><i class="m-p" title="Body measurements: partly. &quot;Body-weight chart against a goal line&quot;"></i><i class="m-y" title="Export data: yes. &quot;Export everything as one JSON file&quot;"></i></span></td><td data-k="Stars"><span class="s">21k</span><small class="w">+1.2k</small></td>
+      <td data-k="Covers"><span class="fit"><b>94%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Log sets, reps and weights: yes. &quot;weights are pre-filled from last time&quot;"></i><i class="m-y core" title="Workout routines: yes. &quot;A routine per weekday&quot;"></i><i class="m-y" title="Exercise library: yes. &quot;over 5,600 exercises&quot;"></i><i class="m-y" title="Progress charts and records: yes. &quot;PRs are detected as you go&quot;"></i><i class="m-y" title="Rest timer: yes. &quot;a rest timer runs between sets&quot;"></i><i class="m-p" title="Body measurements: partly. &quot;Body-weight chart against a goal line&quot;"></i><i class="m-y" title="Export data: yes. &quot;Export everything as one JSON file&quot;"></i></span></td><td data-k="Stars"><span class="s">21k</span><small class="w">+1.3k</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>2,523</div></td>
       <td data-k="Last release">8 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>65%</span></td>
       <td data-k="Form">Mobile app, Self-hostable service</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

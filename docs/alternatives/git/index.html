@@ -91,7 +91,7 @@
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=xit-vcs%2Fxit"><img src="https://avatars.githubusercontent.com/u/258866700?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>xit</b><small>Version control system written in Zig, positioned as a Git alternative</small></span></a></th>
       <td data-k="Covers"><span class="fit"><b>78%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Track file history with commits: yes. &quot;commit create a new commit.&quot;"></i><i class="m-y core" title="Branches and merges: yes. &quot;You can also create branches and perform merges&quot;"></i><i class="m-y" title="Clone and sync remote repositories: yes. &quot;You can clone, fetch, and push with git remotes&quot;"></i><i class="m-p" title="Diffs and blame: partly. &quot;diff show changes between the last commit&quot;"></i><i class="m-p" title="Rebase and history editing: partly. &quot;cherry-pick apply the changes introduced by an existing commit.&quot;"></i><i class="m-y" title="Tags and releases: yes. &quot;tag add, remove, and list tags.&quot;"></i><i class="m-n" title="Works offline: not shown"></i></span></td><td data-k="Stars"><span class="s">743</span><small class="w">+3</small></td>
-      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>149</div></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>150</div></td>
       <td data-k="Last release">None</td><td data-k="Issues closed">Too few</td>
       <td data-k="Form">Command-line tool</td>
       <td data-k="License">MIT</td></tr></tbody></table></div>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

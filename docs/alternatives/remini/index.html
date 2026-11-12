@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=Nutlope%2FrestorePhotos"><img src="https://avatars.githubusercontent.com/u/63742054?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>restorePhotos</b><small>Web app that restores old and blurry face photos using AI</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>50%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-y core" title="Restore old and blurry photos: yes. &quot;Have old and blurry face photos? Let our AI restore them&quot;"></i><i class="m-y core" title="Enhance faces in photos: yes. &quot;restores old face photos using AI&quot;"></i><i class="m-n" title="Upscale low-res images: not shown"></i><i class="m-n" title="Colorize black and white photos: not shown"></i><i class="m-n" title="AI portraits and avatars: not shown"></i><i class="m-n" title="Video enhancement: not shown"></i></span></td><td data-k="Stars"><span class="s">4.4k</span><small class="w">+2</small></td>
+      <td data-k="Covers"><span class="fit"><b>50%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-y core" title="Restore old and blurry photos: yes. &quot;Have old and blurry face photos? Let our AI restore them&quot;"></i><i class="m-y core" title="Enhance faces in photos: yes. &quot;restores old face photos using AI&quot;"></i><i class="m-n" title="Upscale low-res images: not shown"></i><i class="m-n" title="Colorize black and white photos: not shown"></i><i class="m-n" title="AI portraits and avatars: not shown"></i><i class="m-n" title="Video enhancement: not shown"></i></span></td><td data-k="Stars"><span class="s">4.4k</span></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:0rem"></span>0</div></td>
       <td data-k="Last release">None</td><td data-k="Issues closed">Too few</td>
       <td data-k="Form">Web app</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

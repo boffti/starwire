@@ -90,13 +90,13 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=pascalorg%2Feditor"><img src="https://avatars.githubusercontent.com/u/214160140?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>editor</b><small>3D architectural and floor plan editor with a CLI and MCP tools</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>81%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-p core" title="Quick 3D modeling with push and pull: partly. &quot;Build with SDF/CSG shapes that blend, merge, and carve naturally.&quot;"></i><i class="m-y core" title="Architectural and interior models: yes. &quot;Model sites, buildings, levels, walls, slabs, roofs, openings, rooms, and furniture&quot;"></i><i class="m-y" title="Floor plans and layout drawings: yes. &quot;trace a floor plan set to its real scale&quot;"></i><i class="m-y" title="3D Warehouse of ready models: yes. &quot;Asset library Thousands of ready-made 3D objects.&quot;"></i><i class="m-p" title="Extensions and plugins: partly. &quot;embed them, extend them, or let AI agents drive them&quot;"></i><i class="m-y" title="Rendering and presentation: yes. &quot;The most eye-catching renders use these.&quot;"></i></span></td><td data-k="Stars"><span class="s">25k</span><small class="w">+101</small></td>
+      <td data-k="Covers"><span class="fit"><b>81%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-p core" title="Quick 3D modeling with push and pull: partly. &quot;Build with SDF/CSG shapes that blend, merge, and carve naturally.&quot;"></i><i class="m-y core" title="Architectural and interior models: yes. &quot;Model sites, buildings, levels, walls, slabs, roofs, openings, rooms, and furniture&quot;"></i><i class="m-y" title="Floor plans and layout drawings: yes. &quot;trace a floor plan set to its real scale&quot;"></i><i class="m-y" title="3D Warehouse of ready models: yes. &quot;Asset library Thousands of ready-made 3D objects.&quot;"></i><i class="m-p" title="Extensions and plugins: partly. &quot;embed them, extend them, or let AI agents drive them&quot;"></i><i class="m-y" title="Rendering and presentation: yes. &quot;The most eye-catching renders use these.&quot;"></i></span></td><td data-k="Stars"><span class="s">25k</span><small class="w">+109</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>860</div></td>
       <td data-k="Last release">today</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>97%</span></td>
       <td data-k="Form">Web app</td>
       <td data-k="License">MIT</td></tr><tr>
       <th scope="row"><a class="alt-name" href="?page=BenchUp3D%2Feditor"><img src="https://avatars.githubusercontent.com/u/354285524?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>editor</b><small>3D woodworking and modeling editor in Rust and WebGPU, a SketchUp alternative</small></span></a></th>
-      <td data-k="Covers"><span class="muted">Not checked yet</span></td><td data-k="Stars"><span class="s">784</span><small class="w">+244</small></td>
+      <td data-k="Covers"><span class="muted">Not checked yet</span></td><td data-k="Stars"><span class="s">804</span><small class="w">+270</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:1.9209302325581397rem"></span>236</div></td>
       <td data-k="Last release">today</td><td data-k="Issues closed"><span class="lvl-ok"><i class="dot"></i>50%</span></td>
       <td data-k="Form">Web app, Desktop app</td>
@@ -189,8 +189,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=Yalton%2FWeltbon"><img src="https://avatars.githubusercontent.com/u/73573710?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>Weltbon</b><small>Self-hosted worldbuilding wiki with linked entries and a graph view</small></span></a></th>
-      <td data-k="Stars"><span class="s">15</span><small class="w">+6</small></td>
+      <td data-k="Stars"><span class="s">19</span><small class="w">+11</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>458</div></td>
       <td data-k="Last release">11 days ago</td><td data-k="Issues closed">Too few</td>
       <td data-k="Form">Self-hostable service</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

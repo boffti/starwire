@@ -90,8 +90,8 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=zerobrewhq%2Fzerobrew"><img src="https://avatars.githubusercontent.com/u/336332407?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>zerobrew</b><small>Alternative Homebrew client written in Rust that aims to be much faster</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>72%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Install command-line tools: yes. &quot;zb install jq&quot;"></i><i class="m-y core" title="Keep packages updated: yes. &quot;upgrade all outdated packages&quot;"></i><i class="m-n" title="Install Mac apps with casks: not shown"></i><i class="m-y" title="Uninstall and cleanup: yes. &quot;uninstall one package&quot;"></i><i class="m-n" title="Third-party taps: not shown"></i><i class="m-y" title="Brewfile for setups: yes. &quot;install from Brewfile&quot;"></i><i class="m-p" title="Dependency management: partly. &quot;the package and all of its dependencies&quot;"></i></span></td><td data-k="Stars"><span class="s">8.3k</span><small class="w">+13</small></td>
-      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>170</div></td>
+      <td data-k="Covers"><span class="fit"><b>72%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Install command-line tools: yes. &quot;zb install jq&quot;"></i><i class="m-y core" title="Keep packages updated: yes. &quot;upgrade all outdated packages&quot;"></i><i class="m-n" title="Install Mac apps with casks: not shown"></i><i class="m-y" title="Uninstall and cleanup: yes. &quot;uninstall one package&quot;"></i><i class="m-n" title="Third-party taps: not shown"></i><i class="m-y" title="Brewfile for setups: yes. &quot;install from Brewfile&quot;"></i><i class="m-p" title="Dependency management: partly. &quot;the package and all of its dependencies&quot;"></i></span></td><td data-k="Stars"><span class="s">8.3k</span><small class="w">+12</small></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>168</div></td>
       <td data-k="Last release">21 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>100%</span></td>
       <td data-k="Form">Command-line tool</td>
       <td data-k="License">Apache-2.0</td></tr></tbody></table></div>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

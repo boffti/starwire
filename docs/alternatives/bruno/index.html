@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=jtaoufik%2Ftiger"><img src="https://avatars.githubusercontent.com/u/24681249?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>tiger</b><small>Git-native API client with plain-text collections, offline use and built-in MCP</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>90%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Send HTTP requests and read responses: yes. &quot;testing REST, GraphQL and SOAP APIs&quot;"></i><i class="m-y core" title="Collections stored as plain files: yes. &quot;One `.tiger` text file per request.&quot;"></i><i class="m-y core" title="Git-friendly versioning: yes. &quot;Diff, branch and review them like code.&quot;"></i><i class="m-y" title="Environments and variables: yes. &quot;Environments and secrets with masked secret variables.&quot;"></i><i class="m-y" title="Scripts and assertions: yes. &quot;assertions that show pass or fail&quot;"></i><i class="m-n" title="Run collections from the command line: not shown"></i><i class="m-y" title="Import from Postman and OpenAPI: yes. &quot;Import Postman v2.0/v2.1 collections, environments and globals&quot;"></i></span></td><td data-k="Stars"><span class="s">106</span><small class="w">+1</small></td>
+      <td data-k="Covers"><span class="fit"><b>90%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Send HTTP requests and read responses: yes. &quot;testing REST, GraphQL and SOAP APIs&quot;"></i><i class="m-y core" title="Collections stored as plain files: yes. &quot;One `.tiger` text file per request.&quot;"></i><i class="m-y core" title="Git-friendly versioning: yes. &quot;Diff, branch and review them like code.&quot;"></i><i class="m-y" title="Environments and variables: yes. &quot;Environments and secrets with masked secret variables.&quot;"></i><i class="m-y" title="Scripts and assertions: yes. &quot;assertions that show pass or fail&quot;"></i><i class="m-n" title="Run collections from the command line: not shown"></i><i class="m-y" title="Import from Postman and OpenAPI: yes. &quot;Import Postman v2.0/v2.1 collections, environments and globals&quot;"></i></span></td><td data-k="Stars"><span class="s">107</span><small class="w">+2</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>205</div></td>
       <td data-k="Last release">today</td><td data-k="Issues closed">Too few</td>
       <td data-k="Form">Desktop app</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

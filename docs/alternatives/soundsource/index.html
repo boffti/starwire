@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=ronitsingh10%2FFineTune"><img src="https://avatars.githubusercontent.com/u/70445944?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>FineTune</b><small>macOS menu bar app for per-app volume, output routing and a 10-band EQ</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>93%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Per-app volume control: yes. &quot;Individual sliders and mute for each application&quot;"></i><i class="m-y core" title="Route apps to different outputs: yes. &quot;Send apps to different outputs or follow system default&quot;"></i><i class="m-y" title="Equalizer: yes. &quot;10-band EQ — 20 presets across 5 categories&quot;"></i><i class="m-p" title="Audio effects and plugins: partly. &quot;AutoEQ headphone correction&quot;"></i><i class="m-y" title="Quick output device switching: yes. &quot;Choose which device FineTune switches to when a new device connects&quot;"></i></span></td><td data-k="Stars"><span class="s">10k</span><small class="w">+79</small></td>
+      <td data-k="Covers"><span class="fit"><b>93%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Per-app volume control: yes. &quot;Individual sliders and mute for each application&quot;"></i><i class="m-y core" title="Route apps to different outputs: yes. &quot;Send apps to different outputs or follow system default&quot;"></i><i class="m-y" title="Equalizer: yes. &quot;10-band EQ — 20 presets across 5 categories&quot;"></i><i class="m-p" title="Audio effects and plugins: partly. &quot;AutoEQ headphone correction&quot;"></i><i class="m-y" title="Quick output device switching: yes. &quot;Choose which device FineTune switches to when a new device connects&quot;"></i></span></td><td data-k="Stars"><span class="s">10k</span><small class="w">+81</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:0rem"></span>0</div></td>
       <td data-k="Last release">4 months ago</td><td data-k="Issues closed"><span class="lvl-low"><i class="dot"></i>5%</span></td>
       <td data-k="Form">Desktop app</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

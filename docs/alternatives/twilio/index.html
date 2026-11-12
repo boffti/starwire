@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=NdoleStudio%2Fhttpsms"><img src="https://avatars.githubusercontent.com/u/13936519?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>httpsms</b><small>Sends and receives SMS through an Android phone using an HTTP API</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>38%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-y core" title="Send and receive SMS from code: yes. &quot;use your Android phone as an SMS Gateway&quot;"></i><i class="m-n core" title="Voice calls and phone numbers: not shown"></i><i class="m-n" title="WhatsApp and chat messaging: not shown"></i><i class="m-n" title="Verification codes and two-factor login: not shown"></i><i class="m-n" title="Email sending: not shown"></i><i class="m-y" title="Webhooks for incoming messages: yes. &quot;forward SMS messages received on the android phone to your server&quot;"></i></span></td><td data-k="Stars"><span class="s">6.3k</span><small class="w">+45</small></td>
+      <td data-k="Covers"><span class="fit"><b>38%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-y core" title="Send and receive SMS from code: yes. &quot;use your Android phone as an SMS Gateway&quot;"></i><i class="m-n core" title="Voice calls and phone numbers: not shown"></i><i class="m-n" title="WhatsApp and chat messaging: not shown"></i><i class="m-n" title="Verification codes and two-factor login: not shown"></i><i class="m-n" title="Email sending: not shown"></i><i class="m-y" title="Webhooks for incoming messages: yes. &quot;forward SMS messages received on the android phone to your server&quot;"></i></span></td><td data-k="Stars"><span class="s">6.3k</span><small class="w">+47</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>200</div></td>
       <td data-k="Last release">3 months ago</td><td data-k="Issues closed">Too few</td>
       <td data-k="Form">Self-hostable service, Web app</td>
@@ -189,8 +189,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

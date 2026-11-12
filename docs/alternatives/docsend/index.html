@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=papermark%2Fpapermark"><img src="https://avatars.githubusercontent.com/u/145220958?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>papermark</b><small>Open-source document sharing with analytics, data rooms and custom domains</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>94%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Share documents via tracked links: yes. &quot;Share your documents securely by sending a custom link.&quot;"></i><i class="m-y core" title="Page-by-page view analytics: yes. &quot;Time spent per page&quot;"></i><i class="m-y" title="Access controls and email gating: yes. &quot;granular permissions, dynamic watermarking, NDA gating&quot;"></i><i class="m-y" title="Virtual data rooms: yes. &quot;secure data rooms with built-in analytics&quot;"></i><i class="m-p" title="Revoke or update shared docs: partly. &quot;Version 2 Version 1&quot;"></i><i class="m-y" title="Custom domains and branding: yes. &quot;Add a custom domain and your own branding.&quot;"></i></span></td><td data-k="Stars"><span class="s">9.3k</span><small class="w">+39</small></td>
+      <td data-k="Covers"><span class="fit"><b>94%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Share documents via tracked links: yes. &quot;Share your documents securely by sending a custom link.&quot;"></i><i class="m-y core" title="Page-by-page view analytics: yes. &quot;Time spent per page&quot;"></i><i class="m-y" title="Access controls and email gating: yes. &quot;granular permissions, dynamic watermarking, NDA gating&quot;"></i><i class="m-y" title="Virtual data rooms: yes. &quot;secure data rooms with built-in analytics&quot;"></i><i class="m-p" title="Revoke or update shared docs: partly. &quot;Version 2 Version 1&quot;"></i><i class="m-y" title="Custom domains and branding: yes. &quot;Add a custom domain and your own branding.&quot;"></i></span></td><td data-k="Stars"><span class="s">9.3k</span><small class="w">+47</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>11</div></td>
       <td data-k="Last release">11 months ago</td><td data-k="Issues closed">Too few</td>
       <td data-k="Form">Self-hostable service, Web app</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

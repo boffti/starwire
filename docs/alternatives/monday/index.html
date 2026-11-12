@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=makeplane%2Fplane"><img src="https://avatars.githubusercontent.com/u/115727700?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>plane</b><small>Open source project management with tasks, sprints, docs and triage</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>88%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Task and project boards: yes. &quot;Plan projects, assign work items, and track progress across teams.&quot;"></i><i class="m-y core" title="Team workflows: yes. &quot;Define workflows that match how your team actually works&quot;"></i><i class="m-p" title="Automations: partly. &quot;ship updates automatically&quot;"></i><i class="m-y" title="Dashboards: yes. &quot;real-time dashboards&quot;"></i><i class="m-p" title="Kanban, Gantt and calendar views: partly. &quot;Board, Spreadsheet, List, Gantt. Switch instantly.&quot;"></i><i class="m-y" title="Integrations: yes. &quot;Connect to Slack, GitHub, Figma, and 50+ tools&quot;"></i></span></td><td data-k="Stars"><span class="s">62k</span><small class="w">+276</small></td>
+      <td data-k="Covers"><span class="fit"><b>88%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Task and project boards: yes. &quot;Plan projects, assign work items, and track progress across teams.&quot;"></i><i class="m-y core" title="Team workflows: yes. &quot;Define workflows that match how your team actually works&quot;"></i><i class="m-p" title="Automations: partly. &quot;ship updates automatically&quot;"></i><i class="m-y" title="Dashboards: yes. &quot;real-time dashboards&quot;"></i><i class="m-p" title="Kanban, Gantt and calendar views: partly. &quot;Board, Spreadsheet, List, Gantt. Switch instantly.&quot;"></i><i class="m-y" title="Integrations: yes. &quot;Connect to Slack, GitHub, Figma, and 50+ tools&quot;"></i></span></td><td data-k="Stars"><span class="s">62k</span><small class="w">+304</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>215</div></td>
       <td data-k="Last release">14 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>100%</span></td>
       <td data-k="Form">Self-hostable service, Web app</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

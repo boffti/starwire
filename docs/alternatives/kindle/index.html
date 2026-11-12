@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=readest%2Freadest"><img src="https://avatars.githubusercontent.com/u/190965649?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>readest</b><small>Cross-platform ebook reader for EPUB files with a modern interface</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>75%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-y core" title="Read ebooks: yes. &quot;open-source ebook reader designed for immersive and deep reading&quot;"></i><i class="m-p core" title="Buy and download books: partly. &quot;Integrate OPDS/Calibre to access online libraries and catalogs&quot;"></i><i class="m-y" title="Sync reading position across devices: yes. &quot;Synchronize book files, reading progress, notes, and bookmarks&quot;"></i><i class="m-y" title="Highlights and notes: yes. &quot;Add highlights, bookmarks, and notes&quot;"></i><i class="m-y" title="Dictionary lookup: yes. &quot;Look up words with built-in sources&quot;"></i><i class="m-n" title="Send documents to read: not shown"></i></span></td><td data-k="Stars"><span class="s">26k</span><small class="w">+216</small></td>
+      <td data-k="Covers"><span class="fit"><b>75%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-y core" title="Read ebooks: yes. &quot;open-source ebook reader designed for immersive and deep reading&quot;"></i><i class="m-p core" title="Buy and download books: partly. &quot;Integrate OPDS/Calibre to access online libraries and catalogs&quot;"></i><i class="m-y" title="Sync reading position across devices: yes. &quot;Synchronize book files, reading progress, notes, and bookmarks&quot;"></i><i class="m-y" title="Highlights and notes: yes. &quot;Add highlights, bookmarks, and notes&quot;"></i><i class="m-y" title="Dictionary lookup: yes. &quot;Look up words with built-in sources&quot;"></i><i class="m-n" title="Send documents to read: not shown"></i></span></td><td data-k="Stars"><span class="s">26k</span><small class="w">+235</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>814</div></td>
       <td data-k="Last release">6 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>96%</span></td>
       <td data-k="Form">Desktop app, Mobile app</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

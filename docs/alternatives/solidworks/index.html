@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=tangency-labs%2Fsolidcraft"><img src="https://avatars.githubusercontent.com/u/343519248?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>solidcraft</b><small>Parametric 3D CAD app in Rust with desktop, web and MCP automation</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>72%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Parametric 3D part modeling: yes. &quot;parametric 3D CAD application built in pure Rust&quot;"></i><i class="m-y core" title="Assemblies of parts: yes. &quot;Assemblies** with joints, motion studies&quot;"></i><i class="m-n" title="2D engineering drawings: not shown"></i><i class="m-p" title="Simulation and stress analysis: partly. &quot;contact sets, interference and mass properties&quot;"></i><i class="m-y" title="Sheet metal design: yes. &quot;Sheet metal** with flanges, hems, fold/unfold and flat patterns&quot;"></i><i class="m-y" title="Export for manufacturing: yes. &quot;STEP, IGES, 3MF, STL, OBJ and glTF in and out&quot;"></i><i class="m-n" title="Parts libraries: not shown"></i></span></td><td data-k="Stars"><span class="s">16k</span><small class="w">+1.6k</small></td>
+      <td data-k="Covers"><span class="fit"><b>72%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Parametric 3D part modeling: yes. &quot;parametric 3D CAD application built in pure Rust&quot;"></i><i class="m-y core" title="Assemblies of parts: yes. &quot;Assemblies** with joints, motion studies&quot;"></i><i class="m-n" title="2D engineering drawings: not shown"></i><i class="m-p" title="Simulation and stress analysis: partly. &quot;contact sets, interference and mass properties&quot;"></i><i class="m-y" title="Sheet metal design: yes. &quot;Sheet metal** with flanges, hems, fold/unfold and flat patterns&quot;"></i><i class="m-y" title="Export for manufacturing: yes. &quot;STEP, IGES, 3MF, STL, OBJ and glTF in and out&quot;"></i><i class="m-n" title="Parts libraries: not shown"></i></span></td><td data-k="Stars"><span class="s">16k</span><small class="w">+1.7k</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>8,369</div></td>
       <td data-k="Last release">9 days ago</td><td data-k="Issues closed"><span class="lvl-ok"><i class="dot"></i>36%</span></td>
       <td data-k="Form">Desktop app, Web app</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

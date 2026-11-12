@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=GabrieleLozupone%2Fkokon"><img src="https://avatars.githubusercontent.com/u/54721912?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>kokon</b><small>Describe a photo edit and run it on your own GPU, with an MCP server</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>86%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Edit images with text prompts: yes. &quot;Edit photos by describing the change&quot;"></i><i class="m-y core" title="Generate images from prompts: yes. &quot;about 36 s for a new image at native 2K&quot;"></i><i class="m-n" title="Keep characters consistent across images: not shown"></i><i class="m-y" title="Blend multiple images: yes. &quot;generate the kitchen, combine the two&quot;"></i><i class="m-y" title="Style changes: yes. &quot;Turn it into a hand-painted watercolor illustration&quot;"></i></span></td><td data-k="Stars"><span class="s">334</span><small class="w">+45</small></td>
+      <td data-k="Covers"><span class="fit"><b>86%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Edit images with text prompts: yes. &quot;Edit photos by describing the change&quot;"></i><i class="m-y core" title="Generate images from prompts: yes. &quot;about 36 s for a new image at native 2K&quot;"></i><i class="m-n" title="Keep characters consistent across images: not shown"></i><i class="m-y" title="Blend multiple images: yes. &quot;generate the kitchen, combine the two&quot;"></i><i class="m-y" title="Style changes: yes. &quot;Turn it into a hand-painted watercolor illustration&quot;"></i></span></td><td data-k="Stars"><span class="s">335</span><small class="w">+46</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>443</div></td>
       <td data-k="Last release">7 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>69%</span></td>
       <td data-k="Form">Desktop app, MCP server</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

@@ -90,9 +90,9 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=1Panel-dev%2F1Panel"><img src="https://avatars.githubusercontent.com/u/109613420?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>1Panel</b><small>Web control panel for Linux servers, Docker and AI model deployments</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>82%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Host websites and manage domains: yes. &quot;one-click domain binding and SSL certificate configuration&quot;"></i><i class="m-y core" title="Create and manage databases: yes. &quot;database management&quot;"></i><i class="m-p core" title="Email accounts and mail settings: partly. &quot;邮件服务 (4)&quot;"></i><i class="m-y" title="File manager and FTP accounts: yes. &quot;file management&quot;"></i><i class="m-y" title="SSL certificates: yes. &quot;SSL certificate configuration&quot;"></i><i class="m-y" title="Backups and restores: yes. &quot;Supports one-click backup and restoration&quot;"></i><i class="m-y" title="One-click app installs like WordPress: yes. &quot;Deeply integrates with popular website builders like WordPress&quot;"></i><i class="m-n" title="DNS zone editing: not shown"></i></span></td><td data-k="Stars"><span class="s">37k</span><small class="w">+61</small></td>
-      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:4.3510054844606945rem"></span>340</div></td>
-      <td data-k="Last release">12 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>76%</span></td>
+      <td data-k="Covers"><span class="fit"><b>82%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Host websites and manage domains: yes. &quot;one-click domain binding and SSL certificate configuration&quot;"></i><i class="m-y core" title="Create and manage databases: yes. &quot;database management&quot;"></i><i class="m-p core" title="Email accounts and mail settings: partly. &quot;邮件服务 (4)&quot;"></i><i class="m-y" title="File manager and FTP accounts: yes. &quot;file management&quot;"></i><i class="m-y" title="SSL certificates: yes. &quot;SSL certificate configuration&quot;"></i><i class="m-y" title="Backups and restores: yes. &quot;Supports one-click backup and restoration&quot;"></i><i class="m-y" title="One-click app installs like WordPress: yes. &quot;Deeply integrates with popular website builders like WordPress&quot;"></i><i class="m-n" title="DNS zone editing: not shown"></i></span></td><td data-k="Stars"><span class="s">37k</span><small class="w">+67</small></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:4.530164533820841rem"></span>354</div></td>
+      <td data-k="Last release">today</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>85%</span></td>
       <td data-k="Form">Self-hostable service, Web app</td>
       <td data-k="License">GPL-3.0</td></tr><tr>
       <th scope="row"><a class="alt-name" href="?page=aaPanel%2FaaPanel"><img src="https://avatars.githubusercontent.com/u/31841517?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>aaPanel</b><small>Web control panel for hosting LAMP and LNMP stacks with Docker and MySQL</small></span></a></th>
@@ -195,8 +195,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=elie222%2Frakazo"><img src="https://avatars.githubusercontent.com/u/3090527?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>rakazo</b><small>Open source Grok Bot alternative with your choice of model and sandbox</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>63%</b><small>Same job, different way</small></span><span class="fit-dots"><i class="m-y core" title="Chat with an AI assistant: yes. &quot;Persistent AI teammates with their own memory&quot;"></i><i class="m-p core" title="Real-time answers using posts and the web: partly. &quot;Computer and browser use&quot;"></i><i class="m-n" title="Image generation: not shown"></i><i class="m-p" title="Coding help: partly. &quot;Coding Agent Make code changes on your computer.&quot;"></i><i class="m-y" title="Voice mode: yes. &quot;Voice chat and calls&quot;"></i><i class="m-p" title="File and image understanding: partly. &quot;A browser, terminal, files, and a full desktop.&quot;"></i></span></td><td data-k="Stars"><span class="s">8.0k</span><small class="w">+333</small></td>
+      <td data-k="Covers"><span class="fit"><b>63%</b><small>Same job, different way</small></span><span class="fit-dots"><i class="m-y core" title="Chat with an AI assistant: yes. &quot;Persistent AI teammates with their own memory&quot;"></i><i class="m-p core" title="Real-time answers using posts and the web: partly. &quot;Computer and browser use&quot;"></i><i class="m-n" title="Image generation: not shown"></i><i class="m-p" title="Coding help: partly. &quot;Coding Agent Make code changes on your computer.&quot;"></i><i class="m-y" title="Voice mode: yes. &quot;Voice chat and calls&quot;"></i><i class="m-p" title="File and image understanding: partly. &quot;A browser, terminal, files, and a full desktop.&quot;"></i></span></td><td data-k="Stars"><span class="s">8.0k</span><small class="w">+398</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>3,192</div></td>
       <td data-k="Last release">7 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>86%</span></td>
       <td data-k="Form">Desktop app, Mobile app</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=marimo-team%2Fmarimo"><img src="https://avatars.githubusercontent.com/u/98563464?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>marimo</b><small>Reactive Python notebook stored as plain .py files, with SQL and app deployment</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>94%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Run code cell by cell with live output: yes. &quot;run a cell, and marimo reactively runs all dependent cells&quot;"></i><i class="m-y core" title="Inline charts and tables: yes. &quot;Interactive dataframes.&quot;"></i><i class="m-y" title="Markdown notes beside code: yes. &quot;Dynamic markdown.&quot;"></i><i class="m-p" title="Kernels for Python and other languages: partly. &quot;A reactive notebook for Python&quot;"></i><i class="m-y" title="Share or export notebooks: yes. &quot;HTML export&quot;"></i><i class="m-y" title="Interactive widgets: yes. &quot;bind sliders, tables, plots, and more to Python&quot;"></i></span></td><td data-k="Stars"><span class="s">24k</span><small class="w">+75</small></td>
+      <td data-k="Covers"><span class="fit"><b>94%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Run code cell by cell with live output: yes. &quot;run a cell, and marimo reactively runs all dependent cells&quot;"></i><i class="m-y core" title="Inline charts and tables: yes. &quot;Interactive dataframes.&quot;"></i><i class="m-y" title="Markdown notes beside code: yes. &quot;Dynamic markdown.&quot;"></i><i class="m-p" title="Kernels for Python and other languages: partly. &quot;A reactive notebook for Python&quot;"></i><i class="m-y" title="Share or export notebooks: yes. &quot;HTML export&quot;"></i><i class="m-y" title="Interactive widgets: yes. &quot;bind sliders, tables, plots, and more to Python&quot;"></i></span></td><td data-k="Stars"><span class="s">24k</span><small class="w">+80</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>746</div></td>
       <td data-k="Last release">23 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>94%</span></td>
       <td data-k="Form">Web app, Library or framework</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

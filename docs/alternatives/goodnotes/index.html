@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=swimmingbrain%2Fbrainotes"><img src="https://avatars.githubusercontent.com/u/93007893?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>brainotes</b><small>Handwritten notes and whiteboard in the browser, stored locally</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>70%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Handwritten notes with a stylus: yes. &quot;Ballpoint, fountain pen, marker, pencil and highlighter, with pen pressure&quot;"></i><i class="m-y core" title="Annotate PDFs: yes. &quot;Write on a pdf&quot;"></i><i class="m-y" title="Notebooks and folders: yes. &quot;Notebooks on blank, lined, grid or dotted paper&quot;"></i><i class="m-n" title="Search handwriting: not shown"></i><i class="m-p" title="Digital planners and templates: partly. &quot;blank, lined, grid or dotted paper&quot;"></i><i class="m-n" title="Sync across devices: not shown"></i><i class="m-y" title="Shapes and highlighter tools: yes. &quot;Pictures, shapes, text, a lasso, an eraser&quot;"></i><i class="m-p" title="Share and collaborate: partly. &quot;to back up a notebook or share it&quot;"></i></span></td><td data-k="Stars"><span class="s">77</span><small class="w">+3</small></td>
+      <td data-k="Covers"><span class="fit"><b>70%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Handwritten notes with a stylus: yes. &quot;Ballpoint, fountain pen, marker, pencil and highlighter, with pen pressure&quot;"></i><i class="m-y core" title="Annotate PDFs: yes. &quot;Write on a pdf&quot;"></i><i class="m-y" title="Notebooks and folders: yes. &quot;Notebooks on blank, lined, grid or dotted paper&quot;"></i><i class="m-n" title="Search handwriting: not shown"></i><i class="m-p" title="Digital planners and templates: partly. &quot;blank, lined, grid or dotted paper&quot;"></i><i class="m-n" title="Sync across devices: not shown"></i><i class="m-y" title="Shapes and highlighter tools: yes. &quot;Pictures, shapes, text, a lasso, an eraser&quot;"></i><i class="m-p" title="Share and collaborate: partly. &quot;to back up a notebook or share it&quot;"></i></span></td><td data-k="Stars"><span class="s">79</span><small class="w">+5</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>395</div></td>
       <td data-k="Last release">None</td><td data-k="Issues closed">Too few</td>
       <td data-k="Form">Web app</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

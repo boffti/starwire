@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=adityaongit%2Fpulse"><img src="https://avatars.githubusercontent.com/u/74150665?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>pulse</b><small>Self-hosted tracker that scores recovery, strain and sleep from wearable data</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>100%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Recovery score: yes. &quot;Sleep, Recovery and Strain** every morning&quot;"></i><i class="m-y core" title="Sleep tracking and coaching: yes. &quot;Last night’s sleep Your sleep was sufficient&quot;"></i><i class="m-y core" title="Strain and workout tracking: yes. &quot;with a Strain Target for the day&quot;"></i><i class="m-y" title="Heart rate and HRV monitoring: yes. &quot;Heart rate variability 42 55&quot;"></i><i class="m-y" title="Journal of habits and their effects: yes. &quot;answer the questions you pick from fifty behaviours&quot;"></i><i class="m-y" title="Health trends and reports: yes. &quot;**Trends**, **Reports**&quot;"></i></span></td><td data-k="Stars"><span class="s">197</span><small class="w">+13</small></td>
+      <td data-k="Covers"><span class="fit"><b>100%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Recovery score: yes. &quot;Sleep, Recovery and Strain** every morning&quot;"></i><i class="m-y core" title="Sleep tracking and coaching: yes. &quot;Last night’s sleep Your sleep was sufficient&quot;"></i><i class="m-y core" title="Strain and workout tracking: yes. &quot;with a Strain Target for the day&quot;"></i><i class="m-y" title="Heart rate and HRV monitoring: yes. &quot;Heart rate variability 42 55&quot;"></i><i class="m-y" title="Journal of habits and their effects: yes. &quot;answer the questions you pick from fifty behaviours&quot;"></i><i class="m-y" title="Health trends and reports: yes. &quot;**Trends**, **Reports**&quot;"></i></span></td><td data-k="Stars"><span class="s">199</span><small class="w">+15</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>355</div></td>
       <td data-k="Last release">None</td><td data-k="Issues closed"><span class="lvl-low"><i class="dot"></i>26%</span></td>
       <td data-k="Form">Self-hostable service, Web app</td>
@@ -183,8 +183,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

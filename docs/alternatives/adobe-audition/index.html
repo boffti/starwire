@@ -90,14 +90,14 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=audacity%2Faudacity"><img src="https://avatars.githubusercontent.com/u/11648186?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>audacity</b><small>Cross-platform desktop audio editor</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>49%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Edit audio waveforms: yes. &quot;cut, copy, trim or silence it&quot;"></i><i class="m-y core" title="Multitrack recording and mixing: yes. &quot;multi-track audio editor and recorder&quot;"></i><i class="m-n core" title="Noise reduction and audio repair: not shown"></i><i class="m-y" title="Effects and processing: yes. &quot;Add a compressor or a touch of EQ&quot;"></i><i class="m-p" title="Podcast and voiceover workflows: partly. &quot;Connect your microphone&quot;"></i><i class="m-n" title="Spectral editing: not shown"></i><i class="m-y" title="Export to many formats: yes. &quot;Mix down to MP3, WAV, FLAC&quot;"></i></span></td><td data-k="Stars"><span class="s">19k</span><small class="w">+60</small></td>
-      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>944</div></td>
-      <td data-k="Last release">9 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>64%</span></td>
+      <td data-k="Covers"><span class="fit"><b>49%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Edit audio waveforms: yes. &quot;cut, copy, trim or silence it&quot;"></i><i class="m-y core" title="Multitrack recording and mixing: yes. &quot;multi-track audio editor and recorder&quot;"></i><i class="m-n core" title="Noise reduction and audio repair: not shown"></i><i class="m-y" title="Effects and processing: yes. &quot;Add a compressor or a touch of EQ&quot;"></i><i class="m-p" title="Podcast and voiceover workflows: partly. &quot;Connect your microphone&quot;"></i><i class="m-n" title="Spectral editing: not shown"></i><i class="m-y" title="Export to many formats: yes. &quot;Mix down to MP3, WAV, FLAC&quot;"></i></span></td><td data-k="Stars"><span class="s">19k</span><small class="w">+68</small></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>1,022</div></td>
+      <td data-k="Last release">9 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>67%</span></td>
       <td data-k="Form">Desktop app</td>
       <td data-k="License">Custom license</td></tr><tr>
       <th scope="row"><a class="alt-name" href="?page=kvoltmer%2FAudionaut"><img src="https://avatars.githubusercontent.com/u/6395140?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>Audionaut</b><small>Desktop audio editor and recorder built with JUCE</small></span></a></th>
       <td data-k="Covers"><span class="fit"><b>49%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-y core" title="Edit audio waveforms: yes. &quot;precise cutting, per-track playlists&quot;"></i><i class="m-y core" title="Multitrack recording and mixing: yes. &quot;A free, open-source multitrack audio editor&quot;"></i><i class="m-n core" title="Noise reduction and audio repair: not shown"></i><i class="m-p" title="Effects and processing: partly. &quot;splitting, arranging, regions, fades, clip gain&quot;"></i><i class="m-y" title="Podcast and voiceover workflows: yes. &quot;Whether you're working on music, podcasts, or multitrack recordings&quot;"></i><i class="m-n" title="Spectral editing: not shown"></i><i class="m-p" title="Export to many formats: partly. &quot;clean exports&quot;"></i></span></td><td data-k="Stars"><span class="s">271</span><small class="w">+1</small></td>
-      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:3.7521186440677967rem"></span>506</div></td>
+      <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:3.465753424657534rem"></span>506</div></td>
       <td data-k="Last release">17 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>76%</span></td>
       <td data-k="Form">Desktop app</td>
       <td data-k="License">Custom license</td></tr></tbody></table></div>
@@ -189,8 +189,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

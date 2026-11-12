@@ -108,7 +108,7 @@
       <td data-k="Form">Web app, Self-hostable service</td>
       <td data-k="License">MIT</td></tr><tr>
       <th scope="row"><a class="alt-name" href="?page=firecrawl%2Fopen-lovable"><img src="https://avatars.githubusercontent.com/u/135057108?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>open-lovable</b><small>Recreates a website as a React app from its URL, using an AI model</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>50%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-y core" title="Generate full apps from prompts: yes. &quot;Clone and recreate any website as a modern React app&quot;"></i><i class="m-y core" title="Iterate by chat: yes. &quot;Chat with AI to build React apps instantly.&quot;"></i><i class="m-n" title="One-click deploy: not shown"></i><i class="m-n" title="Database and auth integration: not shown"></i><i class="m-n" title="Edit code and sync to GitHub: not shown"></i><i class="m-n" title="Visual editing: not shown"></i></span></td><td data-k="Stars"><span class="s">29k</span><small class="w">+34</small></td>
+      <td data-k="Covers"><span class="fit"><b>50%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-y core" title="Generate full apps from prompts: yes. &quot;Clone and recreate any website as a modern React app&quot;"></i><i class="m-y core" title="Iterate by chat: yes. &quot;Chat with AI to build React apps instantly.&quot;"></i><i class="m-n" title="One-click deploy: not shown"></i><i class="m-n" title="Database and auth integration: not shown"></i><i class="m-n" title="Edit code and sync to GitHub: not shown"></i><i class="m-n" title="Visual editing: not shown"></i></span></td><td data-k="Stars"><span class="s">29k</span><small class="w">+37</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:0.09395973154362416rem"></span>2</div></td>
       <td data-k="Last release">None</td><td data-k="Issues closed"><span class="lvl-low"><i class="dot"></i>29%</span></td>
       <td data-k="Form">Web app, Self-hostable service</td>
@@ -201,8 +201,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

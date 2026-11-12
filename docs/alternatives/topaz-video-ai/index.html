@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=Merserk%2Fdlss5-visual-enhancer"><img src="https://avatars.githubusercontent.com/u/119538451?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>dlss5-visual-enhancer</b><small>Neural upscaling and enhancement for images and video, with HDR and color grading</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>75%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="AI upscaling of video resolution: yes. &quot;AI upscaling with VisionNext, RazorNext, PeakMagnetar&quot;"></i><i class="m-y core" title="Denoise and sharpen footage: yes. &quot;Standard Upscaling, Denoise, Deblur, and High-Bitrate modes&quot;"></i><i class="m-y" title="Frame interpolation and slow motion: yes. &quot;Increase video frame rate with a 2×–8× multiplier&quot;"></i><i class="m-n" title="Deinterlacing old footage: not shown"></i><i class="m-n" title="Stabilization: not shown"></i><i class="m-y" title="Batch processing and export: yes. &quot;Single files or whole batches&quot;"></i></span></td><td data-k="Stars"><span class="s">1.8k</span><small class="w">+86</small></td>
+      <td data-k="Covers"><span class="fit"><b>75%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="AI upscaling of video resolution: yes. &quot;AI upscaling with VisionNext, RazorNext, PeakMagnetar&quot;"></i><i class="m-y core" title="Denoise and sharpen footage: yes. &quot;Standard Upscaling, Denoise, Deblur, and High-Bitrate modes&quot;"></i><i class="m-y" title="Frame interpolation and slow motion: yes. &quot;Increase video frame rate with a 2×–8× multiplier&quot;"></i><i class="m-n" title="Deinterlacing old footage: not shown"></i><i class="m-n" title="Stabilization: not shown"></i><i class="m-y" title="Batch processing and export: yes. &quot;Single files or whole batches&quot;"></i></span></td><td data-k="Stars"><span class="s">1.9k</span><small class="w">+90</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>105</div></td>
       <td data-k="Last release">7 days ago</td><td data-k="Issues closed"><span class="lvl-ok"><i class="dot"></i>54%</span></td>
       <td data-k="Form">Desktop app</td>
@@ -189,8 +189,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."

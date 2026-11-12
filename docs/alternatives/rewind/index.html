@@ -90,7 +90,7 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=screenpipe%2Fscreenpipe"><img src="https://avatars.githubusercontent.com/u/259178917?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>screenpipe</b><small>Records screen and audio history on your computer to give agents context</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>100%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Record screen history: yes. &quot;Continuously record your company's computer work&quot;"></i><i class="m-y core" title="Search everything you have seen: yes. &quot;search with ai - find anything using natural language&quot;"></i><i class="m-y" title="Ask AI about past activity: yes. &quot;ask claude what did i see in the last 5 mins?&quot;"></i><i class="m-y" title="Meeting audio and transcripts: yes. &quot;transcription, speakers, keyboard inputs, app switches&quot;"></i><i class="m-y" title="Stored locally on your device: yes. &quot;capture history stays on your device by default&quot;"></i><i class="m-y" title="Time-based browsing of history: yes. &quot;Scrub back through your day to the exact screen&quot;"></i></span></td><td data-k="Stars"><span class="s">22k</span><small class="w">+106</small></td>
+      <td data-k="Covers"><span class="fit"><b>100%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Record screen history: yes. &quot;Continuously record your company's computer work&quot;"></i><i class="m-y core" title="Search everything you have seen: yes. &quot;search with ai - find anything using natural language&quot;"></i><i class="m-y" title="Ask AI about past activity: yes. &quot;ask claude what did i see in the last 5 mins?&quot;"></i><i class="m-y" title="Meeting audio and transcripts: yes. &quot;transcription, speakers, keyboard inputs, app switches&quot;"></i><i class="m-y" title="Stored locally on your device: yes. &quot;capture history stays on your device by default&quot;"></i><i class="m-y" title="Time-based browsing of history: yes. &quot;Scrub back through your day to the exact screen&quot;"></i></span></td><td data-k="Stars"><span class="s">22k</span><small class="w">+110</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>1,687</div></td>
       <td data-k="Last release">5 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>100%</span></td>
       <td data-k="Form">Desktop app</td>
@@ -195,8 +195,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."
