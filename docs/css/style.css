@@ -799,11 +799,10 @@ body[data-cols="one"] #savedbar { display: none; }
 .rail-tip[hidden] { display: none; }
 @media (prefers-reduced-motion: reduce) { .rail .cat svg, .rail .side-link svg { transition: none; } }
 
-/* signal checks on a repo page */
-.rp .sg-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); gap: 10px 24px; margin: 16px 0 0; padding: 0; list-style: none; font-size: 14px; }
-.rp .sg-list li { display: flex; align-items: baseline; gap: 8px; }
-.rp .sg-list li::before { content: "\2713"; flex: none; width: 1em; color: var(--green); font-weight: 700; }
-.rp .sg-list li.no::before { content: "\2715"; color: var(--amber); }
-.rp .sg-list li.na::before { content: "\2013"; color: var(--muted); }
-.rp .sg-list li.na { color: var(--muted); }
-.rp .sg-list small { margin-left: auto; font-size: 12px; color: var(--muted); white-space: nowrap; }
+/* signal checks on a repo page: five small tiles, the measured number first */
+.rp .sg-tiles { grid-template-columns: repeat(auto-fit, minmax(min(11rem, calc(50% - 6px)), 1fr)); }
+.rp .sg-tiles .tile { padding: 16px; gap: 8px; }
+.rp .sg-tiles .v { font-size: 24px; }
+.rp .sg-tiles .v small { font-size: 13px; }
+.rp .sg-tiles .k svg { color: var(--c); }
+.rp .sg-tiles .lvl-none .v { color: var(--muted); font-size: 18px; line-height: 1.5; }

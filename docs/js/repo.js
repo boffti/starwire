@@ -92,8 +92,10 @@ function render(saved) {
 // the five checks behind "Worth a look", each one shown as passed, not passed or not judged
 function signalSection() {
   const cs = checks(r, today), judged = cs.filter((c) => c[2] != null), ok = judged.filter((c) => c[2]).length
-  return `<section aria-labelledby="sg"><h2 id="sg">Signal <span class="chip${ok === judged.length && ok ? " good" : ""}">${ok} of ${judged.length} checks</span></h2>
-    <ul class="sg-list">${cs.map(([, label, pass]) => `<li class="${pass == null ? "na" : pass ? "yes" : "no"}">${esc(label)}<small>${pass == null ? "too little to judge" : pass ? "yes" : "no"}</small></li>`).join("")}</ul>
+  const mark = { true: '<path d="m5 12 5 5 9-10"/>', false: '<path d="M6 6l12 12M18 6 6 18"/>', null: '<path d="M6 12h12"/>' }
+  return `<section aria-labelledby="sg"><div class="sec-head"><h2 id="sg">Signal</h2><span class="chip${ok === judged.length && ok ? " good" : ""}">${ok} of ${judged.length} checks passed</span></div>
+    <div class="tiles sg-tiles">${cs.map(([, label, pass, [name, n, unit, bar]]) => `<div class="tile lvl-${pass == null ? "none" : pass ? "good" : "low"}" title="${esc(label)}"><div class="k"><span>${name}</span>${svg(mark[pass])}</div>
+      <div class="v">${esc(String(n))}${unit ? ` <small>${esc(unit)}</small>` : ""}</div><div class="n">${pass == null ? esc(bar) : `${pass ? "Passes" : "Needs"}: ${esc(bar)}`}</div></div>`).join("")}</div>
     <p class="foot-note">These weigh a repo's daily star gain in the default order, Worth a look. They say whether the attention looks earned, not whether the project is good. <a href="how.html#signal">How this works</a></p></section>`
 }
 
