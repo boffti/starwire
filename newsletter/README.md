@@ -5,6 +5,8 @@ Everything subscribers see from starwire's newsletter is in this folder, and cha
 - `newsletter.mjs` builds the weekly email: the repo of the week, five trending repos, five new picks, one hidden
   gem and one "instead of" spotlight. It also holds the instruction given to Claude for the short notes.
 - `listmonk/static/email-templates/subscriber-optin.html` is the "confirm your subscription" email.
+- `listmonk/static/public/templates/message.html` is the page of short messages on list.starwire.foo; after someone
+  confirms, it also links to the latest issue.
 - `listmonk/public.css` styles the signup and confirmation pages on list.starwire.foo.
 
 ## Try a change

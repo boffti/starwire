@@ -162,8 +162,8 @@
         const res = await fetch(news.action, { method: "POST", body: new URLSearchParams(new FormData(news)) })
         if (!res.ok) throw new Error(`listmonk said ${res.status}`)
         news.classList.add("sent")
-        say.textContent = "Almost there. We sent you an email with a link to confirm."
-        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 6000)
+        say.textContent = "Almost there. We sent you an email with a link to confirm. Issues go out on Mondays; the latest one is linked below."
+        setTimeout(() => { news.hidePopover(); news.reset(); box.reset(); news.classList.remove("sent"); say.textContent = "" }, 12000)
       } catch {
         box.reset?.()
         say.textContent = "That didn't go through. Please try again in a moment."
