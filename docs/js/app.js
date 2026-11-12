@@ -322,7 +322,7 @@ function showCollections() {
   el.className = "cols"
   el.innerHTML = [...stacks.values()].map((c) => `<a class="col-card" href="?col=${esc(c.id)}">
     <strong>${esc(c.title)}</strong><p>${esc(c.intro)}</p>
-    <span class="col-faces">${c.picks.map((p) => `<img src="${esc(avatar(p.repo.r.split("/")[0], 56))}" alt="" width="26" height="26" loading="lazy" decoding="async">`).join("")}<small>${c.picks.length} tools</small></span></a>`).join("")
+    <span class="col-faces">${c.picks.slice(0, 8).map((p) => `<img src="${esc(avatar(p.repo.r.split("/")[0], 56))}" alt="" width="26" height="26" loading="lazy" decoding="async">`).join("")}<small>${c.picks.length} tools</small></span></a>`).join("")
   syncURL()
   if (counted.place !== "collections") count((counted.place = "collections"), "Collections")
 }

@@ -4,16 +4,54 @@
     "title": "For solopreneurs",
     "intro": "Everything a one-person business runs on: a site, a way to get paid, bookings, a mailing list and the numbers.",
     "needs": [
-      ["Build your website", "Webflow", "Framer", "Wix", "WordPress"],
-      ["Take payments", "Stripe"],
-      ["Send invoices and keep the books", "QuickBooks", "Xero", "Wave"],
-      ["Let clients book time", "Calendly"],
-      ["Run a mailing list", "Mailchimp"],
-      ["Collect answers with forms", "Typeform", "Google Forms", "SurveyMonkey"],
-      ["See who visits", "Google Analytics", "Plausible"],
-      ["Keep notes and plans", "Notion"],
-      ["Get documents signed", "DocuSign"],
-      ["Automate the busywork", "Zapier"]
+      [
+        "Build your website",
+        "Webflow",
+        "Framer",
+        "Wix",
+        "WordPress"
+      ],
+      [
+        "Take payments",
+        "Stripe"
+      ],
+      [
+        "Send invoices and keep the books",
+        "QuickBooks",
+        "Xero",
+        "Wave"
+      ],
+      [
+        "Let clients book time",
+        "Calendly"
+      ],
+      [
+        "Run a mailing list",
+        "Mailchimp"
+      ],
+      [
+        "Collect answers with forms",
+        "Typeform",
+        "Google Forms",
+        "SurveyMonkey"
+      ],
+      [
+        "See who visits",
+        "Google Analytics",
+        "Plausible"
+      ],
+      [
+        "Keep notes and plans",
+        "Notion"
+      ],
+      [
+        "Get documents signed",
+        "DocuSign"
+      ],
+      [
+        "Automate the busywork",
+        "Zapier"
+      ]
     ]
   },
   {
@@ -21,17 +59,66 @@
     "title": "For a small business",
     "intro": "The systems a team of five to fifty pays for every month, from the customer list to the accounts.",
     "needs": [
-      ["Track customers and deals", "Salesforce", "HubSpot", "Kommo"],
-      ["Do the accounts", "QuickBooks", "Xero"],
-      ["Answer customer support", "Zendesk", "Freshdesk", "Help Scout", "Intercom"],
-      ["Plan and track work", "Asana", "Trello", "Monday", "ClickUp", "Jira"],
-      ["Talk as a team", "Slack"],
-      ["Write and share documents", "Google Docs", "Microsoft Office", "Confluence"],
-      ["Share passwords safely", "1Password", "Bitwarden"],
-      ["Sell online", "Shopify"],
-      ["Hold video meetings", "Zoom", "Google Meet"],
-      ["Run stock, orders and operations", "NetSuite", "SAP"],
-      ["Sign up new logins once", "Okta", "Auth0"]
+      [
+        "Track customers and deals",
+        "Salesforce",
+        "HubSpot",
+        "Kommo"
+      ],
+      [
+        "Do the accounts",
+        "QuickBooks",
+        "Xero"
+      ],
+      [
+        "Answer customer support",
+        "Zendesk",
+        "Freshdesk",
+        "Help Scout",
+        "Intercom"
+      ],
+      [
+        "Plan and track work",
+        "Asana",
+        "Trello",
+        "Monday",
+        "ClickUp",
+        "Jira"
+      ],
+      [
+        "Talk as a team",
+        "Slack"
+      ],
+      [
+        "Write and share documents",
+        "Google Docs",
+        "Microsoft Office",
+        "Confluence"
+      ],
+      [
+        "Share passwords safely",
+        "1Password",
+        "Bitwarden"
+      ],
+      [
+        "Sell online",
+        "Shopify"
+      ],
+      [
+        "Hold video meetings",
+        "Zoom",
+        "Google Meet"
+      ],
+      [
+        "Run stock, orders and operations",
+        "NetSuite",
+        "SAP"
+      ],
+      [
+        "Sign up new logins once",
+        "Okta",
+        "Auth0"
+      ]
     ]
   },
   {
@@ -39,20 +126,74 @@
     "title": "For marketing and creative agencies",
     "intro": "Design, video, campaigns and reporting, plus the tools for working with clients.",
     "needs": [
-      ["Design interfaces and layouts", "Figma"],
-      ["Edit photos", "Photoshop", "Lightroom"],
-      ["Draw vector artwork", "Adobe Illustrator", "Illustrator"],
-      ["Make quick social graphics", "Canva"],
-      ["Edit video", "Adobe Premiere Pro", "Premiere Pro", "Final Cut Pro", "CapCut"],
-      ["Animate and add effects", "After Effects"],
-      ["Schedule social posts", "Buffer", "Hootsuite", "Sendible", "SocialPilot"],
-      ["Send email campaigns", "Mailchimp"],
-      ["Research keywords and audit sites", "Ahrefs", "Semrush", "Screaming Frog"],
-      ["Report on web traffic", "Google Analytics"],
-      ["Brainstorm on a whiteboard", "Miro"],
-      ["Collect client feedback on video", "Frame.io"],
-      ["Track billable time", "Toggl"],
-      ["Manage site content", "Contentful", "Sanity", "Webflow"]
+      [
+        "Design interfaces and layouts",
+        "Figma"
+      ],
+      [
+        "Edit photos",
+        "Photoshop",
+        "Lightroom"
+      ],
+      [
+        "Draw vector artwork",
+        "Adobe Illustrator",
+        "Illustrator"
+      ],
+      [
+        "Make quick social graphics",
+        "Canva"
+      ],
+      [
+        "Edit video",
+        "Adobe Premiere Pro",
+        "Premiere Pro",
+        "Final Cut Pro",
+        "CapCut"
+      ],
+      [
+        "Animate and add effects",
+        "After Effects"
+      ],
+      [
+        "Schedule social posts",
+        "Buffer",
+        "Hootsuite",
+        "Sendible",
+        "SocialPilot"
+      ],
+      [
+        "Send email campaigns",
+        "Mailchimp"
+      ],
+      [
+        "Research keywords and audit sites",
+        "Ahrefs",
+        "Semrush",
+        "Screaming Frog"
+      ],
+      [
+        "Report on web traffic",
+        "Google Analytics"
+      ],
+      [
+        "Brainstorm on a whiteboard",
+        "Miro"
+      ],
+      [
+        "Collect client feedback on video",
+        "Frame.io"
+      ],
+      [
+        "Track billable time",
+        "Toggl"
+      ],
+      [
+        "Manage site content",
+        "Contentful",
+        "Sanity",
+        "Webflow"
+      ]
     ]
   },
   {
@@ -60,20 +201,76 @@
     "title": "For a startup engineering team",
     "intro": "The services a product team signs up for in its first year, from the repo to production monitoring.",
     "needs": [
-      ["Host your code", "GitHub", "GitLab"],
-      ["Track issues", "Linear", "Jira"],
-      ["Run the backend", "Firebase", "Supabase"],
-      ["Deploy and host", "Heroku", "Vercel", "Netlify"],
-      ["Handle sign-in", "Auth0", "WorkOS", "Okta"],
-      ["Monitor production", "Datadog", "New Relic"],
-      ["Understand product usage", "Mixpanel", "Amplitude"],
-      ["Ship behind feature flags", "LaunchDarkly"],
-      ["Build internal tools", "Retool"],
-      ["Test APIs", "Postman", "Insomnia"],
-      ["Send transactional email", "SendGrid", "Resend", "Postmark", "Mailgun"],
-      ["Add search", "Algolia", "Elasticsearch"],
-      ["Replay user sessions", "LogRocket"],
-      ["Know when the site is down", "UptimeRobot"]
+      [
+        "Host your code",
+        "GitHub",
+        "GitLab"
+      ],
+      [
+        "Track issues",
+        "Linear",
+        "Jira"
+      ],
+      [
+        "Run the backend",
+        "Firebase",
+        "Supabase"
+      ],
+      [
+        "Deploy and host",
+        "Heroku",
+        "Vercel",
+        "Netlify"
+      ],
+      [
+        "Handle sign-in",
+        "Auth0",
+        "WorkOS",
+        "Okta"
+      ],
+      [
+        "Monitor production",
+        "Datadog",
+        "New Relic"
+      ],
+      [
+        "Understand product usage",
+        "Mixpanel",
+        "Amplitude"
+      ],
+      [
+        "Ship behind feature flags",
+        "LaunchDarkly"
+      ],
+      [
+        "Build internal tools",
+        "Retool"
+      ],
+      [
+        "Test APIs",
+        "Postman",
+        "Insomnia"
+      ],
+      [
+        "Send transactional email",
+        "SendGrid",
+        "Resend",
+        "Postmark",
+        "Mailgun"
+      ],
+      [
+        "Add search",
+        "Algolia",
+        "Elasticsearch"
+      ],
+      [
+        "Replay user sessions",
+        "LogRocket"
+      ],
+      [
+        "Know when the site is down",
+        "UptimeRobot"
+      ]
     ]
   },
   {
@@ -81,16 +278,53 @@
     "title": "For content creators",
     "intro": "Record, edit, clip, caption and publish, without a stack of monthly subscriptions.",
     "needs": [
-      ["Record your screen", "Screen Studio", "Loom"],
-      ["Edit video", "CapCut", "Final Cut Pro", "iMovie"],
-      ["Cut long videos into clips", "Opus Clip", "OpusClip"],
-      ["Edit by transcript", "Descript"],
-      ["Generate voiceover", "ElevenLabs"],
-      ["Make thumbnails and graphics", "Canva", "Photoshop"],
-      ["Make background music", "Suno"],
-      ["Upscale footage and images", "Topaz Video AI", "Topaz Gigapixel"],
-      ["Dictate scripts", "Wispr Flow"],
-      ["Schedule posts", "Buffer", "Hootsuite"]
+      [
+        "Record your screen",
+        "Screen Studio",
+        "Loom"
+      ],
+      [
+        "Edit video",
+        "CapCut",
+        "Final Cut Pro",
+        "iMovie"
+      ],
+      [
+        "Cut long videos into clips",
+        "Opus Clip",
+        "OpusClip"
+      ],
+      [
+        "Edit by transcript",
+        "Descript"
+      ],
+      [
+        "Generate voiceover",
+        "ElevenLabs"
+      ],
+      [
+        "Make thumbnails and graphics",
+        "Canva",
+        "Photoshop"
+      ],
+      [
+        "Make background music",
+        "Suno"
+      ],
+      [
+        "Upscale footage and images",
+        "Topaz Video AI",
+        "Topaz Gigapixel"
+      ],
+      [
+        "Dictate scripts",
+        "Wispr Flow"
+      ],
+      [
+        "Schedule posts",
+        "Buffer",
+        "Hootsuite"
+      ]
     ]
   },
   {
@@ -98,17 +332,60 @@
     "title": "For remote teams",
     "intro": "What a team that never shares a room needs to talk, meet, decide and keep a record.",
     "needs": [
-      ["Chat", "Slack", "Discord"],
-      ["Meet on video", "Zoom", "Google Meet"],
-      ["Take meeting notes", "Otter.ai", "Granola", "Fireflies.ai", "Fireflies"],
-      ["Explain things on video", "Loom"],
-      ["Think together on a whiteboard", "Miro"],
-      ["Keep a team wiki", "Confluence", "Notion"],
-      ["Assign and track tasks", "Linear", "Asana", "Trello"],
-      ["Find a time to meet", "Calendly"],
-      ["Send large files", "WeTransfer"],
-      ["Help a colleague on their screen", "TeamViewer", "AnyDesk"],
-      ["Share passwords", "1Password", "Bitwarden"]
+      [
+        "Chat",
+        "Slack",
+        "Discord"
+      ],
+      [
+        "Meet on video",
+        "Zoom",
+        "Google Meet"
+      ],
+      [
+        "Take meeting notes",
+        "Otter.ai",
+        "Granola",
+        "Fireflies.ai",
+        "Fireflies"
+      ],
+      [
+        "Explain things on video",
+        "Loom"
+      ],
+      [
+        "Think together on a whiteboard",
+        "Miro"
+      ],
+      [
+        "Keep a team wiki",
+        "Confluence",
+        "Notion"
+      ],
+      [
+        "Assign and track tasks",
+        "Linear",
+        "Asana",
+        "Trello"
+      ],
+      [
+        "Find a time to meet",
+        "Calendly"
+      ],
+      [
+        "Send large files",
+        "WeTransfer"
+      ],
+      [
+        "Help a colleague on their screen",
+        "TeamViewer",
+        "AnyDesk"
+      ],
+      [
+        "Share passwords",
+        "1Password",
+        "Bitwarden"
+      ]
     ]
   },
   {
@@ -116,16 +393,55 @@
     "title": "For data teams",
     "intro": "From raw tables to dashboards people actually open: storage, transformation, analysis and reporting.",
     "needs": [
-      ["Build dashboards", "Tableau", "Power BI", "Looker"],
-      ["Store data for analysis", "Snowflake", "BigQuery", "ClickHouse"],
-      ["Transform data", "dbt"],
-      ["Query and browse databases", "DataGrip", "TablePlus", "Navicat"],
-      ["Work in notebooks", "Jupyter", "Google Colab"],
-      ["Give everyone a spreadsheet view", "Airtable"],
-      ["Analyse product usage", "Mixpanel", "Amplitude"],
-      ["Search across records", "Elasticsearch"],
-      ["Track experiments", "Weights & Biases"],
-      ["Turn analysis into an app", "Streamlit", "Retool"]
+      [
+        "Build dashboards",
+        "Tableau",
+        "Power BI",
+        "Looker"
+      ],
+      [
+        "Store data for analysis",
+        "Snowflake",
+        "BigQuery",
+        "ClickHouse"
+      ],
+      [
+        "Transform data",
+        "dbt"
+      ],
+      [
+        "Query and browse databases",
+        "DataGrip",
+        "TablePlus",
+        "Navicat"
+      ],
+      [
+        "Work in notebooks",
+        "Jupyter",
+        "Google Colab"
+      ],
+      [
+        "Give everyone a spreadsheet view",
+        "Airtable"
+      ],
+      [
+        "Analyse product usage",
+        "Mixpanel",
+        "Amplitude"
+      ],
+      [
+        "Search across records",
+        "Elasticsearch"
+      ],
+      [
+        "Track experiments",
+        "Weights & Biases"
+      ],
+      [
+        "Turn analysis into an app",
+        "Streamlit",
+        "Retool"
+      ]
     ]
   },
   {
@@ -133,16 +449,51 @@
     "title": "For freelancers",
     "intro": "Win the work, do the work, bill the work. The admin side of working for yourself.",
     "needs": [
-      ["Show your portfolio", "Framer", "Webflow", "Wix"],
-      ["Track your hours", "Toggl"],
-      ["Invoice clients", "QuickBooks", "Wave", "Xero"],
-      ["Get contracts signed", "DocuSign"],
-      ["Share proposals", "DocSend"],
-      ["Book calls", "Calendly"],
-      ["Keep a to-do list", "Todoist", "Trello"],
-      ["Log expenses", "Expensify"],
-      ["Record walkthroughs for clients", "Loom"],
-      ["Check your writing", "Grammarly"]
+      [
+        "Show your portfolio",
+        "Framer",
+        "Webflow",
+        "Wix"
+      ],
+      [
+        "Track your hours",
+        "Toggl"
+      ],
+      [
+        "Invoice clients",
+        "QuickBooks",
+        "Wave",
+        "Xero"
+      ],
+      [
+        "Get contracts signed",
+        "DocuSign"
+      ],
+      [
+        "Share proposals",
+        "DocSend"
+      ],
+      [
+        "Book calls",
+        "Calendly"
+      ],
+      [
+        "Keep a to-do list",
+        "Todoist",
+        "Trello"
+      ],
+      [
+        "Log expenses",
+        "Expensify"
+      ],
+      [
+        "Record walkthroughs for clients",
+        "Loom"
+      ],
+      [
+        "Check your writing",
+        "Grammarly"
+      ]
     ]
   },
   {
@@ -150,17 +501,58 @@
     "title": "For students and researchers",
     "intro": "Read, take notes, write up and revise, with tools that cost nothing and keep your work in your hands.",
     "needs": [
-      ["Write papers", "Overleaf"],
-      ["Take notes", "Obsidian", "Notion", "Evernote"],
-      ["Question your sources", "NotebookLM"],
-      ["Revise with flashcards", "Quizlet"],
-      ["Save reading for later", "Pocket", "Instapaper"],
-      ["Check your writing", "Grammarly"],
-      ["Translate", "DeepL", "Google Translate"],
-      ["Run code in notebooks", "Google Colab", "Jupyter"],
-      ["Manage e-books", "Calibre", "Kindle"],
-      ["Learn a language", "Duolingo"],
-      ["Write documents", "Microsoft Word", "Microsoft Office", "Google Docs"]
+      [
+        "Write papers",
+        "Overleaf"
+      ],
+      [
+        "Take notes",
+        "Obsidian",
+        "Notion",
+        "Evernote"
+      ],
+      [
+        "Question your sources",
+        "NotebookLM"
+      ],
+      [
+        "Revise with flashcards",
+        "Quizlet"
+      ],
+      [
+        "Save reading for later",
+        "Pocket",
+        "Instapaper"
+      ],
+      [
+        "Check your writing",
+        "Grammarly"
+      ],
+      [
+        "Translate",
+        "DeepL",
+        "Google Translate"
+      ],
+      [
+        "Run code in notebooks",
+        "Google Colab",
+        "Jupyter"
+      ],
+      [
+        "Manage e-books",
+        "Calibre",
+        "Kindle"
+      ],
+      [
+        "Learn a language",
+        "Duolingo"
+      ],
+      [
+        "Write documents",
+        "Microsoft Word",
+        "Microsoft Office",
+        "Google Docs"
+      ]
     ]
   },
   {
@@ -168,17 +560,699 @@
     "title": "For your household",
     "intro": "The family's photos, films, passwords and budget, on a machine at home.",
     "needs": [
-      ["Back up everyone's photos", "Google Photos"],
-      ["Stream your films", "Plex"],
-      ["Play your music", "Spotify", "YouTube Music"],
-      ["Keep passwords", "1Password", "Bitwarden"],
-      ["Budget together", "YNAB", "Mint"],
-      ["Keep track of subscriptions", "Rocket Money"],
-      ["Split shared bills", "Splitwise"],
-      ["Run the smart home", "Google Home", "SmartThings"],
-      ["Block ads on every device", "Pi-hole", "AdGuard"],
-      ["Share notes and lists", "Google Keep"],
-      ["Share where everyone is", "Life360", "Find My"]
+      [
+        "Back up everyone's photos",
+        "Google Photos"
+      ],
+      [
+        "Stream your films",
+        "Plex"
+      ],
+      [
+        "Play your music",
+        "Spotify",
+        "YouTube Music"
+      ],
+      [
+        "Keep passwords",
+        "1Password",
+        "Bitwarden"
+      ],
+      [
+        "Budget together",
+        "YNAB",
+        "Mint"
+      ],
+      [
+        "Keep track of subscriptions",
+        "Rocket Money"
+      ],
+      [
+        "Split shared bills",
+        "Splitwise"
+      ],
+      [
+        "Run the smart home",
+        "Google Home",
+        "SmartThings"
+      ],
+      [
+        "Block ads on every device",
+        "Pi-hole",
+        "AdGuard"
+      ],
+      [
+        "Share notes and lists",
+        "Google Keep"
+      ],
+      [
+        "Share where everyone is",
+        "Life360",
+        "Find My"
+      ]
+    ]
+  },
+  {
+    "id": "online-stores",
+    "title": "For online stores",
+    "intro": "A shop, a checkout and everything around them: support, email, search and knowing what sells.",
+    "needs": [
+      [
+        "Run the shop",
+        "Shopify"
+      ],
+      [
+        "Take payments",
+        "Stripe"
+      ],
+      [
+        "Answer customers",
+        "Zendesk",
+        "Intercom",
+        "Help Scout",
+        "Freshdesk"
+      ],
+      [
+        "Email your customers",
+        "Mailchimp"
+      ],
+      [
+        "Send order emails",
+        "SendGrid",
+        "Postmark",
+        "Resend",
+        "Mailgun"
+      ],
+      [
+        "Add product search",
+        "Algolia",
+        "Elasticsearch"
+      ],
+      [
+        "See what sells",
+        "Google Analytics",
+        "Mixpanel"
+      ],
+      [
+        "Edit product photos",
+        "Photoshop",
+        "Lightroom"
+      ],
+      [
+        "Make promo graphics",
+        "Canva"
+      ],
+      [
+        "Manage stock and orders",
+        "NetSuite",
+        "SAP"
+      ],
+      [
+        "Keep the books",
+        "QuickBooks",
+        "Xero"
+      ],
+      [
+        "Test what converts",
+        "Optimizely"
+      ]
+    ]
+  },
+  {
+    "id": "saas-founders",
+    "title": "For SaaS founders",
+    "intro": "From first prototype to first paying customers: build it, host it, charge for it and find out who's using it.",
+    "needs": [
+      [
+        "Prototype the app",
+        "Lovable",
+        "Bolt.new",
+        "Bolt",
+        "v0"
+      ],
+      [
+        "Run the backend",
+        "Supabase",
+        "Firebase"
+      ],
+      [
+        "Deploy it",
+        "Vercel",
+        "Netlify",
+        "Heroku"
+      ],
+      [
+        "Handle sign-in",
+        "Auth0",
+        "WorkOS"
+      ],
+      [
+        "Charge customers",
+        "Stripe"
+      ],
+      [
+        "Send product email",
+        "Resend",
+        "Postmark",
+        "SendGrid"
+      ],
+      [
+        "Talk to users in the app",
+        "Intercom"
+      ],
+      [
+        "Understand usage",
+        "Mixpanel",
+        "Amplitude"
+      ],
+      [
+        "Count visitors",
+        "Plausible",
+        "Google Analytics",
+        "Umami"
+      ],
+      [
+        "Plan the work",
+        "Linear"
+      ],
+      [
+        "Know when it's down",
+        "UptimeRobot"
+      ],
+      [
+        "Build the landing page",
+        "Framer",
+        "Webflow"
+      ]
+    ]
+  },
+  {
+    "id": "designers",
+    "title": "For designers",
+    "intro": "Interface design, illustration, photo work and motion, without a monthly licence for each.",
+    "needs": [
+      [
+        "Design interfaces",
+        "Figma"
+      ],
+      [
+        "Draw vectors",
+        "Adobe Illustrator",
+        "Illustrator"
+      ],
+      [
+        "Edit photos",
+        "Photoshop"
+      ],
+      [
+        "Develop and grade photos",
+        "Lightroom"
+      ],
+      [
+        "Paint and sketch",
+        "Procreate"
+      ],
+      [
+        "Animate",
+        "After Effects"
+      ],
+      [
+        "Build sites visually",
+        "Framer",
+        "Webflow"
+      ],
+      [
+        "Map out ideas",
+        "Miro"
+      ],
+      [
+        "Generate images",
+        "Midjourney"
+      ],
+      [
+        "Upscale images",
+        "Magnific",
+        "Topaz Gigapixel"
+      ],
+      [
+        "Model in 3D",
+        "SketchUp",
+        "Fusion 360"
+      ],
+      [
+        "Organise assets",
+        "Adobe Bridge"
+      ]
+    ]
+  },
+  {
+    "id": "writers",
+    "title": "For writers and bloggers",
+    "intro": "Draft, edit, publish and reach readers, with your words kept in files you own.",
+    "needs": [
+      [
+        "Write without distraction",
+        "iA Writer",
+        "Typora"
+      ],
+      [
+        "Organise notes and research",
+        "Obsidian",
+        "Notion",
+        "Evernote",
+        "Roam Research"
+      ],
+      [
+        "Check grammar and style",
+        "Grammarly"
+      ],
+      [
+        "Write long documents",
+        "Microsoft Word",
+        "Google Docs"
+      ],
+      [
+        "Publish a site",
+        "WordPress",
+        "Wix"
+      ],
+      [
+        "Send a newsletter",
+        "Mailchimp"
+      ],
+      [
+        "Save articles to read",
+        "Pocket",
+        "Instapaper",
+        "Raindrop.io"
+      ],
+      [
+        "Keep a journal",
+        "Day One"
+      ],
+      [
+        "Dictate drafts",
+        "Wispr Flow",
+        "Dragon",
+        "Superwhisper"
+      ],
+      [
+        "Translate your work",
+        "DeepL",
+        "Google Translate"
+      ],
+      [
+        "Manage your library",
+        "Calibre",
+        "Kindle"
+      ]
+    ]
+  },
+  {
+    "id": "podcasters-musicians",
+    "title": "For podcasters and musicians",
+    "intro": "Record, clean up, mix and publish audio, and a few tools for making and playing music.",
+    "needs": [
+      [
+        "Edit and clean up audio",
+        "Adobe Audition"
+      ],
+      [
+        "Edit by transcript",
+        "Descript"
+      ],
+      [
+        "Transcribe episodes",
+        "Otter.ai",
+        "Otter"
+      ],
+      [
+        "Generate voices",
+        "ElevenLabs"
+      ],
+      [
+        "Split a track into stems",
+        "Moises"
+      ],
+      [
+        "Compose with AI",
+        "Suno"
+      ],
+      [
+        "DJ a set",
+        "rekordbox",
+        "Serato DJ"
+      ],
+      [
+        "Route audio between apps",
+        "SoundSource"
+      ],
+      [
+        "Listen to music",
+        "Spotify",
+        "YouTube Music"
+      ],
+      [
+        "Play local files",
+        "Winamp"
+      ],
+      [
+        "Record remote guests",
+        "Zoom",
+        "Google Meet"
+      ]
+    ]
+  },
+  {
+    "id": "mac-power-users",
+    "title": "For Mac power users",
+    "intro": "The paid utilities most Mac setups end up with, each replaced by a project you can read the source of.",
+    "needs": [
+      [
+        "Launch anything from the keyboard",
+        "Raycast",
+        "Alfred",
+        "Spotlight"
+      ],
+      [
+        "Clean up the disk",
+        "CleanMyMac",
+        "DaisyDisk"
+      ],
+      [
+        "Watch system stats",
+        "iStat Menus"
+      ],
+      [
+        "Take better screenshots",
+        "CleanShot X"
+      ],
+      [
+        "Arrange windows",
+        "Divvy",
+        "AeroSpace"
+      ],
+      [
+        "Keep the Mac awake",
+        "Amphetamine",
+        "Caffeine"
+      ],
+      [
+        "Uninstall apps fully",
+        "AppCleaner"
+      ],
+      [
+        "Automate file tidying",
+        "Hazel"
+      ],
+      [
+        "Expand text snippets",
+        "TextExpander"
+      ],
+      [
+        "Use a second screen",
+        "Duet Display",
+        "Sidecar"
+      ],
+      [
+        "Run Windows and Linux",
+        "Parallels"
+      ],
+      [
+        "Record polished screen videos",
+        "Screen Studio"
+      ],
+      [
+        "Use a better terminal",
+        "iTerm2",
+        "Warp"
+      ],
+      [
+        "Share files nearby",
+        "AirDrop"
+      ]
+    ]
+  },
+  {
+    "id": "it-admins",
+    "title": "For IT admins",
+    "intro": "Identity, devices, secrets and servers for a company that would rather own its infrastructure.",
+    "needs": [
+      [
+        "Manage logins",
+        "Okta",
+        "Auth0"
+      ],
+      [
+        "Manage Apple devices",
+        "Jamf"
+      ],
+      [
+        "Store secrets",
+        "HashiCorp Vault"
+      ],
+      [
+        "Control privileged access",
+        "CyberArk"
+      ],
+      [
+        "Support users remotely",
+        "TeamViewer",
+        "AnyDesk"
+      ],
+      [
+        "Monitor systems",
+        "Datadog",
+        "New Relic",
+        "Prometheus"
+      ],
+      [
+        "Search logs",
+        "Splunk",
+        "Loki"
+      ],
+      [
+        "Automate configuration",
+        "Ansible"
+      ],
+      [
+        "Run virtual machines",
+        "VMware vSphere",
+        "Proxmox"
+      ],
+      [
+        "Connect sites privately",
+        "Tailscale"
+      ],
+      [
+        "Manage web hosting",
+        "cPanel"
+      ],
+      [
+        "Watch uptime",
+        "UptimeRobot"
+      ],
+      [
+        "Share passwords",
+        "1Password",
+        "Bitwarden"
+      ]
+    ]
+  },
+  {
+    "id": "ai-builders",
+    "title": "For AI builders",
+    "intro": "The paid services behind most LLM apps, from the gateway to evaluation, each with an open source stand-in.",
+    "needs": [
+      [
+        "Route between model providers",
+        "LiteLLM"
+      ],
+      [
+        "Trace and evaluate",
+        "LangSmith"
+      ],
+      [
+        "Store embeddings",
+        "Pinecone"
+      ],
+      [
+        "Track experiments",
+        "Weights & Biases"
+      ],
+      [
+        "Label data",
+        "Labelbox"
+      ],
+      [
+        "Serve your own models",
+        "vLLM"
+      ],
+      [
+        "Work in notebooks",
+        "Google Colab",
+        "Jupyter"
+      ],
+      [
+        "Give the team a chat app",
+        "ChatGPT",
+        "Claude"
+      ],
+      [
+        "Run long workflows",
+        "Temporal"
+      ],
+      [
+        "Search company knowledge",
+        "Glean"
+      ],
+      [
+        "Debug MCP servers",
+        "MCP Inspector"
+      ],
+      [
+        "Ship a demo",
+        "Streamlit"
+      ],
+      [
+        "Build agents that use a browser",
+        "OpenAI Operator"
+      ]
+    ]
+  },
+  {
+    "id": "nonprofits",
+    "title": "For nonprofits and community groups",
+    "intro": "Reach supporters, organise volunteers and keep the accounts, on a budget that goes to the cause.",
+    "needs": [
+      [
+        "Keep track of supporters",
+        "Salesforce",
+        "HubSpot"
+      ],
+      [
+        "Email your members",
+        "Mailchimp"
+      ],
+      [
+        "Run sign-ups and surveys",
+        "Google Forms",
+        "SurveyMonkey",
+        "Typeform"
+      ],
+      [
+        "Build the website",
+        "WordPress",
+        "Wix"
+      ],
+      [
+        "Give the community a home",
+        "Discord",
+        "Slack"
+      ],
+      [
+        "Meet online",
+        "Zoom",
+        "Google Meet"
+      ],
+      [
+        "Write and share documents",
+        "Google Docs",
+        "Microsoft Office"
+      ],
+      [
+        "Do the accounts",
+        "QuickBooks",
+        "Xero",
+        "Wave"
+      ],
+      [
+        "Schedule volunteers",
+        "Calendly"
+      ],
+      [
+        "Make posters and posts",
+        "Canva"
+      ],
+      [
+        "Plan projects",
+        "Trello",
+        "Asana"
+      ],
+      [
+        "Post to social media",
+        "Buffer",
+        "Hootsuite"
+      ]
+    ]
+  },
+  {
+    "id": "privacy-minded",
+    "title": "For the privacy-minded",
+    "intro": "The everyday services that know the most about you, swapped for ones that answer only to you.",
+    "needs": [
+      [
+        "Email",
+        "Gmail",
+        "ProtonMail",
+        "Outlook"
+      ],
+      [
+        "Browse the web",
+        "Google Chrome",
+        "Arc"
+      ],
+      [
+        "Search",
+        "Google Search",
+        "SearXNG"
+      ],
+      [
+        "Message people",
+        "WhatsApp",
+        "iMessage"
+      ],
+      [
+        "Store photos",
+        "Google Photos"
+      ],
+      [
+        "Keep passwords",
+        "1Password",
+        "Bitwarden"
+      ],
+      [
+        "Block ads and trackers",
+        "uBlock Origin",
+        "AdGuard",
+        "Pi-hole"
+      ],
+      [
+        "Remove yourself from data brokers",
+        "DeleteMe",
+        "Incogni"
+      ],
+      [
+        "Hide your real email address",
+        "Hide My Email"
+      ],
+      [
+        "Keep your location history",
+        "Google Timeline"
+      ],
+      [
+        "Connect devices privately",
+        "Tailscale"
+      ],
+      [
+        "Translate without sharing text",
+        "Google Translate",
+        "DeepL"
+      ],
+      [
+        "Watch video",
+        "YouTube"
+      ]
     ]
   }
 ]
