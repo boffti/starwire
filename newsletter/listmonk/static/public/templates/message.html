@@ -1,0 +1,15 @@
+{{ define "message" }}
+    {{ template "header" .}}
+
+    <h2>{{ .Data.Title }}</h2>
+    <div>
+        {{ .Data.Message }}
+    </div>
+    {{/* Only on the page shown right after someone confirms: they are in, so now is the time to offer something to read. */}}
+    {{ if eq .Data.Title (L.T "public.subConfirmedTitle") }}
+    <p>Issues go out on Mondays. No need to wait for the next one:</p>
+    <p><a class="button" href="/archive">Read the latest issue</a></p>
+    {{ end }}
+
+    {{ template "footer" .}}
+{{ end }}
