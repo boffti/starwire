@@ -529,7 +529,8 @@ html { scrollbar-gutter: stable; }
 .rp .alt-chips { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
 .rp .alt-chips a { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--raise); color: var(--text); font-weight: 500; }
 .rp .alt-chips a:hover { text-decoration: none; background: color-mix(in srgb, var(--raise) 70%, var(--line)); }
-.rp .alt-chips span, .rp .alt-filter { width: min(100%, 26rem); height: 44px; padding: 0 14px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--text); font: inherit; }
+.rp .alt-chips span { font-size: 13px; font-weight: 400; color: var(--muted); font-variant-numeric: tabular-nums; }
+.rp .alt-filter { width: min(100%, 26rem); height: 44px; padding: 0 14px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--text); font: inherit; }
 .alt-hint { display: inline-flex; margin-top: 8px; padding: 6px 12px; border-radius: 999px; background: var(--green-soft); color: var(--green); font-size: 14px; font-weight: 500; text-decoration: none; }
 .alt-hint:hover { text-decoration: underline; }
 .alt-hint[hidden] { display: none; }
