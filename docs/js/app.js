@@ -7,14 +7,12 @@ const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5 9-
 const COPY = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>'
 const GH = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>'
 const num = (n) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k` : String(n))
-// avatars straight from GitHub's image CDN: github.com/<owner>.png is a no-cache redirect, so every re-render of the
-// grid went back to github.com for each card and got rate limited; the CDN answers directly and can be cached
-const avatar = (owner, size) => `https://avatars.githubusercontent.com/${encodeURIComponent(owner)}?s=${size}`
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c])
 
 import { makeIndex, fieldsFor } from "./search.js"
 import { readmeFragment, followTheme } from "./readme.js"
 import { count } from "./count.js"
+import { avatar, knowOwners } from "./avatar.js"
 import { signs, summary } from "./vitals.js"
 import { LICENSE_KINDS, licenseKind, licenseText } from "./license.js"
 import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups, replacesOf, stackFor } from "./repo.js"
@@ -28,6 +26,7 @@ const AREA = new Map(TX.areas.map((a) => [a.id, a]))
 const SUB = new Map(TX.areas.flatMap((a) => a.subs.map(([id, name]) => [`${a.id}/${id}`, name])))
 const FORM = new Map(TX.forms), PLAT = new Map(TX.platforms), WITH = new Map(TX.worksWith), LIC = new Map(LICENSE_KINDS)
 const areaPairs = (r) => (r.a ? [`${r.a}/${r.sa}`, ...(r.mo ?? [])] : [])
+knowOwners(data.repos)
 const repos = data.repos.map((r) => ({ ...r, age: (now - Date.parse(r.p)) / 864e5 }))
 // themes: the tags each repo carries (tg), which cut across areas ("local-first", "rag"). A tag is its own name; the map holds how many repos have it
 const TAG = new Map()

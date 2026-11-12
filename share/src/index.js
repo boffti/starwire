@@ -11,6 +11,7 @@ import { altCardHTML, rankAlts, altSlug } from "./altcard.js"
 import { pickArt } from "./art.js"
 import { badgeText, badgeSVG } from "./badge.js"
 import { signs, summary } from "../../docs/js/vitals.js"
+import { knowOwners } from "../../docs/js/avatar.js"
 
 const SITE = "https://starwire.foo", SELF = "https://r.starwire.foo"
 const fonts = [400, 600, 700, 800].map((weight) => new GoogleFont("Geist", { weight }))
@@ -26,6 +27,7 @@ async function site() {
   const get = async (f) => (await one(`data/${f}`)) ?? one(f)
   const [data, vitals, art, fit] = await Promise.all([get("data.json"), get("vitals.json"), get("art.json"), get("fit.json")])
   if (!data) throw new Error("starwire data unavailable")
+  knowOwners(data.repos)
   memo = {
     at: Date.now(), data, vitals: vitals ?? {}, art: art ?? {}, fit: fit ?? {},
     alts: new Map(data.repos.flatMap((r) => r.alt ?? []).map((a) => [altSlug(a), a])), // slug -> product name

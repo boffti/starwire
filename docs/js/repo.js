@@ -1,12 +1,12 @@
 // The repo page (?page=owner/name) and the alternatives pages (?alt=Product, ?alt=all), shown inside the main app: vital signs, how it compares with its alternatives,
 // what it replaces and how to start. app.js owns the URL, saves and counting; this module only draws the page.
 import { signs, momentum } from "./vitals.js"
+import { avatar } from "./avatar.js"
 import { licenseText } from "./license.js"
 import { readmeFragment } from "./readme.js"
 
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c])
 const num = (n) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k` : String(n))
-const avatar = (owner, size) => `https://avatars.githubusercontent.com/${encodeURIComponent(owner)}?s=${size}`
 const ago = (d) => (d < 1 ? "today" : d === 1 ? "yesterday" : d < 60 ? `${d} days ago` : d < 730 ? `${Math.round(d / 30)} months ago` : `${Math.round(d / 365)} years ago`)
 const svg = (d) => `<svg viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`
 const I = {
