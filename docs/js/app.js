@@ -17,9 +17,10 @@ import { readmeFragment, followTheme } from "./readme.js"
 import { count } from "./count.js"
 import { signs, summary } from "./vitals.js"
 import { LICENSE_KINDS, licenseKind, licenseText } from "./license.js"
-import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups, replacesOf } from "./repo.js"
+import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups, replacesOf, stackFor } from "./repo.js"
 
-const data = await fetch("data/data.json").then((r) => r.json())
+// collections.json is written by hand (see CONTRIBUTING.md); the site works the same without it
+const [data, collections] = await Promise.all([fetch("data/data.json").then((r) => r.json()), fetch("collections.json").then((r) => (r.ok ? r.json() : [])).catch(() => [])])
 const now = Date.parse(data.updated)
 // facets (docs/plans/2026-11-07-taxonomy.md in the pipeline): area > subarea, form, platform, works with, tags, alternatives
 const TX = data.taxonomy ?? { areas: [], forms: [], platforms: [], worksWith: [] }
@@ -35,6 +36,22 @@ for (const r of repos) for (const t of r.tg ?? []) TAG.set(t, (TAG.get(t) ?? 0) 
 let index
 const search = (q, pool) => (q.trim() ? (index ??= makeIndex(repos, fieldsFor(TX)))(q, pool) : null)
 const byName = new Map(repos.map((r) => [r.r.toLowerCase(), r]))
+// Collections: the open source stack for one kind of reader ("For solopreneurs"). collections.json only says who it's
+// for and what they need, each need as the products people usually pay for. The repos are not hand-picked: every need
+// gets the top-ranked alternative on starwire (stackFor in repo.js), so a collection updates itself as rankings move.
+// Ranking needs the fit and vitals files, so the stacks are worked out the first time a collection is opened.
+const COL = new Map(collections.map((c) => [c.id, c]))
+let stacks = null // id -> { ...collection, picks, why, order }, once loaded
+async function loadStacks() {
+  vitals ??= fetch("data/vitals.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
+  fits ??= fetch("data/fit.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
+  const [v, f] = await Promise.all([vitals, fits]), ctx = { repos, vitals: v, fit: f, today: data.updated.slice(0, 10) }
+  stacks = new Map(collections.map((c) => { const picks = stackFor(c.needs, ctx)
+    return [c.id, { ...c, picks, order: new Map(picks.map((p, i) => [p.repo.r, i])),
+      why: new Map(picks.map((p) => [p.repo.r, `${p.label}, in place of ${p.product}. ${p.repo.l ?? ""}`])) }] }).filter(([, c]) => c.picks.length >= 3))
+}
+const inCol = () => stacks?.get(state.col) // the collection being shown, if any
+const lineOf = (r) => inCol()?.why.get(r.r) ?? r.l // inside a collection a repo says which need it fills
 
 // ---- saved for later: repo names in localStorage, oldest first. No accounts, so saves live in this browser,
 // and a share link (?saved=a/b,c/d) carries them to another device or person ----
@@ -94,7 +111,7 @@ const OLD_CATEGORY = {
 const old = OLD_CATEGORY[params.get("c")] ?? {}
 const pick = (k, map) => { const v = params.get(k) ?? old[k] ?? ""; return !map || map.has(v) ? v : "" }
 const state = {
-  a: pick("a", AREA), sa: "", form: pick("form", FORM), plat: pick("plat", PLAT), with: pick("with", WITH), tag: pick("tag", TAG), lic: pick("lic", LIC),
+  a: pick("a", AREA), sa: "", form: pick("form", FORM), plat: pick("plat", PLAT), with: pick("with", WITH), tag: pick("tag", TAG), lic: pick("lic", LIC), col: pick("col", new Map([...COL, ["all"]])),
   f: params.get("f") ?? (shared.length ? "shared" : params.has("multi") ? "multi" : ""), q: params.get("q") ?? "",
   repo: params.get("repo") ?? "", page: params.get("page") ?? "", alt: params.get("alt") ?? "", sort: params.get("sort") ?? (params.get("q") ? "match" : viewSort(params.get("f")) || prefs.sort), lang: params.get("lang") ?? "", view: params.get("view") ?? prefs.layout, shown: PAGE,
 }
@@ -149,8 +166,9 @@ Object.assign(I, {
 })
 I.multi = '<path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/>'
 const item = (attr, key, label, count) =>
-  `<button type="button" class="cat" data-${attr}="${esc(key)}" aria-current="false" title="${esc(label)}"><svg viewBox="0 0 24 24" aria-hidden="true">${I[key] ?? I[""]}</svg><span>${esc(label)}</span><span class="n">${count.toLocaleString("en-US")}</span></button>`
+  `<button type="button" class="cat" data-${attr}="${esc(key)}" aria-current="false" title="${esc(label)}"><svg viewBox="0 0 24 24" aria-hidden="true">${I[key] ?? I[attr] ?? I[""]}</svg><span>${esc(label)}</span><span class="n">${count.toLocaleString("en-US")}</span></button>`
 I.alt = '<path d="M4 7h13l-3-3M20 17H7l3 3"/>'
+I.col = '<path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="m3 13 9 5 9-5M3 18l9 5 9-5" opacity=".55"/>'
 I.gems = '<path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M8 9l4 12 4-12M8 9l4-6 4 6"/>'
 const ALTS = altGroups(repos)
 const visible = (r) => !(prefs.hideAI && r.ai > 0) // "Hide AI repos" in settings
@@ -159,7 +177,7 @@ function renderSidebar() {
   const pool = repos.filter(visible), count = (test) => pool.filter(test).length
   // ways to discover first, then Alternatives, and Saved last: it's the reader's own list, not another cut of ours
   $("#views").innerHTML = "<h2>Browse</h2>" + VIEWS.filter((v) => !v.hidden && v.f !== "saved").map((v) => item("f", v.f, v.label, count(v.test))).join("")
-    + item("alt", "all", "Alternatives", ALTS.size) + item("f", "saved", "Saved", saved.length)
+    + item("alt", "all", "Alternatives", ALTS.size) + (COL.size ? item("col", "all", "Collections", COL.size) : "") + item("f", "saved", "Saved", saved.length)
   let html
   if (prefs.sidebar === "form") html = "<h2>Forms</h2>" + TX.forms.map(([id, name]) => [id, name, count((r) => r.fo?.includes(id))]).filter((x) => x[2]).sort((a, b) => b[2] - a[2]).map(([id, name, n]) => item("form", id, name, n)).join("")
   else if (prefs.sidebar === "with") html = "<h2>Works with</h2>" + TX.worksWith.map(([id, name]) => [id, name, count((r) => r.ww?.includes(id))]).filter((x) => x[2]).sort((a, b) => b[2] - a[2]).map(([id, name, n]) => item("with", id, name, n)).join("")
@@ -191,7 +209,7 @@ function card(r) {
   const [fc, ft] = fresh(r.age)
   return `<div class="repo" role="button" tabindex="0" data-r="${esc(r.r)}" aria-label="${esc(name)} details">
   <div class="head"><img src="${esc(avatar(owner, 56))}" alt="" loading="lazy" decoding="async" width="28" height="28"><div class="name"><strong>${esc(name)}</strong><span>${esc(owner)}</span></div>${pills(r) ? `<span class="head-pills">${pills(r)}</span>` : ""}${saveBtn(r.r)}<a class="jump" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener" aria-label="Open ${esc(name)} on GitHub" title="Open on GitHub">${GH}</a></div>
-  <p class="line">${esc(r.l)}</p>
+  <p class="line">${esc(lineOf(r))}</p>
   ${r.t.length ? `<div class="topics">${r.t.slice(0, 3).map((t) => `<span>${esc(t)}</span>`).join("")}</div>` : ""}
   <div class="meta"><span class="stars">${STAR}${num(r.s)}</span>${r.g ? `<span class="dot" style="--c:${esc(r.gc ?? "")}">${esc(r.g)}</span>` : ""}${r.h > 0 ? `<span class="rise" title="${esc(gainTitle(r))}">${esc(gain(r))}</span>` : ""}<span class="fresh" style="--f:${fc}">${ft}</span>${pills(r)}</div>
 </div>`
@@ -229,7 +247,7 @@ function row(r, i) {
   <span class="rank">${i + 1}${moves ? moves(r) : ""}</span>
   <img src="${esc(avatar(owner, 56))}" alt="" loading="lazy" decoding="async" width="28" height="28">
   <div class="name"><strong>${esc(name)}</strong><span>${esc(owner)}${pills(r) ? ` ${pills(r)}` : ""}</span></div>
-  <p class="line">${esc(r.l)}</p>
+  <p class="line">${esc(lineOf(r))}</p>
   <span class="lang">${r.g ? `<span class="dot" style="--c:${esc(r.gc ?? "")}">${esc(r.g)}</span>` : ""}</span>
   ${spark(r.hs ?? [])}
   <div class="gain">${d != null ? `<b>${dayText(r)}</b><small>${today ? "today" : "a day"}</small>` : `<b class="flat">${STAR}${num(r.s)}</b>`}</div>
@@ -287,12 +305,27 @@ const PROMO_ROW = 3 + Math.floor(Math.random() * 5), PROMO_COL = Math.random()
 
 const facetMatch = (r) =>
   (!state.a || areaPairs(r).some((p) => (state.sa ? p === `${state.a}/${state.sa}` : p.startsWith(state.a + "/")))) &&
-  (!state.form || r.fo?.includes(state.form)) && (!state.plat || r.pl?.includes(state.plat)) && (!state.with || r.ww?.includes(state.with)) && (!state.tag || r.tg?.includes(state.tag)) && (!state.lic || licenseKind(r.li) === state.lic)
+  (!state.form || r.fo?.includes(state.form)) && (!state.plat || r.pl?.includes(state.plat)) && (!state.with || r.ww?.includes(state.with)) && (!state.tag || r.tg?.includes(state.tag)) && (!state.lic || licenseKind(r.li) === state.lic) && (!inCol() || inCol().order.has(r.r))
 const anyFacet = () => state.a || state.form || state.plat || state.with || state.tag || state.lic
 
 const PHONE = matchMedia("(max-width: 760px)")
 PHONE.addEventListener("change", () => render())
 
+// the index of collections: one card each, with the faces of what's inside
+function showCollections() {
+  document.body.dataset.cols = "all" // the sort, filters and layout controls mean nothing here: style.css hides them
+  $("#title").textContent = "Collections"
+  $("#sub").textContent = `The open source stack for ${stacks.size} kinds of work. Nothing is hand-picked: each need gets the top-ranked alternative to the product people usually pay for.`
+  for (const id of ["#lead", "#more", "#everywhere", "#alt-hint"]) $(id).hidden = true
+  document.querySelectorAll("[data-f], [data-a], [data-sa], [data-form], [data-with]").forEach((n) => n.setAttribute("aria-current", "false"))
+  const el = $("#results")
+  el.className = "cols"
+  el.innerHTML = [...stacks.values()].map((c) => `<a class="col-card" href="?col=${esc(c.id)}">
+    <strong>${esc(c.title)}</strong><p>${esc(c.intro)}</p>
+    <span class="col-faces">${c.picks.slice(0, 8).map((p) => `<img src="${esc(avatar(p.repo.r.split("/")[0], 56))}" alt="" width="26" height="26" loading="lazy" decoding="async">`).join("")}<small>${c.picks.length} tools</small></span></a>`).join("")
+  syncURL()
+  if (counted.place !== "collections") count((counted.place = "collections"), "Collections")
+}
 function render() {
   const onPage = !!(state.page || state.alt)
   $("#repo-page").hidden = !onPage
@@ -300,6 +333,9 @@ function render() {
   document.querySelectorAll("[data-alt]").forEach((n) => n.setAttribute("aria-current", String(!!state.alt)))
   if (onPage) { if (state.alt) document.querySelectorAll("[data-f]").forEach((n) => n.setAttribute("aria-current", "false")); return showPage(), syncURL() }
   if (shownPage) { shownPage = ""; document.title = TITLE }
+  document.querySelectorAll("[data-col]").forEach((n) => n.setAttribute("aria-current", String(!!state.col)))
+  if (state.col && !stacks) return void loadStacks().then(render) // the stacks need two more files; draw when they're in
+  if (state.col === "all") return showCollections()
   const view = VIEWS.find((v) => v.f === state.f) ?? VIEWS[0]
   let list = repos.filter((r) => visible(r) && view.test(r) && facetMatch(r) && (!state.lang || r.g === state.lang))
   const scores = search(state.q, list)
@@ -310,14 +346,16 @@ function render() {
   const elsewhere = narrowed ? [...search(state.q, repos.filter(visible)).keys()].filter((r) => !scores.has(r)).length : 0
   $("#everywhere").hidden = !elsewhere
   $("#everywhere").textContent = `${elsewhere.toLocaleString("en-US")} more ${elsewhere === 1 ? "match" : "matches"} in all repos`
-  list.sort(scores && state.sort === "match" ? (a, b) => scores.get(b) - scores.get(a) : sorters[state.sort] ?? sorters.picked)
+  const col = inCol() // a collection keeps the order it was written in
+  document.body.dataset.cols = col ? "one" : ""
+  list.sort(scores && state.sort === "match" ? (a, b) => scores.get(b) - scores.get(a) : col ? (a, b) => col.order.get(a.r) - col.order.get(b.r) : sorters[state.sort] ?? sorters.picked)
   // saved repos that dropped off the list stay, at the end, so a save is never lost silently
   const gone = state.f === "saved" && !anyFacet() && !state.lang && !scores ? saved.filter((n) => !byName.has(n.toLowerCase())) : []
   const el = $("#results")
-  const layout = PHONE.matches ? "list" : state.view // phones always get the list; cards add nothing on a narrow screen
+  const layout = PHONE.matches ? "list" : col ? "cards" : state.view // phones always get the list; cards add nothing on a narrow screen. A collection is cards, the layout with room for why each repo is in it
   el.className = layout
-  moves = layout === "wire" && MOVE_SCORES[state.sort] && !scores ? rankMoves(list, MOVE_SCORES[state.sort]) : null
-  if (state.view === "wire") lead(list); else $("#lead").hidden = true // phones get the list rows, but keep the lead
+  moves = layout === "wire" && !col && MOVE_SCORES[state.sort] && !scores ? rankMoves(list, MOVE_SCORES[state.sort]) : null
+  if (state.view === "wire" && !col) lead(list); else $("#lead").hidden = true // phones get the list rows, but keep the lead
   const cols = getComputedStyle(el).gridTemplateColumns.split(" ").length
   const spot = PROMO_ROW * cols + Math.floor(PROMO_COL * cols)
   // the StarDash card takes one repo's place, so a full page is 60 cells: whole rows at 3, 4, 5 or 6 columns
@@ -331,7 +369,7 @@ function render() {
     : `<div class="empty">No repos match that yet. Try fewer words or another filter.<br><button type="button" id="reset">Clear filters</button></div>`
   el.innerHTML = page.length ? page.join("") : empty
   savedBar(list.length + gone.length)
-  $("#title").textContent = state.sa ? SUB.get(`${state.a}/${state.sa}`) : state.a ? AREA.get(state.a).name
+  $("#title").textContent = col ? col.title : state.sa ? SUB.get(`${state.a}/${state.sa}`) : state.a ? AREA.get(state.a).name
     : prefs.sidebar === "form" && state.form ? FORM.get(state.form) : prefs.sidebar === "with" && state.with ? WITH.get(state.with) : view.label
   const total = list.length + gone.length
   const parts = [`${total.toLocaleString("en-US")} ${total === 1 ? "repo" : "repos"}`]
@@ -345,7 +383,7 @@ function render() {
   if (state.lang) parts.push(`in ${state.lang}`)
   if (prefs.hideAI) parts.push("AI repos hidden")
   if (!anyFacet() && !state.f && !state.lang && !state.q) parts.push(`updated ${new Date(now).toLocaleDateString("en-US", { month: "long", day: "numeric" })}`)
-  $("#sub").textContent = parts.join(", ")
+  $("#sub").textContent = col ? col.intro : parts.join(", ")
   // "postman alternative", "alternatives to notion" or just "figma": point at that product's alternatives page
   const want = state.q.toLowerCase().replace(/\b(open[ -]?source|self[ -]?hosted|free|alternatives?|replacements?|to|for|like|vs)\b/g, " ").replace(/\s+/g, " ").trim()
   const g = want && ALTS.get(want), hint = $("#alt-hint")
@@ -357,14 +395,14 @@ function render() {
   $("#more").hidden = list.length <= shown
   $("#more").textContent = `Show more (${(list.length - shown).toLocaleString("en-US")} left)`
   const group = prefs.sidebar === "form" ? state.form : prefs.sidebar === "with" ? state.with : state.a
-  document.querySelectorAll("[data-f]").forEach((n) => n.setAttribute("aria-current", String(!group && n.dataset.f === state.f)))
+  document.querySelectorAll("[data-f]").forEach((n) => n.setAttribute("aria-current", String(!group && !state.col && n.dataset.f === state.f)))
   for (const k of ["a", "form", "with"]) document.querySelectorAll(`[data-${k}]`).forEach((n) => n.setAttribute("aria-current", String(n.dataset[k] === state[k] && !(k === "a" && state.sa))))
   document.querySelectorAll("[data-sa]").forEach((n) => n.setAttribute("aria-current", String(n.dataset.sa === state.sa)))
   document.querySelectorAll(".view button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.view === state.view)))
   $("#reset")?.addEventListener("click", () => set({ f: "", a: "", sa: "", form: "", plat: "", with: "", tag: "", lic: "", q: "", lang: "" }, true))
   syncURL()
-  const place = state.a ? `area/${state.a}${state.sa ? `/${state.sa}` : ""}` : `view/${state.f || "all"}`
-  if (place !== counted.place) count((counted.place = place), state.a ? "Area" : "View")
+  const place = col ? `collection/${col.id}` : state.a ? `area/${state.a}${state.sa ? `/${state.sa}` : ""}` : `view/${state.f || "all"}`
+  if (place !== counted.place) count((counted.place = place), col ? "Collection" : state.a ? "Area" : "View")
   // a search counts once the typing stops, so "pdf editor" isn't also counted as "pd" and "pdf e"
   clearTimeout(counted.t)
   const q = state.q.toLowerCase().slice(0, 60)
@@ -374,7 +412,7 @@ const counted = { place: "", q: "", t: 0 }
 
 function syncURL() {
   const p = new URLSearchParams()
-  for (const k of ["f", "a", "sa", "form", "plat", "with", "tag", "lic", "q", "lang", "repo", "page", "alt"]) if (state[k] && !(k === "f" && state.f === "shared")) p.set(k, state[k])
+  for (const k of ["f", "a", "sa", "form", "plat", "with", "tag", "lic", "col", "q", "lang", "repo", "page", "alt"]) if (state[k] && !(k === "f" && state.f === "shared")) p.set(k, state[k])
   if (state.f === "shared") p.set("saved", shared.join(","))
   // left out only when it's what this browser falls back to on load, so a reload lands where you were
   if (state.sort !== prefs.sort && !(state.sort === "match" && state.q)) p.set("sort", state.sort)
@@ -419,7 +457,7 @@ function navigate(href) {
 }
 function fromURL() {
   const p = new URLSearchParams(location.search)
-  set(Object.fromEntries(["f", "a", "sa", "form", "plat", "with", "tag", "lic", "q", "lang", "page", "alt"].map((k) => [k, p.get(k) ?? ""])), true)
+  set(Object.fromEntries(["f", "a", "sa", "form", "plat", "with", "tag", "lic", "col", "q", "lang", "page", "alt"].map((k) => [k, p.get(k) ?? ""])), true)
   scrollTo({ top: 0 })
 }
 addEventListener("popstate", fromURL)
@@ -427,6 +465,7 @@ const inApp = (e) => { const a = e.target.closest('a[href^="?"]'); return a && !
 
 function set(patch, syncInputs) {
   const hadQ = state.q
+  if (state.col && !("col" in patch) && ["f", "a", "sa", "form", "with"].some((k) => k in patch)) patch = { ...patch, col: "" } // moving to another view or area leaves the collection
   if (!("page" in patch || "alt" in patch)) patch = { ...patch, page: "", alt: "" } // any change to the list leaves the repo page
   Object.assign(state, patch, "shown" in patch ? {} : { shown: PAGE })
   // typing a search switches to Best match; clearing it goes back to the usual order
@@ -476,6 +515,7 @@ $("#sidebar").addEventListener("click", (e) => {
   const sort = viewSort(f) || (["trending", "saved"].includes(state.sort) ? prefs.sort : state.sort)
   const d = n.dataset
   if ("alt" in d) { closeMenu(); return navigate("?alt=all") }
+  if ("col" in d) { closeMenu(); scrollTo({ top: 0 }); return set({ col: "all", f: "", a: "", sa: "", form: "", with: "", q: "" }, true) }
   if ("sa" in d) set({ sa: d.sa === state.sa ? "" : d.sa })
   else if ("a" in d) {
     // clicking the selected area again folds or unfolds its subareas and keeps it selected
@@ -810,6 +850,7 @@ $("#results").addEventListener("click", (e) => {
   if (e.metaKey || e.ctrlKey) return void window.open(`https://github.com/${c.dataset.r}`, "_blank", "noopener")
   openPanel(c.dataset.r)
 })
+$("#results").addEventListener("click", (e) => { const a = e.target.closest(".col-card") && inApp(e); if (a) { e.preventDefault(); navigate(a.getAttribute("href")) } }) // a collection opens without a reload
 $("#results").addEventListener("auxclick", (e) => { const c = e.target.closest(".repo[data-r]"); if (c && e.button === 1 && !e.target.closest(".jump, [data-save]")) window.open(`https://github.com/${c.dataset.r}`, "_blank", "noopener") })
 $("#results").addEventListener("keydown", (e) => { const c = e.target.closest(".repo[data-r]"); if (c && (e.key === "Enter" || e.key === " ") && e.target === c) { e.preventDefault(); openPanel(c.dataset.r) } })
 panel.addEventListener("click", async (e) => {
@@ -866,7 +907,7 @@ if (params.has("settings")) openSettings()
 // A filter picked here is added to what is already on, so "local-first" then "Rust" gives both; views start over.
 {
   const dlg = $("#cmdk"), inp = $("#cmdk-q"), out = $("#cmdk-list"), opener = $("#cmdk-open")
-  const clear = { f: "", a: "", sa: "", form: "", plat: "", with: "", tag: "", lic: "", lang: "", q: "" }
+  const clear = { f: "", a: "", sa: "", form: "", plat: "", with: "", tag: "", lic: "", col: "", lang: "", q: "" }
   let all = null, items = [], at = 0
   const commands = () => (all ??= [
     ...VIEWS.filter((v) => !v.hidden).map((v) => ({ kind: "View", label: v.label, run: () => set({ ...clear, f: v.f, ...(viewSort(v.f) ? { sort: viewSort(v.f) } : {}) }, true) })),
@@ -875,6 +916,7 @@ if (params.has("settings")) openSettings()
     ...TX.forms.map(([id, name]) => ({ kind: "Form", label: name, run: () => set({ form: id }, true) })),
     ...TX.platforms.map(([id, name]) => ({ kind: "Platform", label: name, run: () => set({ plat: id }, true) })),
     ...TX.worksWith.map(([id, name]) => ({ kind: "Works with", label: name, run: () => set({ with: id }, true) })),
+    ...[...COL.values()].map((c) => ({ kind: "Collection", label: c.title, run: () => set({ ...clear, col: c.id }, true) })),
     ...LICENSE_KINDS.map(([id, name]) => ({ kind: "License", label: name, run: () => set({ lic: id }, true) })),
     ...langs.map(([l, n]) => ({ kind: "Language", label: l, n, run: () => set({ lang: l }, true) })),
     ...[...ALTS.values()].map((g) => ({ kind: "Instead of", label: g.name, n: g.repos.length, run: () => set({ alt: g.name }) })),

@@ -554,6 +554,17 @@ html { scrollbar-gutter: stable; }
 }
 
 /* ranked wire: one row per repo, momentum first. Columns: rank, avatar, name, description, 2-week curve, stars today, total */
+/* the index of collections */
+body[data-cols="all"] .controls, body[data-cols="one"] .controls, body[data-cols="all"] #savedbar, body[data-cols="all"] .more-wrap { display: none; }
+#results.cols { display: grid; grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr)); gap: 14px; margin-bottom: 48px; } /* the Show more row, hidden here, is what normally keeps the footer off the list */
+.col-card { display: flex; flex-direction: column; gap: 8px; padding: 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); color: var(--text); text-decoration: none; }
+.col-card:hover { border-color: var(--muted); }
+.col-card strong { font-size: 17px; }
+.col-card p { margin: 0; flex: 1; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.col-faces { display: flex; align-items: center; margin-top: 4px; min-width: 0; }
+.col-faces img { flex: none; }
+.col-faces img { border-radius: 6px; margin-right: -6px; border: 2px solid var(--panel); background: var(--raise); }
+.col-faces small { margin-left: 16px; color: var(--muted); font-size: 13px; white-space: nowrap; }
 .wire { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--panel); }
 .wire .wrow { display: grid; grid-template-columns: 3.4rem 28px minmax(9rem, 15rem) minmax(0, 1fr) 7rem 120px 5.5rem 6.5rem auto auto; align-items: center; gap: 0 16px; padding: 10px 16px; border: 0; border-radius: 0; background: none; cursor: pointer; }
 .wire .wrow + .wrow { border-top: 1px solid var(--line); }

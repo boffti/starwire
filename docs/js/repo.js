@@ -156,6 +156,21 @@ export function replacesOf(x, ctx) {
   return (x.alt ?? []).map((name) => { const g = groups.get(altKey(name)); if (!g) return null
     const order = [...g.repos].sort(byFit(g)); return { name: g.name, f: fitOf(g, x), rank: order.indexOf(x) + 1, n: order.length } }).filter(Boolean)
 }
+// For collections: the stack for a set of needs. Each need names the products people usually pay for to fill it, in
+// order of preference, and gets the top-ranked alternative to the first of them that has one: the same order its
+// alternatives page uses (fit, then health, then stars). A repo fills one need only. needs: [[label, ...products]]
+const MIN_FIT = 0.5
+export function stackFor(needs, ctx) {
+  ({ repos, vitals, today } = ctx); fit = ctx.fit ?? fit
+  const groups = altGroups(repos), taken = new Set(), out = []
+  for (const [label, ...products] of needs) for (const p of products) {
+    // a repo scored under half the product's checklist doesn't fill the need; the next product gets a turn, or the need is left out
+    const g = groups.get(altKey(p)), best = g && [...g.repos].sort(byFit(g)).find((x) => !taken.has(x.r) && (fitOf(g, x)?.[0] ?? 1) >= MIN_FIT)
+    if (!best) continue
+    taken.add(best.r); out.push({ label, product: g.name, repo: best, n: g.repos.length }); break
+  }
+  return out
+}
 const healthy = (x) => { const v = vitals[x.r]; if (!v) return -1; const s = signs(v, today); return [s.activity, s.release, s.issues].filter((y) => y.level === "good").length }
 
 export function altPage(name, ctx) {

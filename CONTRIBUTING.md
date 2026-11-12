@@ -18,6 +18,10 @@ If your repo is on starwire, its page there has a **Copy badge** button under "G
 
 The badge updates itself and shows the best true thing about the repo that day: its rank in its subarea ("#3 in Databases"), "Rising #2 in Databases", "Hidden gem", a strong week ("+38% this week"), its rank among small repos ("#4 under 1k in Databases") or, for everyone else, how early it was found ("Spotted at 47 ★"). The rules are in `share/src/badge.js`.
 
+## Suggest a collection
+
+A collection is the open source stack for one kind of reader, like "For solopreneurs". [`docs/collections.json`](docs/collections.json) only says who it's for and what they need: each need is a short label followed by the products people usually pay for to fill it, in order of preference. Nobody picks the repos. Each need gets the top-ranked alternative to the first of those products that has a good one, in the same order its alternatives page uses, so a collection updates itself as rankings change. To propose one, add an entry with an `id`, a `title`, an `intro` and eight to fourteen `needs`.
+
 ## Please don't edit the list files by hand
 
 `README.md`, everything in `lists/`, `data/`, `assets/badges/`, `assets/banner.svg`, `docs/data/*.json` and `docs/feed.xml` are generated on every update. Edits to them in a pull request would be overwritten, so these pull requests are closed. Use the submission form instead.
