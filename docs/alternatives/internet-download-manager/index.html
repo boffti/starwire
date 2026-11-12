@@ -23,7 +23,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-<link rel="alternate" type="application/rss+xml" title="starwire, new picks" href="https://starwire.foo/feed.xml">
+<link rel="alternate" type="application/rss+xml" title="starwire, the day's best" href="https://starwire.foo/top.xml">
+<link rel="alternate" type="application/rss+xml" title="starwire, every new pick" href="https://starwire.foo/feed.xml">
 <script>try{const t=localStorage.getItem("starwire-theme");if(t)document.documentElement.dataset.theme=t;if(localStorage.getItem("starwire-rail")==="1")document.documentElement.classList.add("rail")}catch{}</script>
 <style>body[data-alt] .page > :not(#repo-page){display:none}</style>
 </head>
@@ -70,6 +71,7 @@
       <nav class="bar-links">
         <button class="icon-btn labeled" id="news-link" type="button" popovertarget="news" aria-label="Get the weekly email" title="Get the weekly email"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span>Newsletter</span></button>
         <a class="icon-btn labeled" href="https://github.com/boffti/starwire" aria-label="starwire on GitHub" title="starwire on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true" class="gh"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg><span>Source</span></a>
+        <button class="icon-btn" id="feeds-link" type="button" popovertarget="feeds" aria-label="RSS feeds" title="RSS feeds"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></button>
         <a class="icon-btn" href="how.html" aria-label="How starwire works" title="How starwire works"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg></a>
         <button id="open-settings" class="icon-btn" type="button" aria-label="Settings" title="Settings"></button>
         <button id="theme" class="icon-btn" type="button" aria-label="Switch light or dark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
@@ -87,37 +89,37 @@
   <section aria-label="Alternatives to Internet Download Manager"><div class="cmp alt-table"><table>
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
-      <th scope="row"><a class="alt-name" href="?page=anefzaoui%2Fmisterdownloadmanager"><img src="https://avatars.githubusercontent.com/anefzaoui?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>misterdownloadmanager</b><small>Cross-platform download manager written in Rust, an IDM alternative</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>85%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Faster downloads over parallel connections: yes. &quot;fetching parts of the file at the same time&quot;"></i><i class="m-y core" title="Pause and resume downloads: yes. &quot;Crash-safe resume picks up where it stopped&quot;"></i><i class="m-y core" title="Catch downloads from the browser: yes. &quot;Catches downloads from Firefox, Chrome, Edge, Brave&quot;"></i><i class="m-y" title="Download queues and scheduling: yes. &quot;queues and a scheduler that can wake the computer&quot;"></i><i class="m-y" title="Grab video from web pages: yes. &quot;**Downloads videos** from web pages&quot;"></i><i class="m-p" title="Organize downloads by type: partly. &quot;the categories, the list of downloads&quot;"></i><i class="m-n" title="Bandwidth limits: not shown"></i></span></td><td data-k="Stars"><span class="s">6.7k</span><small class="w">+6.3k</small></td>
+      <th scope="row"><a class="alt-name" href="?page=anefzaoui%2Fmisterdownloadmanager"><img src="https://avatars.githubusercontent.com/u/1832078?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>misterdownloadmanager</b><small>Cross-platform download manager written in Rust, an IDM alternative</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>85%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Faster downloads over parallel connections: yes. &quot;fetching parts of the file at the same time&quot;"></i><i class="m-y core" title="Pause and resume downloads: yes. &quot;Crash-safe resume picks up where it stopped&quot;"></i><i class="m-y core" title="Catch downloads from the browser: yes. &quot;Catches downloads from Firefox, Chrome, Edge, Brave&quot;"></i><i class="m-y" title="Download queues and scheduling: yes. &quot;queues and a scheduler that can wake the computer&quot;"></i><i class="m-y" title="Grab video from web pages: yes. &quot;**Downloads videos** from web pages&quot;"></i><i class="m-p" title="Organize downloads by type: partly. &quot;the categories, the list of downloads&quot;"></i><i class="m-n" title="Bandwidth limits: not shown"></i></span></td><td data-k="Stars"><span class="s">6.8k</span><small class="w">+5.8k</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:4.41304347826087rem"></span>290</div></td>
       <td data-k="Last release">2 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>65%</span></td>
       <td data-k="Form">Desktop app</td>
       <td data-k="License">GPL-3.0</td></tr><tr>
-      <th scope="row"><a class="alt-name" href="?page=Shahrukhalid%2Fnexonic-download-manager"><img src="https://avatars.githubusercontent.com/Shahrukhalid?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>nexonic-download-manager</b><small>Download manager for Mac and Windows with queues, scheduler and browser extensions</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>85%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Faster downloads over parallel connections: yes. &quot;split each file into parts and download them&quot;"></i><i class="m-y core" title="Pause and resume downloads: yes. &quot;Pause and resume, even after a restart.&quot;"></i><i class="m-y core" title="Catch downloads from the browser: yes. &quot;Click a download link in Chrome, Edge, Brave, Opera&quot;"></i><i class="m-y" title="Download queues and scheduling: yes. &quot;scheduler, queues, batch&quot;"></i><i class="m-y" title="Grab video from web pages: yes. &quot;Download this video button on any web page&quot;"></i><i class="m-p" title="Organize downloads by type: partly. &quot;shows the name, size, category and folder&quot;"></i><i class="m-n" title="Bandwidth limits: not shown"></i></span></td><td data-k="Stars"><span class="s">116</span><small class="w">+94</small></td>
+      <th scope="row"><a class="alt-name" href="?page=Shahrukhalid%2Fnexonic-download-manager"><img src="https://avatars.githubusercontent.com/u/90670731?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>nexonic-download-manager</b><small>Download manager for Mac and Windows with queues, scheduler and browser extensions</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>85%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Faster downloads over parallel connections: yes. &quot;split each file into parts and download them&quot;"></i><i class="m-y core" title="Pause and resume downloads: yes. &quot;Pause and resume, even after a restart.&quot;"></i><i class="m-y core" title="Catch downloads from the browser: yes. &quot;Click a download link in Chrome, Edge, Brave, Opera&quot;"></i><i class="m-y" title="Download queues and scheduling: yes. &quot;scheduler, queues, batch&quot;"></i><i class="m-y" title="Grab video from web pages: yes. &quot;Download this video button on any web page&quot;"></i><i class="m-p" title="Organize downloads by type: partly. &quot;shows the name, size, category and folder&quot;"></i><i class="m-n" title="Bandwidth limits: not shown"></i></span></td><td data-k="Stars"><span class="s">117</span><small class="w">+81</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:3.621739130434783rem"></span>238</div></td>
       <td data-k="Last release">yesterday</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>100%</span></td>
       <td data-k="Form">Desktop app</td>
       <td data-k="License">MIT</td></tr><tr>
-      <th scope="row"><a class="alt-name" href="?page=anmolkapil%2Fplexo"><img src="https://avatars.githubusercontent.com/anmolkapil?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>plexo</b><small>Desktop downloader that combines parallel connections to speed up transfers</small></span></a></th>
+      <th scope="row"><a class="alt-name" href="?page=anmolkapil%2Fplexo"><img src="https://avatars.githubusercontent.com/u/71038519?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>plexo</b><small>Desktop downloader that combines parallel connections to speed up transfers</small></span></a></th>
       <td data-k="Covers"><span class="fit"><b>80%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Faster downloads over parallel connections: yes. &quot;Download file chunks in parallel across connections&quot;"></i><i class="m-y core" title="Pause and resume downloads: yes. &quot;Pause and resume supported downloads across restarts&quot;"></i><i class="m-y core" title="Catch downloads from the browser: yes. &quot;Capture downloads or send individual links to Plexo&quot;"></i><i class="m-y" title="Download queues and scheduling: yes. &quot;Queue downloads and configure concurrent downloads&quot;"></i><i class="m-n" title="Grab video from web pages: not shown"></i><i class="m-n" title="Organize downloads by type: not shown"></i><i class="m-y" title="Bandwidth limits: yes. &quot;Set global and per-network speed limits&quot;"></i></span></td><td data-k="Stars"><span class="s">5.7k</span><small class="w">+97</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:4.960869565217392rem"></span>326</div></td>
       <td data-k="Last release">31 days ago</td><td data-k="Issues closed"><span class="lvl-ok"><i class="dot"></i>53%</span></td>
       <td data-k="Form">Desktop app</td>
       <td data-k="License">MIT</td></tr><tr>
-      <th scope="row"><a class="alt-name" href="?page=XiaoYouChR%2FGhost-Downloader-3"><img src="https://avatars.githubusercontent.com/XiaoYouChR?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>Ghost-Downloader-3</b><small>Download manager built with PySide6 and Qt, with streaming support</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>70%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Faster downloads over parallel connections: yes. &quot;Smart chunking without file merging.&quot;"></i><i class="m-y core" title="Pause and resume downloads: yes. &quot;Progress is never lost.&quot;"></i><i class="m-y core" title="Catch downloads from the browser: yes. &quot;the desktop app takes over seamlessly&quot;"></i><i class="m-n" title="Download queues and scheduling: not shown"></i><i class="m-y" title="Grab video from web pages: yes. &quot;A download button follows the video&quot;"></i><i class="m-n" title="Organize downloads by type: not shown"></i><i class="m-n" title="Bandwidth limits: not shown"></i></span></td><td data-k="Stars"><span class="s">11k</span><small class="w">+409</small></td>
+      <th scope="row"><a class="alt-name" href="?page=XiaoYouChR%2FGhost-Downloader-3"><img src="https://avatars.githubusercontent.com/u/87308195?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>Ghost-Downloader-3</b><small>Download manager built with PySide6 and Qt, with streaming support</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>70%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Faster downloads over parallel connections: yes. &quot;Smart chunking without file merging.&quot;"></i><i class="m-y core" title="Pause and resume downloads: yes. &quot;Progress is never lost.&quot;"></i><i class="m-y core" title="Catch downloads from the browser: yes. &quot;the desktop app takes over seamlessly&quot;"></i><i class="m-n" title="Download queues and scheduling: not shown"></i><i class="m-y" title="Grab video from web pages: yes. &quot;A download button follows the video&quot;"></i><i class="m-n" title="Organize downloads by type: not shown"></i><i class="m-n" title="Bandwidth limits: not shown"></i></span></td><td data-k="Stars"><span class="s">11k</span><small class="w">+415</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>460</div></td>
       <td data-k="Last release">5 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>92%</span></td>
       <td data-k="Form">Desktop app</td>
       <td data-k="License">GPL-3.0</td></tr><tr>
-      <th scope="row"><a class="alt-name" href="?page=agalwood%2FMotrix"><img src="https://avatars.githubusercontent.com/agalwood?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>Motrix</b><small>Desktop download manager on aria2 for HTTP, FTP, BitTorrent and magnets</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>49%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-n core" title="Faster downloads over parallel connections: not shown"></i><i class="m-y core" title="Pause and resume downloads: yes. &quot;Start, pause, retry, and prioritize.&quot;"></i><i class="m-y core" title="Catch downloads from the browser: yes. &quot;hands browser downloads off to Motrix in one click&quot;"></i><i class="m-p" title="Download queues and scheduling: partly. &quot;Start, pause, retry, and prioritize.&quot;"></i><i class="m-p" title="Grab video from web pages: partly. &quot;Extensible URL Resolver plugins for extracting media&quot;"></i><i class="m-p" title="Organize downloads by type: partly. &quot;**Filename Template** for renaming files&quot;"></i><i class="m-y" title="Bandwidth limits: yes. &quot;Upload and download limits with multiple speed-limit profiles&quot;"></i></span></td><td data-k="Stars"><span class="s">58k</span><small class="w">+300</small></td>
+      <th scope="row"><a class="alt-name" href="?page=agalwood%2FMotrix"><img src="https://avatars.githubusercontent.com/u/1032175?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>Motrix</b><small>Desktop download manager on aria2 for HTTP, FTP, BitTorrent and magnets</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>49%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-n core" title="Faster downloads over parallel connections: not shown"></i><i class="m-y core" title="Pause and resume downloads: yes. &quot;Start, pause, retry, and prioritize.&quot;"></i><i class="m-y core" title="Catch downloads from the browser: yes. &quot;hands browser downloads off to Motrix in one click&quot;"></i><i class="m-p" title="Download queues and scheduling: partly. &quot;Start, pause, retry, and prioritize.&quot;"></i><i class="m-p" title="Grab video from web pages: partly. &quot;Extensible URL Resolver plugins for extracting media&quot;"></i><i class="m-p" title="Organize downloads by type: partly. &quot;**Filename Template** for renaming files&quot;"></i><i class="m-y" title="Bandwidth limits: yes. &quot;Upload and download limits with multiple speed-limit profiles&quot;"></i></span></td><td data-k="Stars"><span class="s">58k</span><small class="w">+303</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:5.2956521739130435rem"></span>348</div></td>
       <td data-k="Last release">3 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>100%</span></td>
       <td data-k="Form">Desktop app</td>
-      <td data-k="License">None listed</td></tr><tr>
-      <th scope="row"><a class="alt-name" href="?page=BrisklyDev%2Fbrisk"><img src="https://avatars.githubusercontent.com/BrisklyDev?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>brisk</b><small>Fast download manager for Windows, macOS and Linux</small></span></a></th>
+      <td data-k="License">Custom license</td></tr><tr>
+      <th scope="row"><a class="alt-name" href="?page=BrisklyDev%2Fbrisk"><img src="https://avatars.githubusercontent.com/u/211107432?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>brisk</b><small>Fast download manager for Windows, macOS and Linux</small></span></a></th>
       <td data-k="Covers"><span class="fit"><b>49%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Faster downloads over parallel connections: yes. &quot;new connections are added on the fly&quot;"></i><i class="m-n core" title="Pause and resume downloads: not shown"></i><i class="m-y core" title="Catch downloads from the browser: yes. &quot;Capturing download requests from the browser&quot;"></i><i class="m-y" title="Download queues and scheduling: yes. &quot;Download Queues and Scheduling&quot;"></i><i class="m-y" title="Grab video from web pages: yes. &quot;Downloading video streams from the browser&quot;"></i><i class="m-n" title="Organize downloads by type: not shown"></i><i class="m-n" title="Bandwidth limits: not shown"></i></span></td><td data-k="Stars"><span class="s">1.8k</span><small class="w">+26</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:0.42608695652173917rem"></span>28</div></td>
       <td data-k="Last release">2 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>100%</span></td>
@@ -151,6 +153,7 @@
             <label class="select"><span>Platform</span><select id="f-plat"></select></label>
             <label class="select"><span>Works with</span><select id="f-with"></select></label>
             <label class="select"><span>Theme</span><select id="f-tag"></select></label>
+            <label class="select"><span>License</span><select id="f-lic"></select></label>
             <label class="select"><span>Language</span><select id="lang"><option value="">Any</option></select></label>
           </div>
           <div class="view" role="group" aria-label="Layout">
@@ -165,7 +168,7 @@
       <section id="lead" class="lead" hidden aria-label="Top movers"></section>
       <section id="results" class="wire" aria-label="Repos" aria-live="polite"></section>
       <div class="more-wrap"><button id="more" type="button" class="more" hidden>Show more</button></div>
-      <p class="foot">New repos every two days, stars refreshed daily. Visits are counted without cookies, and <a href="https://starwire.goatcounter.com">the numbers are public</a>. <a href="how.html">How it works</a> <a href="https://github.com/boffti/starwire/blob/main/data/repos.json">Data</a> <a href="feed.xml">RSS</a> <a href="https://list.starwire.foo/subscription/form">Newsletter</a></p>
+      <p class="foot">New repos every two days, stars refreshed daily. Visits are counted without cookies, and <a href="https://starwire.goatcounter.com">the numbers are public</a>. <a href="how.html">How it works</a> <a href="how.html#data">Data</a> <a href="top.xml" title="One item a day: the repos rising fastest and the biggest new picks">RSS</a> <a href="https://list.starwire.foo/subscription/form">Newsletter</a></p>
     </main>
   </div>
 </div>
@@ -182,6 +185,7 @@
   </div>
   <altcha-widget challengeurl="https://list.starwire.foo/api/public/captcha/altcha" hidefooter hidelogo></altcha-widget>
   <p class="news-say" role="status" aria-live="polite"></p>
+  <a class="news-past" href="https://list.starwire.foo/archive" target="_blank" rel="noopener">Read past issues</a>
 </form>
 <script>
   // The signup stays on this page: the form is sent in the background and the panel says what happened, then closes.
@@ -225,6 +229,22 @@
   <ul id="cmdk-list" role="listbox"></ul>
   <p class="cmdk-foot"><kbd>↑</kbd> <kbd>↓</kbd> to move &nbsp; <kbd>Enter</kbd> to choose &nbsp; <kbd>Esc</kbd> to close</p>
 </dialog>
+<!-- RSS feeds: a small panel under the RSS button in the top bar. A feed's address is for a feed reader; opened in a
+     browser it is raw XML, so the panel offers it to copy. -->
+<div class="news feeds" id="feeds" popover>
+  <div><b>Follow starwire by RSS</b><span>Copy an address into your feed reader.</span></div>
+  <div class="feed"><div><b>The day's best</b><span>One item a day: the repos rising fastest and the biggest new picks.</span><a href="https://starwire.foo/top.xml">starwire.foo/top.xml</a></div><button class="btn" type="button" data-copy="https://starwire.foo/top.xml">Copy</button></div>
+  <div class="feed"><div><b>Every new pick</b><span>All of them as they are added, up to 60 a day.</span><a href="https://starwire.foo/feed.xml">starwire.foo/feed.xml</a></div><button class="btn" type="button" data-copy="https://starwire.foo/feed.xml">Copy</button></div>
+  <div class="feed"><div><b>The weekly email</b><span>Each issue of the newsletter, once a week.</span><a href="https://list.starwire.foo/archive.xml">list.starwire.foo/archive.xml</a></div><button class="btn" type="button" data-copy="https://list.starwire.foo/archive.xml">Copy</button></div>
+</div>
+<script>
+  document.getElementById("feeds").addEventListener("click", async (e) => {
+    const b = e.target.closest("[data-copy]")
+    if (!b) return
+    try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = "Copied" } catch { b.textContent = "Copy failed" }
+    setTimeout(() => (b.textContent = "Copy"), 2000)
+  })
+</script>
 <aside class="panel" id="panel" hidden aria-label="Repo details"></aside>
 <aside class="panel settings" id="settings" hidden aria-label="Settings"></aside>
 <div class="panel-scrim" id="pscrim"></div>

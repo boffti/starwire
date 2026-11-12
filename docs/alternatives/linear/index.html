@@ -23,7 +23,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-<link rel="alternate" type="application/rss+xml" title="starwire, new picks" href="https://starwire.foo/feed.xml">
+<link rel="alternate" type="application/rss+xml" title="starwire, the day's best" href="https://starwire.foo/top.xml">
+<link rel="alternate" type="application/rss+xml" title="starwire, every new pick" href="https://starwire.foo/feed.xml">
 <script>try{const t=localStorage.getItem("starwire-theme");if(t)document.documentElement.dataset.theme=t;if(localStorage.getItem("starwire-rail")==="1")document.documentElement.classList.add("rail")}catch{}</script>
 <style>body[data-alt] .page > :not(#repo-page){display:none}</style>
 </head>
@@ -70,6 +71,7 @@
       <nav class="bar-links">
         <button class="icon-btn labeled" id="news-link" type="button" popovertarget="news" aria-label="Get the weekly email" title="Get the weekly email"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span>Newsletter</span></button>
         <a class="icon-btn labeled" href="https://github.com/boffti/starwire" aria-label="starwire on GitHub" title="starwire on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true" class="gh"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg><span>Source</span></a>
+        <button class="icon-btn" id="feeds-link" type="button" popovertarget="feeds" aria-label="RSS feeds" title="RSS feeds"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></button>
         <a class="icon-btn" href="how.html" aria-label="How starwire works" title="How starwire works"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg></a>
         <button id="open-settings" class="icon-btn" type="button" aria-label="Settings" title="Settings"></button>
         <button id="theme" class="icon-btn" type="button" aria-label="Switch light or dark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
@@ -87,32 +89,32 @@
   <section aria-label="Alternatives to Linear"><div class="cmp alt-table"><table>
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Issues closed</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
     <tbody><tr>
-      <th scope="row"><a class="alt-name" href="?page=makeplane%2Fplane"><img src="https://avatars.githubusercontent.com/makeplane?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>plane</b><small>Open source project management with tasks, sprints, docs and triage</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>91%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Issue tracking: yes. &quot;track issues, run ~sprints~ cycles, and manage product roadmaps&quot;"></i><i class="m-y core" title="Projects and roadmaps: yes. &quot;manage product roadmaps&quot;"></i><i class="m-y core" title="Cycles for sprint planning: yes. &quot;Maintain your team’s momentum with Cycles.&quot;"></i><i class="m-n" title="Keyboard shortcuts and fast UI: not shown"></i><i class="m-y" title="Triage inbox: yes. &quot;Triage incoming requests, assign owners, track blockers&quot;"></i><i class="m-y" title="Git and pull request integration: yes. &quot;Connect to Slack, GitHub, Figma, and 50+ tools&quot;"></i><i class="m-y" title="Team workflows and statuses: yes. &quot;Define workflows that match how your team actually works&quot;"></i><i class="m-y" title="Insights: yes. &quot;Access real-time insights across all your Plane data.&quot;"></i></span></td><td data-k="Stars"><span class="s">62k</span><small class="w">+260</small></td>
+      <th scope="row"><a class="alt-name" href="?page=makeplane%2Fplane"><img src="https://avatars.githubusercontent.com/u/115727700?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>plane</b><small>Open source project management with tasks, sprints, docs and triage</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>91%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Issue tracking: yes. &quot;track issues, run ~sprints~ cycles, and manage product roadmaps&quot;"></i><i class="m-y core" title="Projects and roadmaps: yes. &quot;manage product roadmaps&quot;"></i><i class="m-y core" title="Cycles for sprint planning: yes. &quot;Maintain your team’s momentum with Cycles.&quot;"></i><i class="m-n" title="Keyboard shortcuts and fast UI: not shown"></i><i class="m-y" title="Triage inbox: yes. &quot;Triage incoming requests, assign owners, track blockers&quot;"></i><i class="m-y" title="Git and pull request integration: yes. &quot;Connect to Slack, GitHub, Figma, and 50+ tools&quot;"></i><i class="m-y" title="Team workflows and statuses: yes. &quot;Define workflows that match how your team actually works&quot;"></i><i class="m-y" title="Insights: yes. &quot;Access real-time insights across all your Plane data.&quot;"></i></span></td><td data-k="Stars"><span class="s">62k</span><small class="w">+271</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:0.4563371740448757rem"></span>215</div></td>
       <td data-k="Last release">14 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>100%</span></td>
       <td data-k="Form">Self-hostable service, Web app</td>
       <td data-k="License">AGPL-3.0</td></tr><tr>
-      <th scope="row"><a class="alt-name" href="?page=croffasia%2Fitsaplan"><img src="https://avatars.githubusercontent.com/croffasia?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>itsaplan</b><small>Self-hosted issue tracker where teams and AI agents plan work together</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>91%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Issue tracking: yes. &quot;Self-hosted project management and issue tracking&quot;"></i><i class="m-y core" title="Projects and roadmaps: yes. &quot;Kanban, table, timeline, and calendar views&quot;"></i><i class="m-y core" title="Cycles for sprint planning: yes. &quot;Cycles that time-box the work.&quot;"></i><i class="m-p" title="Keyboard shortcuts and fast UI: partly. &quot;Search or run a command&quot;"></i><i class="m-p" title="Triage inbox: partly. &quot;a notification inbox, role-based access control&quot;"></i><i class="m-y" title="Git and pull request integration: yes. &quot;pull requests from 5 forges&quot;"></i><i class="m-y" title="Team workflows and statuses: yes. &quot;custom fields, labels, states, and issue types&quot;"></i><i class="m-y" title="Insights: yes. &quot;Configurable dashboards for project analytics&quot;"></i></span></td><td data-k="Stars"><span class="s">2.3k</span><small class="w">+81</small></td>
+      <th scope="row"><a class="alt-name" href="?page=croffasia%2Fitsaplan"><img src="https://avatars.githubusercontent.com/u/696180?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>itsaplan</b><small>Self-hosted issue tracker where teams and AI agents plan work together</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>91%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Issue tracking: yes. &quot;Self-hosted project management and issue tracking&quot;"></i><i class="m-y core" title="Projects and roadmaps: yes. &quot;Kanban, table, timeline, and calendar views&quot;"></i><i class="m-y core" title="Cycles for sprint planning: yes. &quot;Cycles that time-box the work.&quot;"></i><i class="m-p" title="Keyboard shortcuts and fast UI: partly. &quot;Search or run a command&quot;"></i><i class="m-p" title="Triage inbox: partly. &quot;a notification inbox, role-based access control&quot;"></i><i class="m-y" title="Git and pull request integration: yes. &quot;pull requests from 5 forges&quot;"></i><i class="m-y" title="Team workflows and statuses: yes. &quot;custom fields, labels, states, and issue types&quot;"></i><i class="m-y" title="Insights: yes. &quot;Configurable dashboards for project analytics&quot;"></i></span></td><td data-k="Stars"><span class="s">2.3k</span><small class="w">+83</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:0.9381443298969072rem"></span>442</div></td>
       <td data-k="Last release">6 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>77%</span></td>
       <td data-k="Form">Self-hostable service, Web app</td>
       <td data-k="License">AGPL-3.0</td></tr><tr>
-      <th scope="row"><a class="alt-name" href="?page=hcengineering%2Fplatform"><img src="https://avatars.githubusercontent.com/hcengineering?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>platform</b><small>All in one project management, chat, CRM and HR platform</small></span></a></th>
+      <th scope="row"><a class="alt-name" href="?page=hcengineering%2Fplatform"><img src="https://avatars.githubusercontent.com/u/87086734?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>platform</b><small>All in one project management, chat, CRM and HR platform</small></span></a></th>
       <td data-k="Covers"><span class="fit"><b>49%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Issue tracking: yes. &quot;Manage your tasks efficiently&quot;"></i><i class="m-p core" title="Projects and roadmaps: partly. &quot;collaborating on plans and roadmaps&quot;"></i><i class="m-n core" title="Cycles for sprint planning: not shown"></i><i class="m-y" title="Keyboard shortcuts and fast UI: yes. &quot;Keyboard shortcuts. Work efficiently with instant access to common actions.&quot;"></i><i class="m-p" title="Triage inbox: partly. &quot;Inbox&quot;"></i><i class="m-y" title="Git and pull request integration: yes. &quot;bidirectional GitHub synchronization&quot;"></i><i class="m-p" title="Team workflows and statuses: partly. &quot;Customize your workspace to fit the needs of your teams.&quot;"></i><i class="m-n" title="Insights: not shown"></i></span></td><td data-k="Stars"><span class="s">28k</span><small class="w">+40</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:0.16343238326258339rem"></span>77</div></td>
       <td data-k="Last release">4 months ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>100%</span></td>
       <td data-k="Form">Self-hostable service, Web app</td>
       <td data-k="License">EPL-2.0</td></tr><tr>
-      <th scope="row"><a class="alt-name" href="?page=usekaneo%2Fkaneo"><img src="https://avatars.githubusercontent.com/usekaneo?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>kaneo</b><small>Self-hostable project management with kanban boards and Gantt charts</small></span></a></th>
+      <th scope="row"><a class="alt-name" href="?page=usekaneo%2Fkaneo"><img src="https://avatars.githubusercontent.com/u/192649426?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>kaneo</b><small>Self-hostable project management with kanban boards and Gantt charts</small></span></a></th>
       <td data-k="Covers"><span class="fit"><b>45%</b><small>Replaces it</small></span><span class="fit-dots"><i class="m-y core" title="Issue tracking: yes. &quot;Project management that doesn't become the project.&quot;"></i><i class="m-p core" title="Projects and roadmaps: partly. &quot;plan work on a timeline&quot;"></i><i class="m-n core" title="Cycles for sprint planning: not shown"></i><i class="m-n" title="Keyboard shortcuts and fast UI: not shown"></i><i class="m-n" title="Triage inbox: not shown"></i><i class="m-y" title="Git and pull request integration: yes. &quot;Linked pull requests move tasks through review to done&quot;"></i><i class="m-y" title="Team workflows and statuses: yes. &quot;custom columns and fields&quot;"></i><i class="m-n" title="Insights: not shown"></i></span></td><td data-k="Stars"><span class="s">9.8k</span><small class="w">+54</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:3.1943602183141295rem"></span>1,505</div></td>
       <td data-k="Last release">9 days ago</td><td data-k="Issues closed"><span class="lvl-good"><i class="dot"></i>92%</span></td>
       <td data-k="Form">Self-hostable service, Web app</td>
       <td data-k="License">MIT</td></tr><tr>
-      <th scope="row"><a class="alt-name" href="?page=macro-inc%2Fmacro"><img src="https://avatars.githubusercontent.com/macro-inc?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>macro</b><small>Team workspace combining email, chat, docs, tasks, calls and CRM with AI memory</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>41%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-y core" title="Issue tracking: yes. &quot;Linear-inspired tasks, tightly integrated with channels, email, and agents.&quot;"></i><i class="m-n core" title="Projects and roadmaps: not shown"></i><i class="m-n core" title="Cycles for sprint planning: not shown"></i><i class="m-y" title="Keyboard shortcuts and fast UI: yes. &quot;into a single fast interface&quot;"></i><i class="m-p" title="Triage inbox: partly. &quot;Unified inbox: emails, messages, @mentions, and tasks to complete&quot;"></i><i class="m-y" title="Git and pull request integration: yes. &quot;Linked to tasks, embeddable in channels, available to agents.&quot;"></i><i class="m-n" title="Team workflows and statuses: not shown"></i><i class="m-n" title="Insights: not shown"></i></span></td><td data-k="Stars"><span class="s">6.3k</span><small class="w">+83</small></td>
+      <th scope="row"><a class="alt-name" href="?page=macro-inc%2Fmacro"><img src="https://avatars.githubusercontent.com/u/65687018?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>macro</b><small>Team workspace combining email, chat, docs, tasks, calls and CRM with AI memory</small></span></a></th>
+      <td data-k="Covers"><span class="fit"><b>41%</b><small>Covers one part</small></span><span class="fit-dots"><i class="m-y core" title="Issue tracking: yes. &quot;Linear-inspired tasks, tightly integrated with channels, email, and agents.&quot;"></i><i class="m-n core" title="Projects and roadmaps: not shown"></i><i class="m-n core" title="Cycles for sprint planning: not shown"></i><i class="m-y" title="Keyboard shortcuts and fast UI: yes. &quot;into a single fast interface&quot;"></i><i class="m-p" title="Triage inbox: partly. &quot;Unified inbox: emails, messages, @mentions, and tasks to complete&quot;"></i><i class="m-y" title="Git and pull request integration: yes. &quot;Linked to tasks, embeddable in channels, available to agents.&quot;"></i><i class="m-n" title="Team workflows and statuses: not shown"></i><i class="m-n" title="Insights: not shown"></i></span></td><td data-k="Stars"><span class="s">6.3k</span><small class="w">+88</small></td>
       <td data-k="Commits, 12 weeks"><div class="bar"><span style="width:7rem"></span>3,298</div></td>
       <td data-k="Last release">today</td><td data-k="Issues closed"><span class="lvl-ok"><i class="dot"></i>31%</span></td>
       <td data-k="Form">Web app, Desktop app</td>
@@ -145,6 +147,7 @@
             <label class="select"><span>Platform</span><select id="f-plat"></select></label>
             <label class="select"><span>Works with</span><select id="f-with"></select></label>
             <label class="select"><span>Theme</span><select id="f-tag"></select></label>
+            <label class="select"><span>License</span><select id="f-lic"></select></label>
             <label class="select"><span>Language</span><select id="lang"><option value="">Any</option></select></label>
           </div>
           <div class="view" role="group" aria-label="Layout">
@@ -159,7 +162,7 @@
       <section id="lead" class="lead" hidden aria-label="Top movers"></section>
       <section id="results" class="wire" aria-label="Repos" aria-live="polite"></section>
       <div class="more-wrap"><button id="more" type="button" class="more" hidden>Show more</button></div>
-      <p class="foot">New repos every two days, stars refreshed daily. Visits are counted without cookies, and <a href="https://starwire.goatcounter.com">the numbers are public</a>. <a href="how.html">How it works</a> <a href="https://github.com/boffti/starwire/blob/main/data/repos.json">Data</a> <a href="feed.xml">RSS</a> <a href="https://list.starwire.foo/subscription/form">Newsletter</a></p>
+      <p class="foot">New repos every two days, stars refreshed daily. Visits are counted without cookies, and <a href="https://starwire.goatcounter.com">the numbers are public</a>. <a href="how.html">How it works</a> <a href="how.html#data">Data</a> <a href="top.xml" title="One item a day: the repos rising fastest and the biggest new picks">RSS</a> <a href="https://list.starwire.foo/subscription/form">Newsletter</a></p>
     </main>
   </div>
 </div>
@@ -176,6 +179,7 @@
   </div>
   <altcha-widget challengeurl="https://list.starwire.foo/api/public/captcha/altcha" hidefooter hidelogo></altcha-widget>
   <p class="news-say" role="status" aria-live="polite"></p>
+  <a class="news-past" href="https://list.starwire.foo/archive" target="_blank" rel="noopener">Read past issues</a>
 </form>
 <script>
   // The signup stays on this page: the form is sent in the background and the panel says what happened, then closes.
@@ -219,6 +223,22 @@
   <ul id="cmdk-list" role="listbox"></ul>
   <p class="cmdk-foot"><kbd>↑</kbd> <kbd>↓</kbd> to move &nbsp; <kbd>Enter</kbd> to choose &nbsp; <kbd>Esc</kbd> to close</p>
 </dialog>
+<!-- RSS feeds: a small panel under the RSS button in the top bar. A feed's address is for a feed reader; opened in a
+     browser it is raw XML, so the panel offers it to copy. -->
+<div class="news feeds" id="feeds" popover>
+  <div><b>Follow starwire by RSS</b><span>Copy an address into your feed reader.</span></div>
+  <div class="feed"><div><b>The day's best</b><span>One item a day: the repos rising fastest and the biggest new picks.</span><a href="https://starwire.foo/top.xml">starwire.foo/top.xml</a></div><button class="btn" type="button" data-copy="https://starwire.foo/top.xml">Copy</button></div>
+  <div class="feed"><div><b>Every new pick</b><span>All of them as they are added, up to 60 a day.</span><a href="https://starwire.foo/feed.xml">starwire.foo/feed.xml</a></div><button class="btn" type="button" data-copy="https://starwire.foo/feed.xml">Copy</button></div>
+  <div class="feed"><div><b>The weekly email</b><span>Each issue of the newsletter, once a week.</span><a href="https://list.starwire.foo/archive.xml">list.starwire.foo/archive.xml</a></div><button class="btn" type="button" data-copy="https://list.starwire.foo/archive.xml">Copy</button></div>
+</div>
+<script>
+  document.getElementById("feeds").addEventListener("click", async (e) => {
+    const b = e.target.closest("[data-copy]")
+    if (!b) return
+    try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = "Copied" } catch { b.textContent = "Copy failed" }
+    setTimeout(() => (b.textContent = "Copy"), 2000)
+  })
+</script>
 <aside class="panel" id="panel" hidden aria-label="Repo details"></aside>
 <aside class="panel settings" id="settings" hidden aria-label="Settings"></aside>
 <div class="panel-scrim" id="pscrim"></div>
