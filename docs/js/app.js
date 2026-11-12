@@ -323,7 +323,7 @@ PHONE.addEventListener("change", () => render())
 function showCollections() {
   document.body.dataset.cols = "all" // the sort, filters and layout controls mean nothing here: style.css hides them
   $("#title").textContent = "Collections"
-  $("#sub").textContent = `The open source stack for ${stacks.size} kinds of work. Nothing is hand-picked: each need gets the top-ranked alternative to the product people usually pay for.`
+  $("#sub").textContent = `The open source stack for ${stacks.size} kinds of work. Each need gets the top-ranked alternative to the product people usually pay for.`
   for (const id of ["#lead", "#more", "#everywhere", "#alt-hint"]) $(id).hidden = true
   document.querySelectorAll("[data-f], [data-a], [data-sa], [data-form], [data-with]").forEach((n) => n.setAttribute("aria-current", "false"))
   const el = $("#results")
@@ -359,7 +359,7 @@ function showCollection(c) {
       return `<li class="st-row${p ? "" : " gap"}"><div class="st-need"><span class="st-n">${String(i + 1).padStart(2, "0")}</span><div><h2>${esc(label)}</h2>
         ${p ? `<p>In place of <a href="?alt=${encodeURIComponent(p.product)}">${esc(p.product)}</a>${p.n > 1 ? `<a class="st-all" href="?alt=${encodeURIComponent(p.product)}">Compare all ${p.n}</a>` : ""}</p>` : `<p>Usually ${esc(products.slice(0, 2).join(" or "))}</p>`}</div></div>
         ${p ? pick(p) : gap(products)}</li>` }).join("")}</ol>
-    <p class="st-note">Nothing here is hand-picked. Each need gets the top-ranked open source alternative to the product people usually pay for, so the stack changes as the rankings do. <a href="how.html#fit">How fit is scored</a> &middot; <a href="?col=all">All collections</a></p>`
+    <p class="st-note">Each need gets the top-ranked open source alternative to the product people usually pay for, so the stack changes as the rankings do. <a href="how.html#fit">How fit is scored</a> &middot; <a href="?col=all">All collections</a></p>`
   syncURL()
   const place = `collection/${c.id}`
   if (place !== counted.place) count((counted.place = place), "Collection")
