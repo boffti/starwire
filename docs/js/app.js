@@ -16,7 +16,7 @@ import { avatar, knowOwners } from "./avatar.js"
 import { signs, summary } from "./vitals.js"
 import { weight } from "./signal.js"
 import { LICENSE_KINDS, licenseKind, licenseText } from "./license.js"
-import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups, replacesOf, stackFor } from "./repo.js"
+import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups, replacesOf, stackFor, KIND } from "./repo.js"
 
 // collections.json is written by hand (see CONTRIBUTING.md); the site works the same without it
 const [data, collections] = await Promise.all([fetch("data/data.json").then((r) => r.json()), fetch("collections.json").then((r) => (r.ok ? r.json() : [])).catch(() => [])])
@@ -334,6 +334,36 @@ function showCollections() {
   syncURL()
   if (counted.place !== "collections") count((counted.place = "collections"), "Collections")
 }
+// one collection: the stack, need by need. Each row is a job to be done, the product people usually pay for, and the
+// open source project that takes its place, with how well it fits. A need nothing covers well is shown as a gap.
+function showCollection(c) {
+  document.body.dataset.cols = "one"
+  $("#title").textContent = c.title
+  $("#sub").textContent = c.intro
+  for (const id of ["#lead", "#more", "#everywhere", "#alt-hint"]) $(id).hidden = true
+  document.querySelectorAll("[data-f], [data-a], [data-sa], [data-form], [data-with]").forEach((n) => n.setAttribute("aria-current", "false"))
+  const by = new Map(c.picks.map((p) => [p.label, p])), repos = c.picks.map((p) => p.repo)
+  const host = repos.filter((r) => r.fo?.includes("self-hosted")).length, open = repos.filter((r) => licenseKind(r.li) === "open").length
+  const facts = [[`${c.picks.length} of ${c.needs.length}`, "needs covered"], [c.picks.reduce((n, p) => n + p.n, 0), "alternatives compared"], [open, open === 1 ? "open source license" : "open source licenses"], [host, "can be self-hosted"]]
+  const pick = (p) => { const r = p.repo, [owner, name] = r.r.split("/")
+    return `<div class="repo st-pick" role="button" tabindex="0" data-r="${esc(r.r)}" aria-label="${esc(name)} details">
+      <div class="head"><img src="${esc(avatar(owner, 80))}" alt="" loading="lazy" decoding="async" width="40" height="40"><div class="name"><strong>${esc(name)}</strong><span>${esc(owner)}</span></div>${saveBtn(r.r)}<a class="jump" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener" aria-label="Open ${esc(name)} on GitHub" title="Open on GitHub">${GH}</a></div>
+      <p class="line">${esc(r.l ?? "")}</p>
+      <div class="meta">${p.f ? `<span class="st-fit"><b>${KIND[p.f[1]]}</b> covers ${Math.round(p.f[0] * 100)}%</span>` : ""}<span class="stars">${STAR}${num(r.s)}</span><span>${esc(licenseText(r.li))}</span>${(r.fo ?? []).length ? `<span>${r.fo.map((f) => esc(FORM.get(f))).join(", ")}</span>` : ""}</div></div>` }
+  const gap = (products) => { const g = products.map((x) => ALTS.get(x.toLowerCase())).find(Boolean)
+    return `<div class="st-gap"><b>No strong fit yet.</b> Nothing on starwire covers enough of ${esc(g?.name ?? products[0])} to recommend. ${g ? `<a href="?alt=${encodeURIComponent(g.name)}">See the ${g.repos.length} partial ${g.repos.length === 1 ? "option" : "options"}</a>` : `<a href="https://github.com/boffti/starwire/issues/new?template=submit.yml" target="_blank" rel="noopener">Suggest a repo</a>`}</div>` }
+  const el = $("#results")
+  el.className = "stack"
+  el.innerHTML = `<dl class="st-facts">${facts.map(([n, k]) => `<div><dt>${k}</dt><dd>${n}</dd></div>`).join("")}</dl>
+    <ol class="st-rows">${c.needs.map(([label, ...products], i) => { const p = by.get(label)
+      return `<li class="st-row${p ? "" : " gap"}"><div class="st-need"><span class="st-n">${String(i + 1).padStart(2, "0")}</span><div><h2>${esc(label)}</h2>
+        ${p ? `<p>In place of <a href="?alt=${encodeURIComponent(p.product)}">${esc(p.product)}</a>${p.n > 1 ? `<a class="st-all" href="?alt=${encodeURIComponent(p.product)}">Compare all ${p.n}</a>` : ""}</p>` : `<p>Usually ${esc(products.slice(0, 2).join(" or "))}</p>`}</div></div>
+        ${p ? pick(p) : gap(products)}</li>` }).join("")}</ol>
+    <p class="st-note">Nothing here is hand-picked. Each need gets the top-ranked open source alternative to the product people usually pay for, so the stack changes as the rankings do. <a href="how.html#fit">How fit is scored</a> &middot; <a href="?col=all">All collections</a></p>`
+  syncURL()
+  const place = `collection/${c.id}`
+  if (place !== counted.place) count((counted.place = place), "Collection")
+}
 function render() {
   const onPage = !!(state.page || state.alt)
   $("#repo-page").hidden = !onPage
@@ -344,6 +374,7 @@ function render() {
   document.querySelectorAll("[data-col]").forEach((n) => n.setAttribute("aria-current", String(!!state.col)))
   if (state.col && !stacks) return void loadStacks().then(render) // the stacks need two more files; draw when they're in
   if (state.col === "all") return showCollections()
+  if (inCol() && !state.q) return showCollection(inCol()) // a search from inside a collection falls through to the plain list
   const view = VIEWS.find((v) => v.f === state.f) ?? VIEWS[0]
   let list = repos.filter((r) => visible(r) && view.test(r) && facetMatch(r) && (!state.lang || r.g === state.lang))
   const scores = search(state.q, list)
@@ -859,7 +890,7 @@ $("#results").addEventListener("click", (e) => {
   if (e.metaKey || e.ctrlKey) return void window.open(`https://github.com/${c.dataset.r}`, "_blank", "noopener")
   openPanel(c.dataset.r)
 })
-$("#results").addEventListener("click", (e) => { const a = e.target.closest(".col-card") && inApp(e); if (a) { e.preventDefault(); navigate(a.getAttribute("href")) } }) // a collection opens without a reload
+$("#results").addEventListener("click", (e) => { const a = e.target.closest(".col-card, .stack") && inApp(e); if (a) { e.preventDefault(); navigate(a.getAttribute("href")) } }) // a collection opens without a reload
 $("#results").addEventListener("auxclick", (e) => { const c = e.target.closest(".repo[data-r]"); if (c && e.button === 1 && !e.target.closest(".jump, [data-save]")) window.open(`https://github.com/${c.dataset.r}`, "_blank", "noopener") })
 $("#results").addEventListener("keydown", (e) => { const c = e.target.closest(".repo[data-r]"); if (c && (e.key === "Enter" || e.key === " ") && e.target === c) { e.preventDefault(); openPanel(c.dataset.r) } })
 panel.addEventListener("click", async (e) => {

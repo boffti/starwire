@@ -155,7 +155,7 @@ export function altGroups(list) {
   return g
 }
 // fit: how much of the product's checklist a repo covers (scripts/fit.mjs in the pipeline). [score, kind, marks, quotes]
-const KIND = { "drop-in": "Replaces it", part: "Covers one part", different: "Same job, different way" }
+export const KIND = { "drop-in": "Replaces it", part: "Covers one part", different: "Same job, different way" }
 const fitOf = (g, x) => fit.pairs?.[altKey(g.name)]?.[x.r]
 const byFit = (g) => (a, b) => (fitOf(g, b)?.[0] ?? -1) - (fitOf(g, a)?.[0] ?? -1) || healthy(b) - healthy(a) || b.s - a.s
 const covered = (m) => [...m].reduce((n, c) => n + (c === "y" ? 1 : c === "p" ? 0.5 : 0), 0)
@@ -177,7 +177,7 @@ export function stackFor(needs, ctx) {
     // a repo scored under half the product's checklist doesn't fill the need; the next product gets a turn, or the need is left out
     const g = groups.get(altKey(p)), best = g && [...g.repos].sort(byFit(g)).find((x) => !taken.has(x.r) && (fitOf(g, x)?.[0] ?? 1) >= MIN_FIT)
     if (!best) continue
-    taken.add(best.r); out.push({ label, product: g.name, repo: best, n: g.repos.length }); break
+    taken.add(best.r); out.push({ label, product: g.name, repo: best, n: g.repos.length, f: fitOf(g, best) }); break
   }
   return out
 }
