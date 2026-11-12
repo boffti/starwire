@@ -499,9 +499,23 @@ html { scrollbar-gutter: stable; }
 /* alternatives pages (?alt=Product, ?alt=all), same shell as the repo page */
 .rp .alt-hero h1 { font-size: clamp(28px, 4.4vw, 38px); }
 .rp .alt-hero .line { max-width: 62ch; display: block; overflow: visible; }
-.rp .alt-table table { min-width: 52rem; }
+/* no sideways scroll: every cell but the project keeps to one line, the project gives up width first, and the
+   columns that matter least drop out as the table's own box narrows (the phone layout below shows them all again) */
+.rp .alt-table table { min-width: 0; }
+.rp .alt-table thead th, .rp .alt-table tbody td { white-space: nowrap; }
+.rp .alt-table td.c-form, .rp .alt-table tr.ev td { white-space: normal; }
+.rp .alt-table thead th { padding-block: 16px; }
+/* the project column takes whatever is left; its description is cut with an ellipsis and must not set the width */
+.rp .alt-table thead th:first-child { width: 100%; }
+.rp .alt-name > span { flex: 1; width: 0; }
+@media (min-width: 641px) {
+  @container (max-width: 66rem) { .rp .alt-table .c-form { display: none; } }
+  @container (max-width: 60rem) { .rp .alt-table .c-commits { display: none; } }
+  @container (max-width: 50rem) { .rp .alt-table .c-rel { display: none; } }
+  @container (max-width: 44rem) { .rp .alt-table .c-iss { display: none; } }
+}
 .rp .alt-table tbody tr:hover { background: color-mix(in srgb, var(--raise) 50%, transparent); }
-.rp .alt-name { display: flex; align-items: center; gap: 12px; color: var(--text) !important; min-width: 14rem; max-width: 24rem; }
+.rp .alt-name { display: flex; align-items: center; gap: 12px; color: var(--text) !important; min-width: 12rem; max-width: 24rem; }
 .rp .alt-name:hover { text-decoration: none !important; }
 .rp .alt-name:hover b { text-decoration: underline; }
 .rp .alt-name img { width: 28px; height: 28px; border-radius: 8px; background: var(--raise); flex: none; }
@@ -648,7 +662,9 @@ body[data-cols="all"] .controls, body[data-cols="one"] .controls, body[data-cols
 .rp .fit { display: flex; align-items: baseline; gap: 8px; white-space: nowrap; }
 .rp .fit b { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .rp .fit small { font-size: 12px; color: var(--muted); }
-.rp .fit-dots { display: flex; gap: 4px; margin-top: 6px; }
+.rp .fit-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.rp .fit-row small { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.rp .fit-dots { display: flex; gap: 4px; }
 .rp .fit-dots i { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid color-mix(in srgb, var(--green) 70%, var(--line)); }
 .rp .fit-dots i.core { border-radius: 3px; }
 .rp .fit-dots i.m-y { background: var(--green); }

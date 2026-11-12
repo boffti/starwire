@@ -193,7 +193,7 @@ export function altPage(name, ctx) {
   const jobs = P?.jobs ?? []
   const dots = (f) => `<span class="fit-dots">${jobs.map(([j, w], i) => `<i class="m-${f[2][i]}${w === 2 ? " core" : ""}" title="${esc(`${j}: ${f[2][i] === "y" ? "yes" : f[2][i] === "p" ? "partly" : "not shown"}${f[3][i] ? `. "${f[3][i]}"` : ""}`)}"></i>`).join("")}</span>`
   // what it is comes first, the score second: 86% of a checklist is not 86% suitable
-  const fitCell = (x) => { const f = fitOf(g, x); return f ? `<span class="fit"><b>${KIND[f[1]]}</b><small>covers ${Math.round(f[0] * 100)}%</small></span>${dots(f)}` : `<span class="muted">Not checked yet</span>` }
+  const fitCell = (x) => { const f = fitOf(g, x); return f ? `<span class="fit"><b>${KIND[f[1]]}</b></span><span class="fit-row">${dots(f)}<small>${Math.round(f[0] * 100)}%</small></span>` : `<span class="muted">Not checked yet</span>` }
   // the reading in words under each project: the core jobs, then what is partial or absent. The line behind every
   // mark opens underneath (a <details>, so it works by tap and keyboard, not only on hover)
   const at = (f, c) => jobs.filter((_, i) => f[2][i] === c).map(([j]) => esc(j)).join("; ")
@@ -219,13 +219,13 @@ export function altPage(name, ctx) {
     <div class="acts"><button type="button" class="btn" data-share="instead-of/${esc(g.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""))}" aria-label="Copy a share link">${svg(I.share).replace("<svg", '<svg style="fill:none;stroke:currentColor;stroke-width:2"')}<span>Share</span></button></div></section>
   ${P ? `<section class="jobs" aria-labelledby="jobs"><h2 id="jobs">What ${esc(g.name)} does</h2><ol class="job-list">${jobs.map(([j, w]) => `<li class="${w === 2 ? "core" : ""}">${esc(j)}${w === 2 ? "<small>core</small>" : ""}</li>`).join("")}</ol><p class="foot-note">Each dot in the table is one job, in this order. Square dots are core jobs and count double. Full means yes, half means partly. "See the evidence" under a project shows the line behind each one. Coverage is what a project documents, not how well it works or how hard it is to move to. <a href="how.html#fit">How we score this</a></p></section>` : ""}
   <section aria-label="Alternatives to ${esc(g.name)}"><div class="cmp alt-table"><table>
-    <thead><tr><th scope="col">Project</th>${P ? `<th scope="col">Covers</th>` : ""}<th scope="col">Stars</th><th scope="col" style="width:12rem">Commits, 12 weeks</th><th scope="col">Last release</th><th scope="col">Closed vs opened</th><th scope="col">Form</th><th scope="col">License</th></tr></thead>
+    <thead><tr><th scope="col">Project</th>${P ? `<th scope="col">Covers</th>` : ""}<th scope="col">Stars</th><th scope="col" class="c-commits">Commits, 12 weeks</th><th scope="col" class="c-rel">Last release</th><th scope="col" class="c-iss">Closed vs opened</th><th scope="col" class="c-form">Form</th><th scope="col">License</th></tr></thead>
     <tbody>${rows.map((x) => { const c = commits(x), [rel, iss] = cell(x), [owner, nm] = x.r.split("/"); return `<tr>
       <th scope="row"><a class="alt-name" href="?page=${encodeURIComponent(x.r)}"><img src="${esc(avatar(owner, 56))}" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>${esc(nm)}</b><small>${esc(x.l || owner)}</small></span></a></th>
       ${P ? `<td data-k="Covers">${fitCell(x)}</td>` : ""}<td data-k="Stars"><span class="s">${num(x.s)}</span>${x.w > 0 ? `<small class="w">+${num(x.w)}</small>` : ""}</td>
-      <td data-k="Commits, 12 weeks">${c == null ? "Not measured" : `<div class="bar"><span style="width:${(c / max) * 7}rem"></span>${c.toLocaleString("en-US")}</div>`}</td>
-      <td data-k="Last release">${rel}</td><td data-k="Issues closed vs opened">${iss}</td>
-      <td data-k="Form">${(x.fo ?? []).map((f) => esc(FORM.get(f))).join(", ") || "Not labelled"}</td>
+      <td data-k="Commits, 12 weeks" class="c-commits">${c == null ? "Not measured" : `<div class="bar"><span style="width:${(c / max) * 5}rem"></span>${c.toLocaleString("en-US")}</div>`}</td>
+      <td data-k="Last release" class="c-rel">${rel}</td><td data-k="Issues closed vs opened" class="c-iss">${iss}</td>
+      <td data-k="Form" class="c-form">${(x.fo ?? []).map((f) => esc(FORM.get(f))).join(", ") || "Not labelled"}</td>
       <td data-k="License">${esc(licenseText(x.li))}</td></tr>${P ? evidence(x) : ""}` }).join("")}</tbody></table></div>
     <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a></p></section>
   ${related.length ? `<section aria-labelledby="also"><h2 id="also">These also replace</h2><div class="alt-chips">${related.map((x) => `<a href="?alt=${encodeURIComponent(x.name)}">${esc(x.name)}<span>${x.repos.length}</span></a>`).join("")}</div></section>` : ""}`
