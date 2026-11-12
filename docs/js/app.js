@@ -314,7 +314,7 @@ const PROMO_ROW = 3 + Math.floor(Math.random() * 5), PROMO_COL = Math.random()
 
 const facetMatch = (r) =>
   (!state.a || areaPairs(r).some((p) => (state.sa ? p === `${state.a}/${state.sa}` : p.startsWith(state.a + "/")))) &&
-  (!state.form || r.fo?.includes(state.form)) && (!state.plat || r.pl?.includes(state.plat)) && (!state.with || r.ww?.includes(state.with)) && (!state.tag || r.tg?.includes(state.tag)) && (!state.lic || licenseKind(r.li) === state.lic) && (!state.setup || setupOf(r.fo)?.id === state.setup) && (!inCol() || inCol().order.has(r.r))
+  (!state.form || r.fo?.includes(state.form)) && (!state.plat || r.pl?.includes(state.plat)) && (!state.with || r.ww?.includes(state.with)) && (!state.tag || r.tg?.includes(state.tag)) && (!state.lic || licenseKind(r.li) === state.lic) && (!state.setup || setupOf(r.fo, r.ho)?.id === state.setup) && (!inCol() || inCol().order.has(r.r))
 const anyFacet = () => state.a || state.form || state.plat || state.with || state.tag || state.lic || state.setup
 
 const PHONE = matchMedia("(max-width: 760px)")
@@ -344,17 +344,17 @@ function showCollection(c) {
   for (const id of ["#lead", "#more", "#everywhere", "#alt-hint"]) $(id).hidden = true
   document.querySelectorAll("[data-f], [data-a], [data-sa], [data-form], [data-with]").forEach((n) => n.setAttribute("aria-current", "false"))
   const by = new Map(c.picks.map((p) => [p.label, p])), repos = c.picks.map((p) => p.repo)
-  const easy = repos.filter((r) => setupOf(r.fo)?.level === 1).length, open = repos.filter((r) => licenseKind(r.li) === "open").length
-  const facts = [[`${c.picks.length} of ${c.needs.length}`, "needs covered"], [c.picks.reduce((n, p) => n + p.n, 0), "alternatives compared"], [open, open === 1 ? "open source license" : "open source licenses"], [`${easy} of ${c.picks.length}`, "install like an app"]]
-  const pick = (p) => { const r = p.repo, [owner, name] = r.r.split("/"), su = setupOf(r.fo)
+  const easy = repos.filter((r) => setupOf(r.fo, r.ho)?.level === 1).length, open = repos.filter((r) => licenseKind(r.li) === "open").length
+  const facts = [[`${c.picks.length} of ${c.needs.length}`, "needs covered"], [c.picks.reduce((n, p) => n + p.n, 0), "alternatives compared"], [open, open === 1 ? "open source license" : "open source licenses"], [`${easy} of ${c.picks.length}`, "need no server or terminal"]]
+  const pick = (p) => { const r = p.repo, [owner, name] = r.r.split("/"), su = setupOf(r.fo, r.ho)
     const os = (r.pl ?? []).filter((x) => x !== "docker").map((x) => PLAT.get(x)).filter(Boolean).join(", ")
     return `<div class="repo st-pick" role="button" tabindex="0" data-r="${esc(r.r)}" aria-label="${esc(name)} details">
       <div class="head"><img src="${esc(avatar(owner, 80))}" alt="" loading="lazy" decoding="async" width="40" height="40"><div class="name"><strong>${esc(name)}</strong><span>${esc(owner)}</span></div>${saveBtn(r.r)}<a class="jump" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener" aria-label="Open ${esc(name)} on GitHub" title="Open on GitHub">${GH}</a></div>
       <p class="line">${esc(r.l ?? "")}</p>
-      ${su ? `<p class="st-setup">${setupMark(su)}<span>${su.text}${su.level === 1 && os ? ` ${esc(os)}.` : ""}</span></p>` : ""}
+      ${su ? `<p class="st-setup">${setupMark(su)}<span>${su.text}${su.id === "app" && os ? ` ${esc(os)}.` : ""}</span></p>` : ""}
       <div class="meta">${p.f ? `<span class="st-fit"><b>${KIND[p.f[1]]}</b> covers ${Math.round(p.f[0] * 100)}%</span>` : ""}<span class="stars">${STAR}${num(r.s)}</span><span>${esc(licenseText(r.li))}</span>${(r.fo ?? []).length ? `<span>${r.fo.map((f) => esc(FORM.get(f))).join(", ")}</span>` : ""}</div></div>` }
   const gap = (products) => { const g = products.map((x) => ALTS.get(x.toLowerCase())).find(Boolean)
-    return `<div class="st-gap"><b>No strong fit yet.</b> Nothing on starwire covers enough of ${esc(g?.name ?? products[0])} to recommend. ${g ? `<a href="?alt=${encodeURIComponent(g.name)}">See the ${g.repos.length} partial ${g.repos.length === 1 ? "option" : "options"}</a>` : `<a href="https://github.com/boffti/starwire/issues/new?template=submit.yml" target="_blank" rel="noopener">Suggest a repo</a>`}</div>` }
+    return `<div class="st-gap"><b>No pick yet.</b> Nothing on starwire covers enough of ${esc(g?.name ?? products[0])} and is established enough to recommend. ${g ? `<a href="?alt=${encodeURIComponent(g.name)}">See the ${g.repos.length} ${g.repos.length === 1 ? "option" : "options"} we list</a>` : `<a href="https://github.com/boffti/starwire/issues/new?template=submit.yml" target="_blank" rel="noopener">Suggest a repo</a>`}</div>` }
   const el = $("#results")
   el.className = "stack"
   el.innerHTML = `<dl class="st-facts">${facts.map(([n, k]) => `<div><dt>${k}</dt><dd>${n}</dd></div>`).join("")}</dl>
@@ -362,7 +362,7 @@ function showCollection(c) {
       return `<li class="st-row${p ? "" : " gap"}"><div class="st-need"><span class="st-n">${String(i + 1).padStart(2, "0")}</span><div><h2>${esc(label)}</h2>
         ${p ? `<p>In place of <a href="?alt=${encodeURIComponent(p.product)}">${esc(p.product)}</a>${p.n > 1 ? `<a class="st-all" href="?alt=${encodeURIComponent(p.product)}">Compare all ${p.n}</a>` : ""}</p>` : `<p>Usually ${esc(products.slice(0, 2).join(" or "))}</p>`}</div></div>
         ${p ? pick(p) : gap(products)}</li>` }).join("")}</ol>
-    <p class="st-note">Each need gets the top-ranked open source alternative to the product people usually pay for, so the stack changes as the rankings do. <a href="how.html#fit">How fit is scored</a> &middot; <a href="how.html#setup">How setup is read</a> &middot; <a href="?col=all">All collections</a></p>`
+    <p class="st-note">Each need gets the top-ranked open source alternative to the product people usually pay for, as long as it has 100 stars and passes half of its <a href="how.html#signal">signal checks</a>, so the stack changes as the rankings do. <a href="how.html#fit">How fit is scored</a> &middot; <a href="how.html#setup">How setup is read</a> &middot; <a href="?col=all">All collections</a></p>`
   syncURL()
   const place = `collection/${c.id}`
   if (place !== counted.place) count((counted.place = place), "Collection")
@@ -558,7 +558,7 @@ for (const [k, label, map, has] of [["form", "Form", TX.forms, (r, id) => r.fo?.
   // pages drawn before this filter existed (a cached page, or a landing page not rebuilt yet) get the dropdown added
   if (!$("#f-setup")) $("#f-lic").closest("label").insertAdjacentHTML("afterend", '<label class="select"><span>Setup</span><select id="f-setup"></select></label>')
   const el = $("#f-setup")
-  el.innerHTML = `<option value="">Any</option>` + SETUP_KINDS.map(([id, name]) => [id, name, repos.filter((r) => setupOf(r.fo)?.id === id).length]).filter((x) => x[2]).map(([id, name, n]) => `<option value="${id}">${name} (${n})</option>`).join("")
+  el.innerHTML = `<option value="">Any</option>` + SETUP_KINDS.map(([id, name]) => [id, name, repos.filter((r) => setupOf(r.fo, r.ho)?.id === id).length]).filter((x) => x[2]).map(([id, name, n]) => `<option value="${id}">${name} (${n})</option>`).join("")
   el.value = state.setup
   el.addEventListener("change", (e) => set({ setup: e.target.value }))
 }

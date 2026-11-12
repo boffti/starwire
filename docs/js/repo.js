@@ -49,7 +49,7 @@ function render(saved) {
   const v = vitals[r.r], s = v ? signs(v, today) : null, m = momentum(r, repos)
   const crumbs = r.a ? `<nav class="rp-crumbs" aria-label="Where it sits"><a href="?a=${esc(r.a)}">${esc(AREA.get(r.a))}</a><span aria-hidden="true">/</span><a href="?a=${esc(r.a)}&amp;sa=${esc(r.sa)}">${esc(SUB.get(`${r.a}/${r.sa}`))}</a></nav>` : ""
 
-  const su = setupOf(r.fo)
+  const su = setupOf(r.fo, r.ho)
   const stats = [
     `<li class="star">${svg(I.star)}<span><b>${num(r.s)}</b> stars</span></li>`,
     r.w > 0 ? `<li class="up">${svg(I.up)}<span><b>+${num(r.w)}</b> ${esc((r.wt ?? "a week").replace(/^~?\+\S+\s*/, ""))}</span></li>` : "",
@@ -175,13 +175,17 @@ export function replacesOf(x, ctx) {
 // For collections: the stack for a set of needs. Each need names the products people usually pay for to fill it, in
 // order of preference, and gets the top-ranked alternative to the first of them that has one: the same order its
 // alternatives page uses (fit, then health, then stars). A repo fills one need only. needs: [[label, ...products]]
-const MIN_FIT = 0.5
+// A collection recommends, so its pick is also vetted: at least MIN_STARS stars and half of the signal checks that
+// apply to it (signal.js). A two-week-old repo with a dozen stars can top an alternatives page on fit alone; it
+// shouldn't be the one backend a founder is told to build on. The next candidate, or the next product, gets a turn.
+const MIN_FIT = 0.5, MIN_STARS = 100
+export const vetted = (r, today) => { const c = checks(r, today).filter((x) => x[2] != null); return r.s >= MIN_STARS && c.filter((x) => x[2]).length * 2 >= c.length }
 export function stackFor(needs, ctx) {
   ({ repos, vitals, today } = ctx); fit = ctx.fit ?? fit
   const groups = altGroups(repos), taken = new Set(), out = []
   for (const [label, ...products] of needs) for (const p of products) {
-    // a repo scored under half the product's checklist doesn't fill the need; the next product gets a turn, or the need is left out
-    const g = groups.get(altKey(p)), best = g && [...g.repos].sort(byFit(g)).find((x) => !taken.has(x.r) && (fitOf(g, x)?.[0] ?? 1) >= MIN_FIT)
+    // a repo scored under half the product's checklist, or not vetted, doesn't fill the need; the next product gets a turn, or the need is left out
+    const g = groups.get(altKey(p)), best = g && [...g.repos].sort(byFit(g)).find((x) => !taken.has(x.r) && (fitOf(g, x)?.[0] ?? 1) >= MIN_FIT && vetted(x, today))
     if (!best) continue
     taken.add(best.r); out.push({ label, product: g.name, repo: best, n: g.repos.length, f: fitOf(g, best) }); break
   }
@@ -233,7 +237,7 @@ export function altPage(name, ctx) {
       ${P ? `<td data-k="Covers">${fitCell(x)}</td>` : ""}<td data-k="Stars"><span class="s">${num(x.s)}</span>${x.w > 0 ? `<small class="w">+${num(x.w)}</small>` : ""}</td>
       <td data-k="Commits, 12 weeks" class="c-commits">${c == null ? "Not measured" : `<div class="bar"><span style="width:${(c / max) * 5}rem"></span>${c.toLocaleString("en-US")}</div>`}</td>
       <td data-k="Last release" class="c-rel">${rel}</td><td data-k="Issues closed vs opened" class="c-iss">${iss}</td>
-      <td data-k="Setup" title="${esc([(x.fo ?? []).map((f) => FORM.get(f)).join(", "), setupOf(x.fo)?.text].filter(Boolean).join(". "))}">${setupOf(x.fo) ? setupMark(setupOf(x.fo)) : "Not labelled"}</td>
+      <td data-k="Setup" title="${esc([(x.fo ?? []).map((f) => FORM.get(f)).join(", "), setupOf(x.fo, x.ho)?.text].filter(Boolean).join(". "))}">${setupOf(x.fo, x.ho) ? setupMark(setupOf(x.fo, x.ho)) : "Not labelled"}</td>
       <td data-k="License" class="c-lic">${esc(licenseText(x.li))}</td></tr>${P ? evidence(x) : ""}` }).join("")}</tbody></table></div>
     <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a> &middot; <a href="how.html#setup">How setup is read</a></p></section>
   ${inCols.length ? `<section aria-labelledby="incol"><h2 id="incol">Part of ${inCols.length === 1 ? "this collection" : "these collections"}</h2><div class="alt-cols">${inCols.map(([c, [need]]) => `<a class="col-card" href="?col=${esc(c.id)}">

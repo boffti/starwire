@@ -186,13 +186,14 @@
     <thead><tr><th>Label</th><th>Shown when the project is</th><th>What it means</th></tr></thead>
     <tbody>
       <tr><td>Install like an app</td><td>A desktop app, mobile app or browser extension</td><td>Download it and open it. No server, no terminal.</td></tr>
+      <tr><td>Hosted, free plan<br>Hosted, paid<br>Hosted version</td><td>A server or browser project whose makers also run it for you</td><td>Sign up on the project's site, nothing to install. The label says whether it has a free plan, is paid only, or doesn't state a price. Running it yourself still needs a server.</td></tr>
       <tr><td>Runs in a browser</td><td>A web app with no server packaging</td><td>Opens in a browser, but you may have to start it yourself.</td></tr>
       <tr><td>Uses the terminal</td><td>A command-line tool</td><td>Installed and run by typing commands.</td></tr>
       <tr><td>Needs a server</td><td>A self-hostable service</td><td>Someone technical sets it up on a server, usually with Docker.</td></tr>
       <tr><td>For developers</td><td>A library, framework, plugin or similar</td><td>A building block for people who write code.</td></tr>
     </tbody>
   </table>
-  <p>We haven't installed these projects, so the label describes packaging, not how smooth the install is. It also doesn't know whether a project that needs a server sells a hosted version you could sign up for instead; many do, so check the project's website. Setup never changes any ranking.</p>
+  <p>We haven't installed these projects, so the label describes packaging, not how smooth the install is. The hosted label is judged from each project's own README and website, so far only for projects listed as an alternative to a paid product, and it is checked again when either text changes. Plans and prices move, so confirm on the project's site. A project without the label may still have a hosted version we missed. Setup never changes any ranking.</p>
 
   <h2 id="license">Licenses</h2>
   <p>Every repo shows the license GitHub finds in it, and the License filter groups them into four kinds. They say what was found, they aren't legal advice, and nothing is left off the list because of its license.</p>
@@ -263,6 +264,8 @@
 
   <h2 id="changes">Changes to the method</h2>
   <ul class="log">
+    <li><b>Nov 12, 2026.</b> Collections only recommend established projects: a pick needs 100 stars and to pass half of its signal checks, or the need is shown as open.</li>
+    <li><b>Nov 12, 2026.</b> Setup knows about hosted versions: a project that needs a server but is also run by its makers is labelled "Hosted", with whether it has a free plan. <a href="#setup">How setup is read</a>.</li>
     <li><b>Nov 12, 2026.</b> Setup effort: a label and a filter for how much know-how a project takes to run, and collections open as a stack, need by need. <a href="#setup">How setup is read</a>.</li>
     <li><b>Nov 12, 2026.</b> The default order is "Worth a look": daily star gain weighted by five signal checks, so repos with a burst of stars and little else sink. "Most stars today" keeps the unweighted order. <a href="#signal">How it works</a>.</li>
     <li><b>Nov 12, 2026.</b> Vital signs are no longer called "healthy", and the issues sign is worded as issues closed against issues opened, which is what it measures. Alternatives pages show the reading in words, with the line behind each mark one tap away.</li>

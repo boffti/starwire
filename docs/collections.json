@@ -692,8 +692,8 @@
       ],
       [
         "Run the backend",
-        "Supabase",
-        "Firebase"
+        "Firebase",
+        "Supabase"
       ],
       [
         "Deploy it",
