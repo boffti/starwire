@@ -217,6 +217,8 @@ export function altPage(name, ctx) {
   const near = new Map()
   for (const x of rows) for (const a of x.alt ?? []) if (altKey(a) !== altKey(g.name)) near.set(altKey(a), groups.get(altKey(a)))
   const related = [...near.values()].sort((a, b) => b.repos.length - a.repos.length).slice(0, 8)
+  // collections that list this product under one of their needs: the wider stack this choice is part of
+  const inCols = (ctx.cols ?? []).map((c) => [c, c.needs.find(([, ...ps]) => ps.some((p) => altKey(p) === altKey(g.name)))]).filter(([, need]) => need)
   return `<div class="rp-top">${BACK}${crumbs}</div>
   <section class="hero alt-hero"><div class="who">
     <h1>Open source alternatives to ${esc(g.name)}</h1>
@@ -234,6 +236,9 @@ export function altPage(name, ctx) {
       <td data-k="Setup" title="${esc([(x.fo ?? []).map((f) => FORM.get(f)).join(", "), setupOf(x.fo)?.text].filter(Boolean).join(". "))}">${setupOf(x.fo) ? setupMark(setupOf(x.fo)) : "Not labelled"}</td>
       <td data-k="License" class="c-lic">${esc(licenseText(x.li))}</td></tr>${P ? evidence(x) : ""}` }).join("")}</tbody></table></div>
     <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a> &middot; <a href="how.html#setup">How setup is read</a></p></section>
+  ${inCols.length ? `<section aria-labelledby="incol"><h2 id="incol">Part of ${inCols.length === 1 ? "this collection" : "these collections"}</h2><div class="alt-cols">${inCols.map(([c, [need]]) => `<a class="col-card" href="?col=${esc(c.id)}">
+      <strong>${esc(c.title)}</strong><p>${esc(need)}, one of ${c.needs.length} needs in this stack.</p>
+      <span class="col-faces">${c.picks.slice(0, 8).map((p) => `<img src="${esc(avatar(p.repo.r.split("/")[0], 56))}" alt="" width="26" height="26" loading="lazy" decoding="async">`).join("")}<small>${c.picks.length} tools</small></span></a>`).join("")}</div></section>` : ""}
   ${related.length ? `<section aria-labelledby="also"><h2 id="also">These also replace</h2><div class="alt-chips">${related.map((x) => `<a href="?alt=${encodeURIComponent(x.name)}">${esc(x.name)}<span>${x.repos.length}</span></a>`).join("")}</div></section>` : ""}`
 }
 

@@ -526,6 +526,8 @@ html { scrollbar-gutter: stable; }
 .rp .alt-table .w { display: block; color: var(--green); font-size: 12px; }
 .rp .alt-table .dot { display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%; background: var(--c); }
 .rp .alt-table .lvl-low { color: var(--amber); }
+.rp .alt-cols { margin-top: 14px; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr)); gap: 12px; }
+.rp .alt-cols .col-card { color: var(--text) !important; text-decoration: none !important; }
 .rp .alt-chips { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
 .rp .alt-chips a { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--raise); color: var(--text); font-weight: 500; }
 .rp .alt-chips a:hover { text-decoration: none; background: color-mix(in srgb, var(--raise) 70%, var(--line)); }

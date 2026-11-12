@@ -478,7 +478,9 @@ async function showPage() {
   if (state.alt) {
     const [v, f] = await Promise.all([vitals, fits])
     if (shownPage !== key) return
-    el.innerHTML = altPage(state.alt, { repos, vitals: v, fit: f, today: data.updated.slice(0, 10), TX })
+    if (!stacks) await loadStacks() // the page ends with the collections this product is part of
+    if (shownPage !== key) return
+    el.innerHTML = altPage(state.alt, { repos, vitals: v, fit: f, today: data.updated.slice(0, 10), TX, cols: [...stacks.values()] })
     document.title = `Open source alternatives to ${state.alt} | starwire`
     return count(`alt/${state.alt.toLowerCase()}`, "Alternatives page")
   }
