@@ -503,16 +503,16 @@ html { scrollbar-gutter: stable; }
    columns that matter least drop out as the table's own box narrows (the phone layout below shows them all again) */
 .rp .alt-table table { min-width: 0; }
 .rp .alt-table thead th, .rp .alt-table tbody td { white-space: nowrap; }
-.rp .alt-table td.c-form, .rp .alt-table tr.ev td { white-space: normal; }
+.rp .alt-table tr.ev td, .rp .alt-table .fit { white-space: normal; }
 .rp .alt-table thead th { padding-block: 16px; }
 /* the project column takes whatever is left; its description is cut with an ellipsis and must not set the width */
 .rp .alt-table thead th:first-child { width: 100%; }
 .rp .alt-name > span { flex: 1; width: 0; }
 @media (min-width: 641px) {
-  @container (max-width: 66rem) { .rp .alt-table .c-form { display: none; } }
-  @container (max-width: 60rem) { .rp .alt-table .c-commits { display: none; } }
-  @container (max-width: 50rem) { .rp .alt-table .c-rel { display: none; } }
-  @container (max-width: 44rem) { .rp .alt-table .c-iss { display: none; } }
+  @container (max-width: 72rem) { .rp .alt-table .c-commits { display: none; } }
+  @container (max-width: 62rem) { .rp .alt-table .c-rel { display: none; } }
+  @container (max-width: 55rem) { .rp .alt-table .c-iss { display: none; } }
+  @container (max-width: 47rem) { .rp .alt-table .c-lic { display: none; } }
 }
 .rp .alt-table tbody tr:hover { background: color-mix(in srgb, var(--raise) 50%, transparent); }
 .rp .alt-name { display: flex; align-items: center; gap: 12px; color: var(--text) !important; min-width: 12rem; max-width: 24rem; }
@@ -598,12 +598,14 @@ body[data-cols="one"] #savedbar { display: none; }
 .st-pick .line { -webkit-line-clamp: 2; }
 .st-pick .meta { margin-top: 2px; }
 .st-setup { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin: 0; font-size: 13px; color: var(--muted); }
-.st-setup b { color: var(--text); font-weight: 600; }
-.st-bars { display: inline-flex; align-items: flex-end; gap: 2px; height: 12px; --c: var(--green); }
-.st-bars i { width: 4px; border-radius: 1px; background: var(--line); }
-.st-bars i:nth-child(1) { height: 5px; } .st-bars i:nth-child(2) { height: 8px; } .st-bars i:nth-child(3) { height: 12px; }
-.lv-2 .st-bars, .lv-3 .st-bars { --c: var(--amber); }
-.lv-1 .st-bars i:nth-child(-n+1), .lv-2 .st-bars i:nth-child(-n+2), .lv-3 .st-bars i { background: var(--c); }
+/* setup effort: three bars and a label, wherever it is shown (rules in setup.js) */
+.su { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; --c: var(--green); }
+.su b { color: var(--text); font-weight: 600; }
+.su-bars { display: inline-flex; align-items: flex-end; gap: 2px; height: 12px; }
+.su-bars i { width: 4px; border-radius: 1px; background: var(--line); }
+.su-bars i:nth-child(1) { height: 5px; } .su-bars i:nth-child(2) { height: 8px; } .su-bars i:nth-child(3) { height: 12px; }
+.su.lv-2, .su.lv-3 { --c: var(--amber); }
+.su.lv-1 .su-bars i:nth-child(-n+1), .su.lv-2 .su-bars i:nth-child(-n+2), .su.lv-3 .su-bars i { background: var(--c); }
 .st-fit { color: var(--muted); }
 .st-fit b { color: var(--green); font-weight: 600; }
 .st-gap { padding: 16px; border: 1px dashed var(--line); border-radius: var(--radius); color: var(--muted); font-size: 14px; line-height: 1.5; }

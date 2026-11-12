@@ -67,6 +67,7 @@
     <li><a href="#neutral">What never affects ranking</a></li>
     <li><a href="#signal">Worth a look, the default order</a></li>
     <li><a href="#vitals">Vital signs on repo pages</a></li>
+    <li><a href="#setup">Setup effort</a></li>
     <li><a href="#data">Use the data</a></li>
     <li><a href="#counts">What we count</a></li>
     <li><a href="#limits">Known limits</a></li>
@@ -179,6 +180,20 @@
   </table>
   <p>Anything between is shown in a softer green. Some signs are left out instead of judged: no releases (many projects never use GitHub releases), fewer than 5 issues opened and closed in 90 days, or a repo with no measured star gain. "How it compares" puts the same numbers next to repos that replace the same tools, or its closest neighbours in its subarea.</p>
 
+  <h2 id="setup">Setup effort</h2>
+  <p>Not everyone who wants an open source tool runs servers. The Setup label, shown on repo pages, alternatives pages and collections and as a filter on the list, says how much know-how a project takes to get running. It is read from how the project is packaged, taking the easiest route it offers:</p>
+  <table>
+    <thead><tr><th>Label</th><th>Shown when the project is</th><th>What it means</th></tr></thead>
+    <tbody>
+      <tr><td>Install like an app</td><td>A desktop app, mobile app or browser extension</td><td>Download it and open it. No server, no terminal.</td></tr>
+      <tr><td>Runs in a browser</td><td>A web app with no server packaging</td><td>Opens in a browser, but you may have to start it yourself.</td></tr>
+      <tr><td>Uses the terminal</td><td>A command-line tool</td><td>Installed and run by typing commands.</td></tr>
+      <tr><td>Needs a server</td><td>A self-hostable service</td><td>Someone technical sets it up on a server, usually with Docker.</td></tr>
+      <tr><td>For developers</td><td>A library, framework, plugin or similar</td><td>A building block for people who write code.</td></tr>
+    </tbody>
+  </table>
+  <p>We haven't installed these projects, so the label describes packaging, not how smooth the install is. It also doesn't know whether a project that needs a server sells a hosted version you could sign up for instead; many do, so check the project's website. Setup never changes any ranking.</p>
+
   <h2 id="license">Licenses</h2>
   <p>Every repo shows the license GitHub finds in it, and the License filter groups them into four kinds. They say what was found, they aren't legal advice, and nothing is left off the list because of its license.</p>
   <ul>
@@ -248,6 +263,7 @@
 
   <h2 id="changes">Changes to the method</h2>
   <ul class="log">
+    <li><b>Nov 12, 2026.</b> Setup effort: a label and a filter for how much know-how a project takes to run, and collections open as a stack, need by need. <a href="#setup">How setup is read</a>.</li>
     <li><b>Nov 12, 2026.</b> The default order is "Worth a look": daily star gain weighted by five signal checks, so repos with a burst of stars and little else sink. "Most stars today" keeps the unweighted order. <a href="#signal">How it works</a>.</li>
     <li><b>Nov 12, 2026.</b> Vital signs are no longer called "healthy", and the issues sign is worded as issues closed against issues opened, which is what it measures. Alternatives pages show the reading in words, with the line behind each mark one tap away.</li>
     <li><b>Nov 8, 2026.</b> "New this week" and the new label only cover repos created in the last 90 days. Before, any repo picked for the first time counted, so long-established projects showed up as new.</li>

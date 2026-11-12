@@ -4,6 +4,7 @@ import { signs, momentum, issuesText } from "./vitals.js"
 import { avatar } from "./avatar.js"
 import { checks } from "./signal.js"
 import { licenseText } from "./license.js"
+import { setupOf, setupMark } from "./setup.js"
 import { readmeFragment } from "./readme.js"
 
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c])
@@ -48,12 +49,15 @@ function render(saved) {
   const v = vitals[r.r], s = v ? signs(v, today) : null, m = momentum(r, repos)
   const crumbs = r.a ? `<nav class="rp-crumbs" aria-label="Where it sits"><a href="?a=${esc(r.a)}">${esc(AREA.get(r.a))}</a><span aria-hidden="true">/</span><a href="?a=${esc(r.a)}&amp;sa=${esc(r.sa)}">${esc(SUB.get(`${r.a}/${r.sa}`))}</a></nav>` : ""
 
+  const su = setupOf(r.fo)
   const stats = [
     `<li class="star">${svg(I.star)}<span><b>${num(r.s)}</b> stars</span></li>`,
     r.w > 0 ? `<li class="up">${svg(I.up)}<span><b>+${num(r.w)}</b> ${esc((r.wt ?? "a week").replace(/^~?\+\S+\s*/, ""))}</span></li>` : "",
     r.fk ? `<li>${svg(I.fork)}${num(r.fk)} forks</li>` : "",
     r.g ? `<li><span class="dot" style="background:${esc(r.gc ?? "var(--muted)")}"></span>${esc(r.g)}</li>` : "",
     `<li>${svg(I.law)}${esc(licenseText(r.li))}</li>`,
+    // how much know-how it takes to run; left off libraries and the like, where "for developers" says nothing new
+    su && su.id !== "code" ? `<li title="${esc(su.text)} Read from how the project is packaged, not tested.">${setupMark(su)}</li>` : "",
     r.pl?.length ? `<li>${svg(I.screen)}${r.pl.map((p) => esc(PLAT.get(p))).join(", ")}</li>` : "",
   ].join("")
   // what it replaces sits up top: "Alternative to Notion, Confluence"
@@ -219,15 +223,15 @@ export function altPage(name, ctx) {
     <div class="acts"><button type="button" class="btn" data-share="instead-of/${esc(g.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""))}" aria-label="Copy a share link">${svg(I.share).replace("<svg", '<svg style="fill:none;stroke:currentColor;stroke-width:2"')}<span>Share</span></button></div></section>
   ${P ? `<section class="jobs" aria-labelledby="jobs"><h2 id="jobs">What ${esc(g.name)} does</h2><ol class="job-list">${jobs.map(([j, w]) => `<li class="${w === 2 ? "core" : ""}">${esc(j)}${w === 2 ? "<small>core</small>" : ""}</li>`).join("")}</ol><p class="foot-note">Each dot in the table is one job, in this order. Square dots are core jobs and count double. Full means yes, half means partly. "See the evidence" under a project shows the line behind each one. Coverage is what a project documents, not how well it works or how hard it is to move to. <a href="how.html#fit">How we score this</a></p></section>` : ""}
   <section aria-label="Alternatives to ${esc(g.name)}"><div class="cmp alt-table"><table>
-    <thead><tr><th scope="col">Project</th>${P ? `<th scope="col">Covers</th>` : ""}<th scope="col">Stars</th><th scope="col" class="c-commits">Commits, 12 weeks</th><th scope="col" class="c-rel">Last release</th><th scope="col" class="c-iss">Closed vs opened</th><th scope="col" class="c-form">Form</th><th scope="col">License</th></tr></thead>
+    <thead><tr><th scope="col">Project</th>${P ? `<th scope="col">Covers</th>` : ""}<th scope="col">Stars</th><th scope="col" class="c-commits">Commits, 12 weeks</th><th scope="col" class="c-rel">Last release</th><th scope="col" class="c-iss">Closed vs opened</th><th scope="col">Setup</th><th scope="col" class="c-lic">License</th></tr></thead>
     <tbody>${rows.map((x) => { const c = commits(x), [rel, iss] = cell(x), [owner, nm] = x.r.split("/"); return `<tr>
       <th scope="row"><a class="alt-name" href="?page=${encodeURIComponent(x.r)}"><img src="${esc(avatar(owner, 56))}" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>${esc(nm)}</b><small>${esc(x.l || owner)}</small></span></a></th>
       ${P ? `<td data-k="Covers">${fitCell(x)}</td>` : ""}<td data-k="Stars"><span class="s">${num(x.s)}</span>${x.w > 0 ? `<small class="w">+${num(x.w)}</small>` : ""}</td>
       <td data-k="Commits, 12 weeks" class="c-commits">${c == null ? "Not measured" : `<div class="bar"><span style="width:${(c / max) * 5}rem"></span>${c.toLocaleString("en-US")}</div>`}</td>
       <td data-k="Last release" class="c-rel">${rel}</td><td data-k="Issues closed vs opened" class="c-iss">${iss}</td>
-      <td data-k="Form" class="c-form">${(x.fo ?? []).map((f) => esc(FORM.get(f))).join(", ") || "Not labelled"}</td>
-      <td data-k="License">${esc(licenseText(x.li))}</td></tr>${P ? evidence(x) : ""}` }).join("")}</tbody></table></div>
-    <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a></p></section>
+      <td data-k="Setup" title="${esc([(x.fo ?? []).map((f) => FORM.get(f)).join(", "), setupOf(x.fo)?.text].filter(Boolean).join(". "))}">${setupOf(x.fo) ? setupMark(setupOf(x.fo)) : "Not labelled"}</td>
+      <td data-k="License" class="c-lic">${esc(licenseText(x.li))}</td></tr>${P ? evidence(x) : ""}` }).join("")}</tbody></table></div>
+    <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a> &middot; <a href="how.html#setup">How setup is read</a></p></section>
   ${related.length ? `<section aria-labelledby="also"><h2 id="also">These also replace</h2><div class="alt-chips">${related.map((x) => `<a href="?alt=${encodeURIComponent(x.name)}">${esc(x.name)}<span>${x.repos.length}</span></a>`).join("")}</div></section>` : ""}`
 }
 
