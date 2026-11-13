@@ -291,17 +291,19 @@ function lead(list) {
   const [owner, name] = r.r.split("/"), hs = r.hs ?? []
   el.className = "lead spot"
   el.innerHTML = `<div class="spot-text">
-    <h2>${LEAD_TITLE[state.sort] ?? "First on the list"}</h2>
-    <a class="spot-name" href="?page=${esc(r.r)}"><img src="${esc(avatar(owner, 96))}" alt="" width="44" height="44"><span><b>${esc(name)}</b><small>${esc(owner)}</small></span></a>
+    <h2><b class="spot-no">1</b>${LEAD_TITLE[state.sort] ?? "First on the list"}${moves ? moves(r) : ""}</h2>
+    <a class="spot-name" href="?page=${esc(r.r)}"><img src="${esc(avatar(owner, 96))}" alt="" width="44" height="44"><span><b>${esc(name)}</b><small>${esc(owner)}${pills(r) ? ` ${pills(r)}` : ""}</small></span></a>
     <p>${esc(r.l)}</p>
+    ${facts(r)}
     <ul class="spot-stats">${day(r) != null ? `<li><b>${dayText(r)}</b> stars today</li>` : ""}${r.h > 0 ? `<li><b>${esc(gain(r).replace(/ a week$/, ""))}</b> ${/ a week$/.test(gain(r)) ? "this week" : ""}</li>` : ""}<li><b>${num(r.s)}</b> stars in all</li></ul>
     <p class="spot-vitals" hidden></p>
-    <a class="btn" href="?page=${esc(r.r)}">See the repo</a>
+    <div class="spot-acts"><a class="btn" href="?page=${esc(r.r)}">See the repo</a>${saveBtn(r.r)}<a class="jump" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener" aria-label="Open ${esc(name)} on GitHub" title="Open on GitHub">${GH}</a></div>
   </div>
   <figure class="spot-chart">${spark(hs, 480, 150, "bigspark")}<figcaption><span>${num(hs[0]?.[1] ?? r.s)} stars, ${esc(hs[0]?.[0] ?? "")}</span><span>${num(r.s)} stars, ${esc(hs.at(-1)?.[0] ?? "")}</span></figcaption></figure>`
   el.hidden = false
   vitals ??= fetch("data/vitals.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
   vitals.then((v) => { const p = el.querySelector(".spot-vitals"); if (v[r.r] && p && el.contains(p)) { p.textContent = `${summary(signs(v[r.r], TODAY))}.`; p.hidden = false } })
+  return "spot" // tells the list its first repo is shown here, so it starts at number two
 }
 
 const promo = `<a class="promo" href="https://github.com/boffti/stardash" target="_blank" rel="noopener">
@@ -451,7 +453,8 @@ function render() {
   const layout = PHONE.matches ? "list" : col ? "cards" : state.view // phones always get the list; cards add nothing on a narrow screen. A collection is cards, the layout with room for why each repo is in it
   el.className = layout
   moves = layout === "wire" && !col && MOVE_SCORES[state.sort] && !scores ? rankMoves(list, MOVE_SCORES[state.sort]) : null
-  if (state.view === "wire" && !col) lead(list); else $("#lead").hidden = true // phones get the list rows, but keep the lead
+  let heroed = false // the hero is number one: when it shows the list's first repo, the list itself starts at two
+  if (state.view === "wire" && !col) heroed = lead(list) === "spot"; else $("#lead").hidden = true // phones get the list rows, but keep the lead
   const home = !col && !state.f && !state.q && !anyFacet() && !state.lang, railOn = rail(home && railFits()) // before the columns are counted: the bar narrows the list
   const cols = getComputedStyle(el).gridTemplateColumns.split(" ").length
   const spot = PROMO_ROW * cols + Math.floor(PROMO_COL * cols)
@@ -459,6 +462,7 @@ function render() {
   const promoted = layout === "cards" && !state.q && !["saved", "shared"].includes(state.f) && Math.min(list.length, state.shown) > spot
   const shown = state.shown - (promoted ? 1 : 0)
   const page = list.slice(0, shown).map(layout === "wire" ? row : card)
+  if (heroed) page.shift()
   if (list.length <= shown) page.push(...gone.map((n) => `<div class="repo gone"><div class="head"><div class="name"><strong>${esc(n.split("/")[1])}</strong><span>${esc(n.split("/")[0])}</span></div>${saveBtn(n)}</div><p class="line">No longer on the list. <a href="https://github.com/${esc(n)}" target="_blank" rel="noopener">Open on GitHub</a></p></div>`))
   if (promoted) page.splice(spot, 0, promo)
   // doorways on the plain home list only: in the bar when it is showing, else between the rows, last one first so each lands on a whole row
@@ -963,6 +967,10 @@ $("#results").addEventListener("click", (e) => {
   if (!c) return
   if (e.metaKey || e.ctrlKey) return void window.open(`https://github.com/${c.dataset.r}`, "_blank", "noopener")
   openPanel(c.dataset.r)
+})
+$("#lead").addEventListener("click", (e) => { // the hero's save button, and its links without a reload
+  const sv = e.target.closest("[data-save]"); if (sv) return toggleSave(sv.dataset.save)
+  const a = inApp(e); if (a) { e.preventDefault(); navigate(a.getAttribute("href")) }
 })
 railEl.addEventListener("click", (e) => { const a = inApp(e); if (a) { e.preventDefault(); if (a.dataset.door) count(`door/${a.dataset.door}`, "Doorway"); navigate(a.getAttribute("href")) } })
 $("#results").addEventListener("click", (e) => { const a = e.target.closest(".col-card, .stack, .door") && inApp(e); if (a) { e.preventDefault(); if (a.dataset.door) count(`door/${a.dataset.door}`, "Doorway"); navigate(a.getAttribute("href")) } }) // a collection opens without a reload
