@@ -317,9 +317,14 @@ const promo = `<a class="promo" href="https://github.com/boffti/stardash" target
 // list), so the top of the list stays repos. ponytail: fixed spots and a daily rotation; make them smarter only if
 // the door/ events show which ones get used.
 const DOOR_ROWS = [2, 5, 8], DOOR_ITEMS = [6, 16, 28]
+const KNOWN = ["Notion", "Slack", "Figma", "ChatGPT", "Jira", "Spotify", "Zapier", "Photoshop", "Trello", "Shopify", "Postman", "Linear", "Mailchimp", "Miro", "Loom",
+  "Salesforce", "Webflow", "Zendesk", "Midjourney", "Todoist", "HubSpot", "Datadog", "CapCut", "ElevenLabs", "Heroku", "Mixpanel", "Lightroom", "Auth0", "Semrush", "YNAB"]
 function doors() {
   const n = Math.floor(Date.parse(TODAY) / 864e5), out = []
-  const top = [...ALTS.values()].sort((a, b) => b.repos.length - a.repos.length).slice(0, 8)
+  // products most people have heard of, with short names: five a day in turn, so the card changes daily. The product
+  // with the most alternatives isn't the one a visitor recognises. Any that lose their alternatives drop out by themselves.
+  const known = KNOWN.map((k) => ALTS.get(k.toLowerCase())).filter((g) => g && g.repos.length >= 3)
+  const top = known.length >= 8 ? Array.from({ length: 8 }, (_, i) => known[(n * 5 + i) % known.length]) : [...ALTS.values()].sort((a, b) => b.repos.length - a.repos.length).slice(0, 8)
   if (top.length >= 4) out.push(`<section class="door" aria-label="Open source alternatives"><div class="door-text"><small><svg viewBox="0 0 24 24" aria-hidden="true">${I.alt}</svg>Alternatives</small><strong>Open source instead of&hellip;</strong><p>Pick a product you pay for and see what could replace it, ranked by how much of it each one covers.</p></div>
     <div class="door-chips">${top.map((g) => `<a class="door-alt" href="?alt=${encodeURIComponent(g.name)}" data-door="alt"><span>${esc(g.name)}</span><span class="door-stack">${[...g.repos].sort((x, y) => y.s - x.s).slice(0, 3).map((r) => `<img src="${esc(avatar(r.r.split("/")[0], 40))}" alt="" title="${esc(r.r.split("/")[1])}" width="20" height="20" loading="lazy">`).join("")}</span><b>${g.repos.length}</b></a>`).join("")}<a class="door-all" href="?alt=all" data-door="alt">All ${ALTS.size} products</a></div></section>`)
   const c = collections.length && collections[n % collections.length]
