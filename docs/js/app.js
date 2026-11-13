@@ -247,6 +247,20 @@ function rankMoves(list, score) {
   const now = pos((r) => score(r, 0)), then = pos((r) => score(r, 1))
   return (r) => { const a = now.get(r.r), b = then.get(r.r); return a == null ? "" : b == null ? `<i class="mv new">new</i>` : b > a ? `<i class="mv up">▲${b - a}</i>` : b < a ? `<i class="mv down">▼${a - b}</i>` : `<i class="mv same">=</i>` }
 }
+// What a row is for: saying what the repo is and what you'd use it for, not how its stars moved. Beside the summary
+// sit two lines from its labels: the kind of thing it is and where it runs, then the most useful of what it replaces,
+// what it plugs into, or what it is about. Stars shrink to one column: the count, and today's gain beneath it.
+// the row's own short names for the forms: the filter's full names ("Library or framework") don't fit two to a line
+const KIND_SHORT = { "self-hosted": "Self-hosted", cli: "Command line", library: "Library", "agent-skill": "Agent skill", extension: "Extension", model: "Model", template: "Template", reference: "Guide" }
+function facts(r) {
+  const pl = (r.pl ?? []).filter((p) => p !== "docker").map((p) => PLAT.get(p)).filter(Boolean), all = ["macos", "windows", "linux"].every((p) => r.pl?.includes(p))
+  const where = all && pl.length === 3 ? "Mac, Windows, Linux" : pl.slice(0, 3).join(", ")
+  const kind = [(r.fo ?? []).map((f) => KIND_SHORT[f] ?? FORM.get(f)).filter(Boolean).join(", "), where].filter(Boolean).join(" · ")
+  const more = r.alt?.length ? `<b>Replaces</b> ${esc(r.alt.slice(0, 2).join(", "))}`
+    : r.ww?.length ? `<b>Works with</b> ${esc(r.ww.slice(0, 2).map((w) => WITH.get(w)).filter(Boolean).join(", "))}`
+    : r.tg?.length ? esc(r.tg.slice(0, 3).map((t) => t.replace(/-/g, " ")).join(" · ")) : r.g ? esc(r.g) : ""
+  return `<div class="facts"><span>${esc(kind)}</span>${more ? `<small>${more}</small>` : ""}</div>`
+}
 function row(r, i) {
   const [owner, name] = r.r.split("/"), d = day(r), today = r.hs?.at(-1)?.[0] === TODAY
   return `<div class="repo wrow${i < 3 ? " top" : ""}" role="button" tabindex="0" data-r="${esc(r.r)}" aria-label="${esc(name)} details">
@@ -254,10 +268,8 @@ function row(r, i) {
   <img src="${esc(avatar(owner, 56))}" alt="" loading="lazy" decoding="async" width="28" height="28">
   <div class="name"><strong>${esc(name)}</strong><span>${esc(owner)}${pills(r) ? ` ${pills(r)}` : ""}</span></div>
   <p class="line">${esc(lineOf(r))}</p>
-  <span class="lang">${r.g ? `<span class="dot" style="--c:${esc(r.gc ?? "")}">${esc(r.g)}</span>` : ""}</span>
-  ${spark(r.hs ?? [])}
-  <div class="gain">${d != null ? `<b>${dayText(r)}</b><small>${today ? "today" : "a day"}</small>` : `<b class="flat">${STAR}${num(r.s)}</b>`}</div>
-  <div class="tot"><span class="stars">${STAR}${num(r.s)}</span><small title="${esc(gainTitle(r))}">${r.h > 0 ? esc(gain(r)) : ""}</small></div>
+  ${facts(r)}
+  <div class="tot"><span class="stars">${STAR}${num(r.s)}</span>${d != null && Math.round(d) ? `<small class="up">${dayText(r)} ${today ? "today" : "a day"}</small>` : r.h > 0 ? `<small title="${esc(gainTitle(r))}">${esc(gain(r))}</small>` : ""}</div>
   ${saveBtn(r.r)}<a class="jump" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener" aria-label="Open ${esc(name)} on GitHub" title="Open on GitHub">${GH}</a>
 </div>`
 }
