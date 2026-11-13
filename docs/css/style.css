@@ -746,6 +746,11 @@ body[data-cols="one"] #savedbar { display: none; }
 .spot .facts { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; font-size: 14px; }
 .spot .facts small { font-size: 13.5px; color: var(--muted); }
 .spot .facts b { font-weight: 500; color: color-mix(in srgb, var(--accent) 80%, var(--text)); }
+/* stars as one quiet line, the way a row shows them: the count, then what it gained */
+.spot-text > .spot-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 0; margin: 0; font-size: 13.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.spot-meta .stars { font-size: 14.5px; }
+.spot-meta span + span::before { content: "·"; margin: 0 9px; color: var(--muted); }
+.spot-text > .spot-vitals { font-size: 13.5px; color: var(--muted); }
 .spot-acts { display: flex; align-items: center; gap: 6px; }
 .spot-acts .save, .spot-acts .jump { margin: 0; align-self: center; padding: 8px; opacity: 0.8; }
 .spot-acts .save svg, .spot-acts .jump svg { width: 17px; height: 17px; }
@@ -756,9 +761,6 @@ body[data-cols="one"] #savedbar { display: none; }
 .spot-name small { display: block; color: var(--muted); font-size: 14px; }
 .spot-name:hover b { text-decoration: underline; }
 .spot-text > p { margin: 0; font-size: 15.5px; line-height: 1.45; color: color-mix(in srgb, var(--text) 85%, var(--muted)); max-width: 52ch; }
-.spot-stats { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 13.5px; color: var(--muted); }
-.spot-stats b { color: var(--text); font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; margin-right: 4px; }
-.spot-stats li:first-child b { color: var(--green); }
 .spot-vitals { margin: 0; font-size: 13px; color: var(--muted); }
 .spot-chart { margin: 0; min-width: 0; }
 .bigspark { width: 100%; height: 150px; display: block; }

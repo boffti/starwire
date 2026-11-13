@@ -296,9 +296,9 @@ function lead(list) {
     <a class="spot-name" href="?page=${esc(r.r)}"><img src="${esc(avatar(owner, 96))}" alt="" width="44" height="44"><span><b>${esc(name)}</b><small>${esc(owner)}${pills(r) ? ` ${pills(r)}` : ""}</small></span></a>
     <p>${esc(r.l)}</p>
     ${facts(r)}
-    <ul class="spot-stats">${day(r) != null ? `<li><b>${dayText(r)}</b> stars today</li>` : ""}${r.h > 0 ? `<li><b>${esc(gain(r).replace(/ a week$/, ""))}</b> ${/ a week$/.test(gain(r)) ? "this week" : ""}</li>` : ""}<li><b>${num(r.s)}</b> stars in all</li></ul>
+    <p class="spot-meta"><span class="stars" title="${r.s.toLocaleString("en-US")} stars">${STAR}${num(r.s)}</span>${day(r) != null && Math.round(day(r)) ? `<span>${dayText(r)} today</span>` : ""}${r.h > 0 ? `<span title="${esc(gainTitle(r))}">${esc(gain(r))}</span>` : ""}</p>
     <p class="spot-vitals" hidden></p>
-    <div class="spot-acts"><a class="btn" href="?page=${esc(r.r)}">See the repo</a>${saveBtn(r.r)}<a class="jump" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener" aria-label="Open ${esc(name)} on GitHub" title="Open on GitHub">${GH}</a></div>
+    <div class="spot-acts"><a class="btn" href="?page=${esc(r.r)}">Read more</a>${saveBtn(r.r)}<a class="jump" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener" aria-label="Open ${esc(name)} on GitHub" title="Open on GitHub">${GH}</a></div>
   </div>
   <figure class="spot-chart">${spark(hs, 480, 150, "bigspark")}<figcaption><span>${num(hs[0]?.[1] ?? r.s)} stars, ${esc(hs[0]?.[0] ?? "")}</span><span>${num(r.s)} stars, ${esc(hs.at(-1)?.[0] ?? "")}</span></figcaption></figure>`
   el.hidden = false
