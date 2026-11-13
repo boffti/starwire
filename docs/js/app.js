@@ -317,6 +317,23 @@ function doors() {
   return out
 }
 
+// On a wide window the list has room to spare, so the doorways move out of it into a bar on the right that stays in
+// view while the list scrolls. Narrower windows and phones keep them between the rows. The wrapper is made here, not
+// in index.html, so pages drawn before it existed (a cached page, a landing page not rebuilt yet) get it too.
+const RAIL_MIN = 1400 // px the list column and bar need between them
+const railWrap = document.createElement("div"), railEl = document.createElement("aside")
+railWrap.className = "with-rail"; railEl.id = "doorbar"; railEl.hidden = true; railEl.setAttribute("aria-label", "More on starwire")
+$("#results").before(railWrap)
+{ const main = document.createElement("div"); main.className = "rail-main"; main.append($("#results"), document.querySelector(".more-wrap")); railWrap.append(main, railEl) }
+const railFits = () => railWrap.clientWidth >= RAIL_MIN
+function rail(on) {
+  railWrap.classList.toggle("on", on); railEl.hidden = !on
+  if (on && !railEl.firstChild) railEl.innerHTML = doors().join("")
+  return on
+}
+let railFit = null // draw again when the window crosses the width where the bar fits
+new ResizeObserver(() => { const fit = railFits(); if (railFit !== null && fit !== railFit && !state.page && !state.alt) render(); railFit = fit }).observe(railWrap)
+
 // Worth a look: stars per day, kept in full by a repo that passes every signal check and cut for each one it fails
 // The gain is scaled by the repo's size, the way Trending's heat is (gain / sqrt(stars + 100)), so 300 stars a day on a
 // 2,000-star repo outranks 600 a day on one with 300,000: a find, not a fixture.
@@ -392,6 +409,7 @@ function showCollection(c) {
 }
 function render() {
   const onPage = !!(state.page || state.alt)
+  rail(false) // the list below turns it back on when this is the plain home list on a wide window
   $("#repo-page").hidden = !onPage
   for (const el of document.querySelectorAll(".page > :not(#repo-page)")) el.hidden = onPage
   document.querySelectorAll("[data-alt]").forEach((n) => n.setAttribute("aria-current", String(!!state.alt)))
@@ -421,6 +439,7 @@ function render() {
   el.className = layout
   moves = layout === "wire" && !col && MOVE_SCORES[state.sort] && !scores ? rankMoves(list, MOVE_SCORES[state.sort]) : null
   if (state.view === "wire" && !col) lead(list); else $("#lead").hidden = true // phones get the list rows, but keep the lead
+  const home = !col && !state.f && !state.q && !anyFacet() && !state.lang, railOn = rail(home && railFits()) // before the columns are counted: the bar narrows the list
   const cols = getComputedStyle(el).gridTemplateColumns.split(" ").length
   const spot = PROMO_ROW * cols + Math.floor(PROMO_COL * cols)
   // the StarDash card takes one repo's place, so a full page is 60 cells: whole rows at 3, 4, 5 or 6 columns
@@ -429,8 +448,8 @@ function render() {
   const page = list.slice(0, shown).map(layout === "wire" ? row : card)
   if (list.length <= shown) page.push(...gone.map((n) => `<div class="repo gone"><div class="head"><div class="name"><strong>${esc(n.split("/")[1])}</strong><span>${esc(n.split("/")[0])}</span></div>${saveBtn(n)}</div><p class="line">No longer on the list. <a href="https://github.com/${esc(n)}" target="_blank" rel="noopener">Open on GitHub</a></p></div>`))
   if (promoted) page.splice(spot, 0, promo)
-  // doorways on the plain home list only; last one first, so each lands on a whole row
-  if (!col && !state.f && !state.q && !anyFacet() && !state.lang) { const at = layout === "cards" ? DOOR_ROWS.map((r) => r * cols) : DOOR_ITEMS
+  // doorways on the plain home list only: in the bar when it is showing, else between the rows, last one first so each lands on a whole row
+  if (home && !railOn) { const at = layout === "cards" ? DOOR_ROWS.map((r) => r * cols) : DOOR_ITEMS
     doors().map((d, i) => [at[i], d]).reverse().forEach(([i, d]) => { if (page.length > i) page.splice(i, 0, d) }) }
   const empty = state.f === "saved" && !saved.length
     ? `<div class="empty">Nothing saved yet. Use the bookmark on any repo to keep it here.<br>Saves stay in this browser.</div>`
@@ -932,6 +951,7 @@ $("#results").addEventListener("click", (e) => {
   if (e.metaKey || e.ctrlKey) return void window.open(`https://github.com/${c.dataset.r}`, "_blank", "noopener")
   openPanel(c.dataset.r)
 })
+railEl.addEventListener("click", (e) => { const a = inApp(e); if (a) { e.preventDefault(); if (a.dataset.door) count(`door/${a.dataset.door}`, "Doorway"); navigate(a.getAttribute("href")) } })
 $("#results").addEventListener("click", (e) => { const a = e.target.closest(".col-card, .stack, .door") && inApp(e); if (a) { e.preventDefault(); if (a.dataset.door) count(`door/${a.dataset.door}`, "Doorway"); navigate(a.getAttribute("href")) } }) // a collection opens without a reload
 $("#results").addEventListener("auxclick", (e) => { const c = e.target.closest(".repo[data-r]"); if (c && e.button === 1 && !e.target.closest(".jump, [data-save]")) window.open(`https://github.com/${c.dataset.r}`, "_blank", "noopener") })
 $("#results").addEventListener("keydown", (e) => { const c = e.target.closest(".repo[data-r]"); if (c && (e.key === "Enter" || e.key === " ") && e.target === c) { e.preventDefault(); openPanel(c.dataset.r) } })
