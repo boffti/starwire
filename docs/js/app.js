@@ -296,6 +296,27 @@ const promo = `<a class="promo" href="https://github.com/boffti/stardash" target
   <span>Try StarDash for free</span>
 </a>`
 
+// Doorways: most visits are the home list and nothing else, so the plain "All repos" list carries three full-width
+// cards into the parts of the site a sidebar link doesn't sell: alternatives, a collection and a hidden gem. The
+// collection and the gem change with the day's data. Placed after rows 2, 5 and 8 of cards (items 6, 16 and 28 of a
+// list), so the top of the list stays repos. ponytail: fixed spots and a daily rotation; make them smarter only if
+// the door/ events show which ones get used.
+const DOOR_ROWS = [2, 5, 8], DOOR_ITEMS = [6, 16, 28]
+function doors() {
+  const n = Math.floor(Date.parse(TODAY) / 864e5), out = []
+  const top = [...ALTS.values()].sort((a, b) => b.repos.length - a.repos.length).slice(0, 8)
+  if (top.length >= 4) out.push(`<section class="door" aria-label="Open source alternatives"><div class="door-text"><small>Alternatives</small><strong>Open source instead of&hellip;</strong><p>Pick a product you pay for and see what could replace it, ranked by how much of it each one covers.</p></div>
+    <div class="door-chips">${top.map((g) => `<a href="?alt=${encodeURIComponent(g.name)}" data-door="alt">${esc(g.name)}<b>${g.repos.length}</b></a>`).join("")}<a class="door-all" href="?alt=all" data-door="alt">All ${ALTS.size} products</a></div></section>`)
+  const c = collections.length && collections[n % collections.length]
+  if (c) out.push(`<section class="door" aria-label="A collection"><div class="door-text"><small>Collection of the day</small><strong>${esc(c.title)}</strong><p>${esc(c.intro)}</p></div>
+    <div class="door-chips">${c.needs.slice(0, 6).map(([need]) => `<span>${esc(need)}</span>`).join("")}<a class="door-all" href="?col=${esc(c.id)}" data-door="col">See the ${c.needs.length}-part stack</a><a class="door-all" href="?col=all" data-door="col">All ${collections.length} collections</a></div></section>`)
+  const gems = repos.filter((r) => r.h > 0 && r.s < GEM_STARS).sort((a, b) => b.h - a.h), g = gems[n % Math.min(gems.length, 10)]
+  if (g) { const [owner, name] = g.r.split("/")
+    out.push(`<section class="door" aria-label="A hidden gem"><div class="door-text"><small>Hidden gem of the day</small><strong class="door-repo"><img src="${esc(avatar(owner, 64))}" alt="" width="32" height="32" loading="lazy">${esc(name)}<i>${esc(owner)}</i></strong><p>${esc(g.l ?? "")}</p></div>
+    <div class="door-chips"><span>${STAR}${num(g.s)} stars</span>${g.wt ? `<span>${esc(g.wt)}</span>` : ""}<a class="door-all" href="?page=${esc(g.r)}" data-door="gem">See the repo</a><a class="door-all" href="?f=gems" data-door="gem">All ${gems.length} hidden gems</a></div></section>`) }
+  return out
+}
+
 // Worth a look: stars per day, kept in full by a repo that passes every signal check and cut for each one it fails
 const worth = (r, back = 0) => { const d = day(r, back); return d == null ? null : d * (r.sg ??= weight(r, TODAY)) }
 const sorters = {
@@ -406,6 +427,9 @@ function render() {
   const page = list.slice(0, shown).map(layout === "wire" ? row : card)
   if (list.length <= shown) page.push(...gone.map((n) => `<div class="repo gone"><div class="head"><div class="name"><strong>${esc(n.split("/")[1])}</strong><span>${esc(n.split("/")[0])}</span></div>${saveBtn(n)}</div><p class="line">No longer on the list. <a href="https://github.com/${esc(n)}" target="_blank" rel="noopener">Open on GitHub</a></p></div>`))
   if (promoted) page.splice(spot, 0, promo)
+  // doorways on the plain home list only; last one first, so each lands on a whole row
+  if (!col && !state.f && !state.q && !anyFacet() && !state.lang) { const at = layout === "cards" ? DOOR_ROWS.map((r) => r * cols) : DOOR_ITEMS
+    doors().map((d, i) => [at[i], d]).reverse().forEach(([i, d]) => { if (page.length > i) page.splice(i, 0, d) }) }
   const empty = state.f === "saved" && !saved.length
     ? `<div class="empty">Nothing saved yet. Use the bookmark on any repo to keep it here.<br>Saves stay in this browser.</div>`
     : `<div class="empty">No repos match that yet. Try fewer words or another filter.<br><button type="button" id="reset">Clear filters</button></div>`
@@ -905,7 +929,7 @@ $("#results").addEventListener("click", (e) => {
   if (e.metaKey || e.ctrlKey) return void window.open(`https://github.com/${c.dataset.r}`, "_blank", "noopener")
   openPanel(c.dataset.r)
 })
-$("#results").addEventListener("click", (e) => { const a = e.target.closest(".col-card, .stack") && inApp(e); if (a) { e.preventDefault(); navigate(a.getAttribute("href")) } }) // a collection opens without a reload
+$("#results").addEventListener("click", (e) => { const a = e.target.closest(".col-card, .stack, .door") && inApp(e); if (a) { e.preventDefault(); if (a.dataset.door) count(`door/${a.dataset.door}`, "Doorway"); navigate(a.getAttribute("href")) } }) // a collection opens without a reload
 $("#results").addEventListener("auxclick", (e) => { const c = e.target.closest(".repo[data-r]"); if (c && e.button === 1 && !e.target.closest(".jump, [data-save]")) window.open(`https://github.com/${c.dataset.r}`, "_blank", "noopener") })
 $("#results").addEventListener("keydown", (e) => { const c = e.target.closest(".repo[data-r]"); if (c && (e.key === "Enter" || e.key === " ") && e.target === c) { e.preventDefault(); openPanel(c.dataset.r) } })
 panel.addEventListener("click", async (e) => {

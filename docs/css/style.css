@@ -167,6 +167,26 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .list .meta { margin: 0; flex: none; justify-content: flex-end; flex-wrap: nowrap; white-space: nowrap; } /* sized by its content, so a long gain label pushes the description instead of covering it */
 .list .promo { display: none; }
 
+/* doorways in the home list: a full row each, into alternatives, a collection and a hidden gem */
+.door { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); align-items: center; gap: 12px 28px; padding: 18px 20px; border: 1px solid var(--line); border-radius: var(--radius); background: color-mix(in srgb, var(--raise) 45%, var(--panel)); }
+.door small { color: var(--accent); font-size: 12px; font-weight: 600; }
+.door strong { display: block; margin-top: 2px; font-size: 18px; letter-spacing: -0.02em; }
+.door p { margin: 4px 0 0; color: var(--muted); font-size: 13.5px; line-height: 1.45; }
+.door-repo { display: flex !important; align-items: center; gap: 10px; }
+.door-repo img { border-radius: 8px; background: var(--raise); }
+.door-repo i { font-style: normal; font-weight: 400; font-size: 13px; color: var(--muted); }
+.door-chips { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.door-chips > * { display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel); color: var(--text); font-size: 13px; text-decoration: none; white-space: nowrap; }
+.door-chips span { color: var(--muted); }
+.door-chips b { color: var(--muted); font-weight: 500; font-variant-numeric: tabular-nums; }
+.door-chips a:hover { border-color: var(--muted); }
+.door-chips svg { width: 13px; height: 13px; }
+.door-chips .door-all { border-color: transparent; background: none; color: var(--accent); font-weight: 600; padding-inline: 4px; }
+.door-chips .door-all:hover { text-decoration: underline; }
+.list .door, .wire .door { border: 0; border-radius: 0; border-top: 1px solid var(--line); }
+.list .door + .repo, .wire .door + .wrow { border-top: 1px solid var(--line); }
+@media (max-width: 760px) { .door { grid-template-columns: 1fr; padding: 16px; } }
+
 /* StarDash in the results */
 .promo {
   display: flex; flex-direction: column; justify-content: space-between; gap: 12px; padding: 18px;
