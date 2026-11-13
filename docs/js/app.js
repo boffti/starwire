@@ -274,7 +274,8 @@ function row(r, i) {
 </div>`
 }
 const DATE = new Date(now).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" })
-// above the list: the day's biggest mover on the plain views, the area's top three of the week inside an area
+// above the list: its first repo on the plain views, named for the order in use; the area's top three of the week inside an area
+const LEAD_TITLE = { worth: `Most worth a look on ${DATE}`, today: `Biggest mover on ${DATE}`, trending: "Trending hardest this week", picked: "Picked by the most sources", stars: "Most stars on starwire", new: "Newest pick", active: "Most recently updated", saved: "Your latest save" }
 function lead(list) {
   const el = $("#lead")
   if (state.q || state.form || state.plat || state.with || state.tag || state.lic || state.setup || state.lang || ["saved", "shared"].includes(state.f)) return (el.hidden = true)
@@ -285,15 +286,15 @@ function lead(list) {
     el.innerHTML = `<h2>Rising fastest in ${esc(state.sa ? SUB.get(`${state.a}/${state.sa}`) : AREA.get(state.a).name)} this week</h2><div class="mv-row">${top.map((r, i) => { const [o, n] = r.r.split("/"); return `<a class="mv-tile" href="?page=${esc(r.r)}"><span class="n">${i + 1}</span><img src="${esc(avatar(o, 56))}" alt="" width="28" height="28" loading="lazy"><span class="who"><b>${esc(n)}</b><small>${esc(r.l)}</small></span>${spark(r.hs ?? [], 96, 28)}<span class="g"><b>+${num(r.w)}</b><small>${/ a week$/.test(gain(r)) ? "this week" : esc(gain(r).replace(/^~?\+\S+ /, ""))}</small></span></a>` }).join("")}</div>`
     return (el.hidden = false)
   }
-  const r = list.filter((x) => day(x) != null).sort((a, b) => day(b) - day(a))[0]
+  const r = list[0] // the list is already in the chosen order, so the hero is always its first row
   if (!r) return (el.hidden = true)
   const [owner, name] = r.r.split("/"), hs = r.hs ?? []
   el.className = "lead spot"
   el.innerHTML = `<div class="spot-text">
-    <h2>Biggest mover on ${DATE}</h2>
+    <h2>${LEAD_TITLE[state.sort] ?? "First on the list"}</h2>
     <a class="spot-name" href="?page=${esc(r.r)}"><img src="${esc(avatar(owner, 96))}" alt="" width="44" height="44"><span><b>${esc(name)}</b><small>${esc(owner)}</small></span></a>
     <p>${esc(r.l)}</p>
-    <ul class="spot-stats"><li><b>${dayText(r)}</b> stars today</li>${r.h > 0 ? `<li><b>${esc(gain(r).replace(/ a week$/, ""))}</b> ${/ a week$/.test(gain(r)) ? "this week" : ""}</li>` : ""}<li><b>${num(r.s)}</b> stars in all</li></ul>
+    <ul class="spot-stats">${day(r) != null ? `<li><b>${dayText(r)}</b> stars today</li>` : ""}${r.h > 0 ? `<li><b>${esc(gain(r).replace(/ a week$/, ""))}</b> ${/ a week$/.test(gain(r)) ? "this week" : ""}</li>` : ""}<li><b>${num(r.s)}</b> stars in all</li></ul>
     <p class="spot-vitals" hidden></p>
     <a class="btn" href="?page=${esc(r.r)}">See the repo</a>
   </div>
