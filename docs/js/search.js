@@ -6,7 +6,10 @@
 const WEIGHT = { name: 4, owner: 2, tags: 3, alt: 3, facets: 2, line: 1.5, lang: 1 }
 const K1 = 1.2, B = 0.6
 // words that say nothing about what a repo does here: everything is open source, and "X alternative" is answered by the alternatives field
-const FILLER = new Set("a an the for to of in on with and or by vs alternative alternatives replacement replace like similar open source opensource oss free app apps tool tools best good".split(" "))
+// and the glue of a typed sentence ("something to ... my ...", "how do I ...")
+const FILLER = new Set(("a an the for to of in on with and or by vs alternative alternatives replacement replace like similar open source opensource oss free app apps tool tools best good " +
+  "i me my mine myself we us our ourselves yourself you your it its they them their want wants need needs looking something anything thing things some any that this these those which what how who where when " +
+  "is are am was be been do does did can could would should will let lets just also really every all into from up out about more very much way ways instead without anywhere using use make get keep find help").split(" "))
 const ALT_INTENT = /\b(alternatives?|replacements?|replace|vs|like)\b/
 // ponytail: a short hand list; grow it from the test set's misses, not from guesses
 const SYN = { postgres: ["postgresql"], pg: ["postgresql"], k8s: ["kubernetes"], js: ["javascript"], ts: ["typescript"], py: ["python"], gui: ["desktop", "client", "ui"], db: ["database"], ml: ["machine-learning"], md: ["markdown"], cli: ["command-line", "terminal"], selfhosted: ["self-hosted"] }
@@ -129,7 +132,8 @@ export function makeIndex(repos, fields) {
     return out
   }
 
-  // every word must match somewhere; when that leaves under 5 repos, repos missing one word come back below them
+  // every word must match somewhere; when that leaves under 5 repos, repos missing some words come back below them:
+  // one for a short query, up to half for a long one, since a described need rarely uses a repo's own words
   return function search(q, pool) {
     const all = [...new Set(tokens(q, false))], kept = all.filter((w) => !FILLER.has(w))
     const words = kept.length ? kept : all
@@ -142,7 +146,7 @@ export function makeIndex(repos, fields) {
     if (!strict.size && ex.length < 2) return substring(q, allow)
     if (strict.size >= 5 || ex.length < 2) return strict
     // partial matches go below every full one, keeping their own order
-    const part = run(ex, allow, 1, altBoost, phrase), top = Math.max(0, ...[...part].filter(([r]) => !strict.has(r)).map((x) => x[1]))
+    const part = run(ex, allow, Math.max(1, Math.floor(ex.length / 2)), altBoost, phrase), top = Math.max(0, ...[...part].filter(([r]) => !strict.has(r)).map((x) => x[1]))
     const cut = strict.size ? Math.min(...strict.values()) * 0.9 : top
     for (const [r, v] of part) if (!strict.has(r)) strict.set(r, (v / (top || 1)) * cut)
     return strict
