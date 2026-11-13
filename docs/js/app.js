@@ -324,12 +324,25 @@ function doors() {
     <div class="door-chips">${top.map((g) => `<a href="?alt=${encodeURIComponent(g.name)}" data-door="alt">${esc(g.name)}<b>${g.repos.length}</b></a>`).join("")}<a class="door-all" href="?alt=all" data-door="alt">All ${ALTS.size} products</a></div></section>`)
   const c = collections.length && collections[n % collections.length]
   if (c) out.push(`<section class="door" aria-label="A collection"><div class="door-text"><small><svg viewBox="0 0 24 24" aria-hidden="true">${I.col}</svg>Collection of the day</small><strong>${esc(c.title)}</strong><p>${esc(c.intro)}</p></div>
-    <div class="door-chips">${c.needs.slice(0, 6).map(([need]) => `<span>${esc(need)}</span>`).join("")}<a class="door-all" href="?col=${esc(c.id)}" data-door="col">See the ${c.needs.length}-part stack</a><a class="door-all" href="?col=all" data-door="col">All ${collections.length} collections</a></div></section>`)
+    <div class="door-chips"><span class="door-stack" data-stack="${esc(c.id)}"></span><span class="door-count">${c.needs.length} needs</span><a class="door-all" href="?col=${esc(c.id)}" data-door="col">See the stack</a><a class="door-all" href="?col=all" data-door="col">All ${collections.length} collections</a></div></section>`)
   const gems = repos.filter((r) => r.h > 0 && r.s < GEM_STARS).sort((a, b) => b.h - a.h), g = gems[n % Math.min(gems.length, 10)]
   if (g) { const [owner, name] = g.r.split("/")
     out.push(`<section class="door" aria-label="A hidden gem"><div class="door-text"><small><svg viewBox="0 0 24 24" aria-hidden="true">${I.gems}</svg>Hidden gem of the day</small><strong class="door-repo"><img src="${esc(avatar(owner, 64))}" alt="" width="32" height="32" loading="lazy">${esc(name)}<i>${esc(owner)}</i></strong><p>${esc(g.l ?? "")}</p></div>
     <div class="door-chips"><span>${STAR}${num(g.s)} stars</span>${g.wt ? `<span>${esc(g.wt)}</span>` : ""}<a class="door-all" href="?page=${esc(g.r)}" data-door="gem">See the repo</a><a class="door-all" href="?f=gems" data-door="gem">All ${gems.length} hidden gems</a></div></section>`) }
   return out
+}
+
+// The collection card shows its picks as a stack of repo icons. Picks need the fit scores, a file the home list
+// doesn't otherwise load, so they are fetched once the page is idle and the icons arrive a moment after the card.
+let stacksLoading = null
+function doorStacks() {
+  const els = [...document.querySelectorAll("[data-stack]:empty")]
+  if (!els.length) return
+  if (!stacks) return void (stacksLoading ??= new Promise((go) => (window.requestIdleCallback ?? setTimeout)(go)).then(loadStacks).then(doorStacks))
+  for (const el of els) { const picks = stacks.get(el.dataset.stack)?.picks ?? []
+    if (!picks.length) continue
+    el.innerHTML = picks.slice(0, 7).map((p) => `<img src="${esc(avatar(p.repo.r.split("/")[0], 56))}" alt="" title="${esc(`${p.label}: ${p.repo.r.split("/")[1]}`)}" width="28" height="28" loading="lazy">`).join("") + (picks.length > 7 ? `<i>+${picks.length - 7}</i>` : "")
+    el.nextElementSibling.textContent = `${picks.length} picks for ${COL.get(el.dataset.stack).needs.length} needs` }
 }
 
 // On a wide window the list has room to spare, so the doorways move out of it into a bar on the right that stays in
@@ -472,6 +485,7 @@ function render() {
     ? `<div class="empty">Nothing saved yet. Use the bookmark on any repo to keep it here.<br>Saves stay in this browser.</div>`
     : `<div class="empty">No repos match that yet. Try fewer words or another filter.<br><button type="button" id="reset">Clear filters</button></div>`
   el.innerHTML = page.length ? page.join("") : empty
+  doorStacks()
   savedBar(list.length + gone.length)
   $("#title").textContent = col ? col.title : state.sa ? SUB.get(`${state.a}/${state.sa}`) : state.a ? AREA.get(state.a).name
     : prefs.sidebar === "form" && state.form ? FORM.get(state.form) : prefs.sidebar === "with" && state.with ? WITH.get(state.with) : view.label
