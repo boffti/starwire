@@ -317,7 +317,7 @@ const promo = `<a class="promo" href="https://github.com/boffti/stardash" target
 // list), so the top of the list stays repos. ponytail: fixed spots and a daily rotation; make them smarter only if
 // the door/ events show which ones get used.
 const DOOR_ROWS = [2, 5, 8], DOOR_ITEMS = [6, 16, 28]
-const KNOWN = ["Notion", "Slack", "Figma", "ChatGPT", "Jira", "Spotify", "Zapier", "Photoshop", "Trello", "Shopify", "Postman", "Linear", "Mailchimp", "Miro", "Loom",
+const KNOWN = ["Notion", "Slack", "Figma", "ChatGPT", "Wispr Flow", "Jira", "Spotify", "Zapier", "Photoshop", "Trello", "Shopify", "Postman", "Linear", "Mailchimp", "Miro", "Loom",
   "Salesforce", "Webflow", "Zendesk", "Midjourney", "Todoist", "HubSpot", "Datadog", "CapCut", "ElevenLabs", "Heroku", "Mixpanel", "Lightroom", "Auth0", "Semrush", "YNAB"]
 function doors() {
   const n = Math.floor(Date.parse(TODAY) / 864e5), out = []
