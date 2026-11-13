@@ -725,7 +725,7 @@ body[data-cols="one"] #savedbar { display: none; }
 .wire .facts span, .wire .facts small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .wire .facts small { font-size: 12.5px; color: var(--muted); }
 .wire .facts b { font-weight: 500; color: color-mix(in srgb, var(--accent) 80%, var(--text)); }
-.wire .tot .up { color: var(--green); }
+.wire .tot .up { color: var(--muted); } /* today's gain is context, not the point of the row */
 /* when the list itself is under 1,250px (a laptop, or a wide window with the bar beside it) the facts give the summary some of their room */
 @media (min-width: 1281px) { @container (max-width: 1250px) { .wire .wrow { grid-template-columns: 3.4rem 28px minmax(9rem, 12rem) minmax(0, 1fr) 14rem 6.5rem auto auto; } } }
 /* on a small laptop there is room for the summary or the facts, not both: the summary stays */
