@@ -340,7 +340,7 @@ $("#results").before(railWrap)
 const railFits = () => railWrap.clientWidth >= RAIL_MIN
 function rail(on) {
   railWrap.classList.toggle("on", on); railEl.hidden = !on
-  if (on && !railEl.firstChild) railEl.innerHTML = doors().join("")
+  if (on && !railEl.firstChild) { const d = doors(); railEl.innerHTML = [d.at(-1), ...d.slice(0, -1)].join("") } // the hidden gem, last in the list, leads the bar
   return on
 }
 let railFit = null // draw again when the window crosses the width where the bar fits
