@@ -608,10 +608,11 @@ $("#sidebar").addEventListener("click", (e) => {
   scrollTo({ top: 0 })
   closeMenu()
 })
-$("#filters-btn").addEventListener("click", (e) => {
-  const open = $("#filters").classList.toggle("open")
-  e.currentTarget.setAttribute("aria-expanded", String(open))
-})
+// the filters open as a panel over the page; it stays open while you set several, and closes on a click elsewhere or Escape
+const filtersOpen = (open) => { $("#filters").classList.toggle("open", open); $("#filters-btn").setAttribute("aria-expanded", String(open)) }
+$("#filters-btn").addEventListener("click", () => filtersOpen(!$("#filters").classList.contains("open")))
+document.addEventListener("click", (e) => { if ($("#filters").classList.contains("open") && !e.target.closest("#filters, #filters-btn")) filtersOpen(false) })
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && $("#filters").classList.contains("open")) { filtersOpen(false); $("#filters-btn").focus() } })
 $("#menu").addEventListener("click", () => $("#app").classList.add("open"))
 $("#scrim").addEventListener("click", closeMenu)
 document.querySelector(".view").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; prefs.layout = b.dataset.view; savePrefs(); set({ view: b.dataset.view, shown: state.shown }) }) // the layout you pick is remembered, like the setting
