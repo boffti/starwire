@@ -182,7 +182,7 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .door-chips a:hover { border-color: var(--muted); }
 .door-chips svg { width: 13px; height: 13px; }
 .door-chips .door-all { border-color: transparent; background: none; color: var(--accent); font-weight: 600; padding-inline: 4px; }
-.door-chips .door-all:hover { text-decoration: underline; }
+.door-chips .door-all:hover { border-color: transparent; text-decoration: underline; } /* a text link: no pill outline on hover, that is for the chips */
 .list .door, .wire .door { border: 0; border-radius: 0; border-top: 1px solid var(--line); }
 .list .door + .repo, .wire .door + .wrow { border-top: 1px solid var(--line); }
 @media (max-width: 760px) { .door { grid-template-columns: 1fr; padding: 16px; } }
