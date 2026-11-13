@@ -341,7 +341,7 @@ function doorStacks() {
   if (!stacks) return void (stacksLoading ??= new Promise((go) => (window.requestIdleCallback ?? setTimeout)(go)).then(loadStacks).then(doorStacks))
   for (const el of els) { const picks = stacks.get(el.dataset.stack)?.picks ?? []
     if (!picks.length) continue
-    el.innerHTML = picks.slice(0, 7).map((p) => `<img src="${esc(avatar(p.repo.r.split("/")[0], 56))}" alt="" title="${esc(`${p.label}: ${p.repo.r.split("/")[1]}`)}" width="28" height="28" loading="lazy">`).join("") + (picks.length > 7 ? `<i>+${picks.length - 7}</i>` : "")
+    el.innerHTML = picks.slice(0, 6).map((p) => `<img src="${esc(avatar(p.repo.r.split("/")[0], 56))}" alt="" title="${esc(`${p.label}: ${p.repo.r.split("/")[1]}`)}" width="28" height="28" loading="lazy">`).join("") + (picks.length > 6 ? `<i>+${picks.length - 6}</i>` : "")
     el.nextElementSibling.textContent = `${picks.length} picks for ${COL.get(el.dataset.stack).needs.length} needs` }
 }
 

@@ -187,7 +187,9 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .door-chips .door-alt > span:first-child { border: 0; padding: 0; background: none; color: var(--text); }
 .door-chips .door-alt .door-stack { min-height: 0; padding-left: 5px; }
 .door-alt .door-stack img { width: 20px; height: 20px; margin-left: -5px; border-radius: 6px; border-width: 1.5px; }
-#doorbar .door-chips .door-alt { width: 100%; border-radius: 10px; padding: 7px 10px 7px 12px; }
+#doorbar .door-chips .door-alt { box-sizing: border-box; width: 100%; min-width: 0; border-radius: 10px; padding: 7px 12px; gap: 10px; }
+#doorbar .door-alt .door-stack { flex: none; }
+#doorbar .door-alt b { flex: none; min-width: 1.4em; text-align: right; }
 #doorbar .door-chips .door-alt:nth-of-type(n+6) { display: none; } /* five products in the bar, so its three cards fit a laptop-height window */
 #doorbar .door-alt > span:first-child { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 /* a collection's picks as overlapping repo icons */
@@ -205,7 +207,7 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .with-rail.on { display: grid; grid-template-columns: minmax(0, 1fr) 17rem; gap: 16px; align-items: start; }
 #doorbar { position: sticky; top: 68px; display: flex; flex-direction: column; gap: 12px; max-height: calc(100vh - 80px); overflow-y: auto; }
 #doorbar[hidden] { display: none; }
-#doorbar .door { grid-template-columns: 1fr; gap: 12px; padding: 16px; background: var(--panel); }
+#doorbar .door { grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 16px; background: var(--panel); }
 #doorbar .door strong { font-size: 16.5px; }
 
 /* StarDash in the results */
