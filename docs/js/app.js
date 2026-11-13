@@ -318,7 +318,9 @@ function doors() {
 }
 
 // Worth a look: stars per day, kept in full by a repo that passes every signal check and cut for each one it fails
-const worth = (r, back = 0) => { const d = day(r, back); return d == null ? null : d * (r.sg ??= weight(r, TODAY)) }
+// The gain is scaled by the repo's size, the way Trending's heat is (gain / sqrt(stars + 100)), so 300 stars a day on a
+// 2,000-star repo outranks 600 a day on one with 300,000: a find, not a fixture.
+const worth = (r, back = 0) => { const d = day(r, back); return d == null ? null : (d / Math.sqrt(r.s + 100)) * (r.sg ??= weight(r, TODAY)) }
 const sorters = {
   worth: (a, b) => (worth(b) ?? -1) - (worth(a) ?? -1) || b.h - a.h,
   saved: (a, b) => (savedAt.get(b.r) ?? -1) - (savedAt.get(a.r) ?? -1),

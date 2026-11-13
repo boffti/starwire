@@ -1,5 +1,5 @@
 // Signal: five plain checks on whether a repo's attention is likely to be earned. "Worth a look", the default order,
-// is stars gained per day weighted by them, so a repo that passes all five keeps its full gain and one that passes
+// is stars gained per day for the repo's size (app.js) weighted by them, so a repo that passes all five keeps its full gain and one that passes
 // none keeps a quarter. Nothing is hidden: a low-signal repo sinks, and every other sort ignores this.
 // The same rules are written out on how.html#signal. Run `node docs/js/signal.js` to check them.
 // r: a repo from data.json ({ k picks, ca created, p pushed, s stars, fk forks, hs [[day, stars]] }); today: ISO date
