@@ -332,8 +332,11 @@ function doors() {
     <div class="door-chips"><span class="door-stack" data-stack="${esc(c.id)}"></span><span class="door-count">${c.needs.length} needs</span><a class="door-all" href="?col=${esc(c.id)}" data-door="col">See the stack</a><a class="door-all" href="?col=all" data-door="col">All ${collections.length} collections</a></div></section>`)
   const gems = repos.filter((r) => r.h > 0 && r.s < GEM_STARS).sort((a, b) => b.h - a.h), g = gems[n % Math.min(gems.length, 10)]
   if (g) { const [owner, name] = g.r.split("/")
-    out.push(`<section class="door" aria-label="A hidden gem"><div class="door-text"><small><svg viewBox="0 0 24 24" aria-hidden="true">${I.gems}</svg>Hidden gem of the day</small><strong class="door-repo"><img src="${esc(avatar(owner, 64))}" alt="" width="32" height="32" loading="lazy">${esc(name)}<i>${esc(owner)}</i></strong><p>${esc(g.l ?? "")}</p></div>
-    <div class="door-chips"><span>${STAR}${num(g.s)} stars</span>${g.wt ? `<span>${esc(g.wt)}</span>` : ""}<a class="door-all" href="?page=${esc(g.r)}" data-door="gem">See the repo</a><a class="door-all" href="?f=gems" data-door="gem">All ${gems.length} hidden gems</a></div></section>`) }
+    // what it is, as chips: its kinds, where it runs, then what it replaces or plugs into. Not how its stars moved.
+    const what = [...(g.fo ?? []).map((f) => KIND_SHORT[f] ?? FORM.get(f)), (g.pl ?? []).filter((x) => x !== "docker").map((x) => PLAT.get(x)).filter(Boolean).slice(0, 3).join(", "),
+      g.alt?.length ? `Replaces ${g.alt[0]}` : g.ww?.length ? `Works with ${WITH.get(g.ww[0])}` : ""].filter(Boolean)
+    out.push(`<section class="door" aria-label="A hidden gem"><div class="door-text"><small><svg viewBox="0 0 24 24" aria-hidden="true">${I.gems}</svg>Hidden gem of the day</small><strong class="door-repo"><img src="${esc(avatar(owner, 64))}" alt="" width="32" height="32" loading="lazy">${esc(name)}<i>${esc(owner)}</i><span class="stars" title="${g.s.toLocaleString("en-US")} stars">${STAR}${num(g.s)}</span></strong><p>${esc(g.l ?? "")}</p></div>
+    <div class="door-chips">${what.map((w) => `<span>${esc(w)}</span>`).join("")}<i class="door-br"></i><a class="door-all" href="?page=${esc(g.r)}" data-door="gem">See the repo</a><a class="door-all" href="?f=gems" data-door="gem">All ${gems.length} hidden gems</a></div></section>`) }
   return out
 }
 
