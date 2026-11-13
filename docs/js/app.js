@@ -259,7 +259,7 @@ function facts(r) {
   const kind = [(r.fo ?? []).map((f) => KIND_SHORT[f] ?? FORM.get(f)).filter(Boolean).join(", "), where].filter(Boolean).join(" · ")
   const more = r.alt?.length ? `<b>Replaces</b> ${esc(r.alt.slice(0, 2).join(", "))}`
     : r.ww?.length ? `<b>Works with</b> ${esc(r.ww.slice(0, 2).map((w) => WITH.get(w)).filter(Boolean).join(", "))}`
-    : r.tg?.length ? esc(r.tg.slice(0, 3).map((t) => t.replace(/-/g, " ")).join(" · ")) : r.g ? esc(r.g) : ""
+    : r.tg?.length ? r.tg.slice(0, 3).map((t) => `<i class="tag">${esc(t.replace(/-/g, " "))}</i>`).join("") : r.g ? `<i class="tag">${esc(r.g)}</i>` : ""
   return `<div class="facts"><span>${esc(kind)}</span>${more ? `<small>${more}</small>` : ""}</div>`
 }
 function row(r, i) {
@@ -337,7 +337,7 @@ function doors() {
     const what = [...(g.fo ?? []).map((f) => KIND_SHORT[f] ?? FORM.get(f)), (g.pl ?? []).filter((x) => x !== "docker").map((x) => PLAT.get(x)).filter(Boolean).slice(0, 3).join(", "),
       g.alt?.length ? `Replaces ${g.alt[0]}` : g.ww?.length ? `Works with ${WITH.get(g.ww[0])}` : ""].filter(Boolean)
     out.push(`<section class="door" aria-label="A hidden gem"><div class="door-text"><small><svg viewBox="0 0 24 24" aria-hidden="true">${I.gems}</svg>Hidden gem of the day</small><strong class="door-repo"><img src="${esc(avatar(owner, 64))}" alt="" width="32" height="32" loading="lazy">${esc(name)}<i>${esc(owner)}</i><span class="stars" title="${g.s.toLocaleString("en-US")} stars">${STAR}${num(g.s)}</span></strong><p>${esc(g.l ?? "")}</p></div>
-    <div class="door-chips">${what.length ? `<span class="door-what">${esc(what.join(" · "))}</span>` : ""}<span class="door-links"><a class="door-all" href="?page=${esc(g.r)}" data-door="gem">See the repo</a><a class="door-all" href="?f=gems" data-door="gem">All ${gems.length} hidden gems</a></span></div></section>`) }
+    <div class="door-chips">${what.length ? `<span class="door-what">${what.map((w) => `<i class="tag">${esc(w)}</i>`).join("")}</span>` : ""}<span class="door-links"><a class="door-all" href="?page=${esc(g.r)}" data-door="gem">See the repo</a><a class="door-all" href="?f=gems" data-door="gem">All ${gems.length} hidden gems</a></span></div></section>`) }
   return out
 }
 
