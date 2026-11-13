@@ -167,6 +167,62 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .list .meta { margin: 0; flex: none; justify-content: flex-end; flex-wrap: nowrap; white-space: nowrap; } /* sized by its content, so a long gain label pushes the description instead of covering it */
 .list .promo { display: none; }
 
+/* doorways in the home list: a full row each, into alternatives, a collection and a hidden gem */
+.door { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); align-items: center; gap: 12px 28px; padding: 18px 20px; border: 1px solid var(--line); border-radius: var(--radius); background: color-mix(in srgb, var(--raise) 45%, var(--panel)); }
+.door small { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; font-weight: 600; }
+.door small svg { width: 14px; height: 14px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.door strong { display: block; margin-top: 2px; font-size: 18px; letter-spacing: -0.02em; }
+.door p { margin: 4px 0 0; color: var(--muted); font-size: 13.5px; line-height: 1.45; }
+.door-repo { display: flex !important; align-items: center; gap: 10px; }
+.door-repo img { border-radius: 8px; background: var(--raise); }
+.door-repo i { font-style: normal; font-weight: 400; font-size: 13px; color: var(--muted); }
+.door-repo .stars { margin-left: auto; font-size: 13.5px; font-weight: 600; letter-spacing: 0; }
+.door-chips { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.door-chips > * { display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel); color: var(--text); font-size: 13px; text-decoration: none; white-space: nowrap; }
+.door-chips span { color: var(--muted); }
+.door-chips b { color: var(--muted); font-weight: 500; font-variant-numeric: tabular-nums; }
+.door-chips a:hover { border-color: var(--muted); }
+.door-chips svg { width: 13px; height: 13px; }
+/* a product chip carries the icons of its three biggest alternatives: instead of this, these */
+.door-chips .door-alt { gap: 8px; padding: 4px 10px 4px 11px; }
+.door-chips .door-alt > span:first-child { border: 0; padding: 0; background: none; color: var(--text); }
+.door-chips .door-alt .door-stack { min-height: 0; padding-left: 5px; }
+.door-alt .door-stack img { width: 20px; height: 20px; margin-left: -5px; border-radius: 6px; border-width: 1.5px; }
+#doorbar .door-chips .door-alt { box-sizing: border-box; width: 100%; min-width: 0; border-radius: 10px; padding: 7px 12px; gap: 10px; }
+#doorbar .door-alt .door-stack { flex: none; }
+#doorbar .door-alt b { flex: none; min-width: 1.4em; text-align: right; }
+#doorbar .door-chips .door-alt:nth-of-type(n+6) { display: none; } /* five products in the bar, so its three cards fit a laptop-height window */
+#doorbar .door-alt > span:first-child { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+/* a collection's picks as overlapping repo icons */
+.door-chips .door-stack { display: inline-flex; padding: 0 0 0 8px; border: 0; background: none; min-height: 32px; }
+.door-chips .door-stack:empty { display: none; }
+.door-stack img { width: 32px; height: 32px; margin-left: -8px; border-radius: 9px; border: 2px solid var(--panel); background: var(--raise); }
+.door-stack i { display: grid; place-items: center; min-width: 32px; height: 32px; margin-left: -8px; padding: 0 6px; border-radius: 9px; border: 2px solid var(--panel); background: var(--raise); color: var(--muted); font-style: normal; font-size: 11.5px; font-weight: 600; }
+.door-chips .door-count { border: 0; background: none; padding: 0; color: var(--muted); }
+.door-chips .door-all { border-color: transparent; background: none; color: var(--accent); font-weight: 600; padding-inline: 4px; }
+.door-chips .door-all:hover { border-color: transparent; text-decoration: underline; } /* a text link: no pill outline on hover, that is for the chips */
+.list .door, .wire .door { border: 0; border-radius: 0; border-top: 1px solid var(--line); }
+.list .door + .repo, .wire .door + .wrow { border-top: 1px solid var(--line); }
+@media (max-width: 760px) { .door { grid-template-columns: 1fr; padding: 16px; } }
+/* wide windows: the doorways leave the list for a bar on the right that stays in view */
+.with-rail.on { display: grid; grid-template-columns: minmax(0, 1fr) 17rem; gap: 16px; align-items: start; }
+#doorbar { position: sticky; top: 68px; display: flex; flex-direction: column; gap: 12px; max-height: calc(100vh - 80px); overflow-y: auto; }
+#doorbar[hidden] { display: none; }
+#doorbar .door { grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 16px; background: var(--panel); }
+#doorbar .door strong { font-size: 16.5px; }
+#doorbar .door-text > small { margin-bottom: 8px; }
+.door-chips .door-links { display: contents; } /* between the rows the links simply follow the chips */
+.door-links a { display: inline-flex; align-items: center; font-size: 13px; text-decoration: none; white-space: nowrap; }
+.door-links a:hover { text-decoration: underline; }
+/* in the bar each card ends in a footer: its links on their own line under a rule, flush with the card's text */
+#doorbar .door-chips .door-links { display: flex; justify-content: space-between; gap: 12px; flex-basis: 100%; margin-top: 4px; padding: 12px 0 0; border: 0; border-top: 1px solid var(--line); border-radius: 0; background: none; }
+#doorbar .door-chips .door-all { padding: 0; border: 0; }
+/* what the gem is, as one quiet line, not a row of pills */
+.door-chips .door-what { display: inline-flex; flex-wrap: wrap; gap: 5px; padding: 0; border: 0; border-radius: 0; background: none; white-space: normal; }
+#doorbar .door { gap: 14px; }
+#doorbar .door-text p { margin-top: 8px; }
+#doorbar .door-repo { margin-top: 0; }
+
 /* StarDash in the results */
 .promo {
   display: flex; flex-direction: column; justify-content: space-between; gap: 12px; padding: 18px;
@@ -366,7 +422,7 @@ html { scrollbar-gutter: stable; }
 .lab:hover { border-color: var(--accent); }
 .p-alt { margin: 0; font-size: 13px; color: var(--muted); }
 
-/* filters: inline on wide screens; on phones, one "Filters" button opens a compact grid */
+/* filters: inline on wide screens; below that, one "Filters" button opens them as a panel over the page, so nothing below moves */
 .filters { display: contents; }
 .filters-btn { display: none; align-items: center; gap: 8px; height: 34px; padding: 0 12px; font: inherit; font-size: 13.5px; color: var(--text); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; cursor: pointer; }
 .filters-btn svg { width: 15px; height: 15px; }
@@ -376,7 +432,8 @@ html { scrollbar-gutter: stable; }
 /* below the width where Sort, all six filters and the layout toggle fit one row, the filters fold behind a button */
 @media (max-width: 1919px) {
   .filters-btn { display: inline-flex; }
-  .filters { display: none; order: 9; width: 100%; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); gap: 10px 12px; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+  .controls { position: relative; }
+  .filters { display: none; position: absolute; z-index: 30; top: calc(100% + 8px); left: 0; right: 0; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); gap: 10px 12px; padding: 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); box-shadow: 0 18px 40px -12px rgb(0 0 0 / 0.55); }
   .filters.open { display: grid; }
   .filters .select { flex-direction: column; align-items: stretch; gap: 4px; min-width: 0; }
   .filters .select span { font-size: 12px; }
@@ -639,8 +696,8 @@ body[data-cols="one"] #savedbar { display: none; }
 .static-more { padding: 14px 18px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14px; }
 .static-more b { flex-basis: 100%; }
 .static-more a { color: var(--muted); }
-.wire { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--panel); }
-.wire .wrow { display: grid; grid-template-columns: 3.4rem 28px minmax(9rem, 15rem) minmax(0, 1fr) 7rem 120px 5.5rem 6.5rem auto auto; align-items: center; gap: 0 16px; padding: 10px 16px; border: 0; border-radius: 0; background: none; cursor: pointer; }
+.wire { container-type: inline-size; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--panel); }
+.wire .wrow { display: grid; grid-template-columns: 3.4rem 28px minmax(9rem, 12rem) minmax(0, 1fr) 17rem 6.5rem auto auto; align-items: center; gap: 0 16px; padding: 10px 16px; border: 0; border-radius: 0; background: none; cursor: pointer; }
 .wire .wrow + .wrow { border-top: 1px solid var(--line); }
 .wire .wrow:hover { background: color-mix(in srgb, var(--raise) 40%, var(--panel)); }
 .wire .wrow img { width: 28px; height: 28px; border-radius: 7px; background: var(--raise); }
@@ -649,7 +706,7 @@ body[data-cols="one"] #savedbar { display: none; }
 .mv { font-style: normal; font-size: 11px; font-weight: 600; margin-top: 2px; }
 .mv.up { color: var(--green); } .mv.down { color: #e5534b; } .mv.same { color: var(--muted); } .mv.new { color: var(--amber); }
 .wire .name span { display: flex; align-items: center; gap: 6px; }
-.wire .line { -webkit-line-clamp: 1; font-size: 13.5px; }
+.wire .line { -webkit-line-clamp: 2; font-size: 13.5px; line-height: 1.35; } /* two lines fit beside the name and owner without making the row taller */
 .wire .lang { font-size: 12.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wspark { width: 120px; height: 32px; display: block; }
 .wspark polyline, .bigspark polyline { fill: none; stroke: var(--green); stroke-width: 1.6; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
@@ -663,13 +720,40 @@ body[data-cols="one"] #savedbar { display: none; }
 .wire .tot { display: flex; flex-direction: column; align-items: flex-end; font-size: 13px; font-variant-numeric: tabular-nums; }
 .wire .save, .wire .jump { margin: 0; align-self: center; }
 .wire .gone { display: flex; padding: 12px 16px; border: 0; border-top: 1px solid var(--line); border-radius: 0; }
-@media (max-width: 1280px) { .wire .wrow { grid-template-columns: 3rem 28px minmax(9rem, 14rem) minmax(0, 1fr) 6.5rem 96px 5.5rem auto auto; } .wire .tot { display: none; } .wire .wspark { width: 96px; } }
-@media (max-width: 1050px) { .wire .wrow { grid-template-columns: 2.6rem 28px minmax(0, 1fr) 5.5rem auto auto; } .wire .line, .wire .wspark, .wire .lang { display: none; } }
+/* a tag: the same small quiet chip as the topics on a card, so a label reads as a label and a sentence as a sentence */
+.tag { display: inline-block; font-style: normal; font-size: 11.5px; line-height: 1.5; color: var(--muted); background: var(--raise); border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
+.wire .facts .tag + .tag { margin-left: 5px; }
+/* what it is, in two lines beside the summary */
+.wire .facts { display: flex; flex-direction: column; gap: 2px; min-width: 0; font-size: 13px; }
+.wire .facts span, .wire .facts small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wire .facts small { font-size: 12.5px; color: var(--muted); }
+.wire .facts b { font-weight: 500; color: color-mix(in srgb, var(--accent) 80%, var(--text)); }
+.wire .tot .up { color: var(--muted); } /* today's gain is context, not the point of the row */
+/* when the list itself is under 1,250px (a laptop, or a wide window with the bar beside it) the facts give the summary some of their room */
+@media (min-width: 1281px) { @container (max-width: 1250px) { .wire .wrow { grid-template-columns: 3.4rem 28px minmax(9rem, 12rem) minmax(0, 1fr) 14rem 6.5rem auto auto; } } }
+/* on a small laptop there is room for the summary or the facts, not both: the summary stays */
+@media (max-width: 1280px) { .wire .wrow { grid-template-columns: 3rem 28px minmax(9rem, 12rem) minmax(0, 1fr) 6rem auto auto; } .wire .facts { display: none; } }
+@media (max-width: 1050px) { .wire .wrow { grid-template-columns: 2.6rem 28px minmax(0, 1fr) 5.5rem auto auto; } .wire .line, .wire .facts { display: none; } }
 
 /* the lead above the list: the day's biggest mover, or an area's three fastest risers */
 .lead { margin-bottom: 16px; }
 .lead h2 { margin: 0; font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
 .spot { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 24px 40px; align-items: center; padding: 24px 28px; border: 1px solid var(--line); border-radius: var(--radius); background: radial-gradient(120% 140% at 100% 100%, var(--green-soft), transparent 60%), var(--panel); }
+/* the hero is number one on the list: it carries the rank, labels, facts and controls a row would */
+.lead h2 { display: flex; align-items: center; gap: 10px; }
+.spot-no { display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 7px; background: var(--amber); color: oklch(0.13 0 0); font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; } /* the logo's yellow, dark figure on it like the star in the mark */
+.spot-name small { display: flex; align-items: center; gap: 8px; }
+.spot .facts { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; font-size: 14px; }
+.spot .facts small { font-size: 13.5px; color: var(--muted); }
+.spot .facts b { font-weight: 500; color: color-mix(in srgb, var(--accent) 80%, var(--text)); }
+/* stars as one quiet line, the way a row shows them: the count, then what it gained */
+.spot-text > .spot-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 0; margin: 0; font-size: 13.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.spot-meta .stars { font-size: 14.5px; }
+.spot-meta span + span::before { content: "·"; margin: 0 9px; color: var(--muted); }
+.spot-text > .spot-vitals { font-size: 13.5px; color: var(--muted); }
+.spot-acts { display: flex; align-items: center; gap: 6px; }
+.spot-acts .save, .spot-acts .jump { margin: 0; align-self: center; padding: 8px; opacity: 0.8; }
+.spot-acts .save svg, .spot-acts .jump svg { width: 17px; height: 17px; }
 .spot-text { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; min-width: 0; }
 .spot-name { display: flex; align-items: center; gap: 14px; color: var(--text); text-decoration: none; }
 .spot-name img { width: 44px; height: 44px; border-radius: 11px; background: var(--raise); }
@@ -677,9 +761,6 @@ body[data-cols="one"] #savedbar { display: none; }
 .spot-name small { display: block; color: var(--muted); font-size: 14px; }
 .spot-name:hover b { text-decoration: underline; }
 .spot-text > p { margin: 0; font-size: 15.5px; line-height: 1.45; color: color-mix(in srgb, var(--text) 85%, var(--muted)); max-width: 52ch; }
-.spot-stats { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 13.5px; color: var(--muted); }
-.spot-stats b { color: var(--text); font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; margin-right: 4px; }
-.spot-stats li:first-child b { color: var(--green); }
 .spot-vitals { margin: 0; font-size: 13px; color: var(--muted); }
 .spot-chart { margin: 0; min-width: 0; }
 .bigspark { width: 100%; height: 150px; display: block; }

@@ -125,7 +125,7 @@
   <h2 id="sorts">The other sorts and labels</h2>
   <table>
     <tr><th>Sort</th><th>Order</th></tr>
-    <tr><td>Worth a look</td><td>The default. Stars gained in the latest day, weighted by five signal checks. <a href="#signal">How it works</a></td></tr>
+    <tr><td>Worth a look</td><td>The default. Stars gained in the latest day for the repo's size, weighted by five signal checks. <a href="#signal">How it works</a></td></tr>
     <tr><td>Most stars today</td><td>Stars gained in the latest day of our daily counts, with no weighting. The arrow beside the rank compares it with the day before.</td></tr>
     <tr><td>Most picked</td><td>Number of different sources that picked the repo. Each source counts once, however often it posts. Ties go to more stars.</td></tr>
     <tr><td>Trending</td><td>Heat, as above</td></tr>
@@ -153,7 +153,7 @@
   </ul>
 
   <h2 id="signal">Worth a look, the default order</h2>
-  <p>Stars are easy to get for a week. A new repo with a polished README can collect thousands before anyone has used it. So the default order isn't raw star gain. It is stars gained per day, weighted by five checks on whether that attention looks earned:</p>
+  <p>Stars are easy to get for a week. A new repo with a polished README can collect thousands before anyone has used it. So the default order isn't raw star gain. It starts from stars gained per day, scaled to the repo's size the way Trending is (the gain divided by the square root of its stars plus 100), so 300 stars a day on a 2,000-star repo ranks above 600 a day on one with 300,000. A repo everyone already knows gaining its usual stars is not news; a small one taking off is. That figure is then weighted by five checks on whether the attention looks earned:</p>
   <table>
     <thead><tr><th>Check</th><th>Passes when</th><th>Why</th></tr></thead>
     <tbody>
@@ -164,7 +164,7 @@
       <tr><td>Steady</td><td>No single day holds more than 60% of the week's new stars (when the week brought 50 or more)</td><td>A one-day spike is a post going round, not a trend</td></tr>
     </tbody>
   </table>
-  <p>A repo that passes every check it can be judged on keeps its full daily gain. Each one it fails takes an equal share off, down to a quarter of its gain for a repo that passes none. A check with too little to go on is left out instead of counted against the repo. Nothing is hidden or removed: a repo with weak signal sinks in this one order, and still shows in search, in its area and in every other sort. "Most stars today" is the same list without the weighting.</p>
+  <p>A repo that passes every check it can be judged on keeps its full score. Each one it fails takes an equal share off, down to a quarter of its score for a repo that passes none. A check with too little to go on is left out instead of counted against the repo. Nothing is hidden or removed: a repo with weak signal sinks in this one order, and still shows in search, in its area and in every other sort. "Most stars today" is the same list without the weighting.</p>
   <p>The checks say whether attention looks earned. They don't say a project is good, and a young project from one source can be excellent. Every repo page shows which checks it passed, and the rules are in <a href="https://github.com/boffti/starwire/blob/main/docs/js/signal.js">one short file</a> you can read or challenge.</p>
 
   <h2 id="vitals">Vital signs on repo pages</h2>
@@ -264,6 +264,7 @@
 
   <h2 id="changes">Changes to the method</h2>
   <ul class="log">
+    <li><b>Nov 13, 2026.</b> "Worth a look" scales a repo's daily gain to its size, as Trending does, so small repos taking off rank above large ones gaining their usual stars. The first repo is the hero and the list starts at two. Rows in the ranked list say what a repo is (its kind, where it runs, what it replaces or works with) in place of a star chart. Three cards lead to a hidden gem, alternatives and a collection: in a bar on the right on wide windows, between the rows otherwise. The filters open as a panel over the page.</li>
     <li><b>Nov 12, 2026.</b> Collections only recommend established projects: a pick needs 100 stars and to pass half of its signal checks, or the need is shown as open.</li>
     <li><b>Nov 12, 2026.</b> Setup knows about hosted versions: a project that needs a server but is also run by its makers is labelled "Hosted", with whether it has a free plan. <a href="#setup">How setup is read</a>.</li>
     <li><b>Nov 12, 2026.</b> Setup effort: a label and a filter for how much know-how a project takes to run, and collections open as a stack, need by need. <a href="#setup">How setup is read</a>.</li>

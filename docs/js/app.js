@@ -5,7 +5,8 @@ const STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6
 const SHARE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 3v13M7 8l5-5 5 5"/></svg>'
 const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>'
 const COPY = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>'
-const GH = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>'
+// the link out to a repo on GitHub wears GitHub's mark (the same one as "Source" in the top bar), so it says where it goes
+const GH = '<svg viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;stroke:none"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg>'
 const num = (n) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k` : String(n))
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c])
 
@@ -247,6 +248,20 @@ function rankMoves(list, score) {
   const now = pos((r) => score(r, 0)), then = pos((r) => score(r, 1))
   return (r) => { const a = now.get(r.r), b = then.get(r.r); return a == null ? "" : b == null ? `<i class="mv new">new</i>` : b > a ? `<i class="mv up">▲${b - a}</i>` : b < a ? `<i class="mv down">▼${a - b}</i>` : `<i class="mv same">=</i>` }
 }
+// What a row is for: saying what the repo is and what you'd use it for, not how its stars moved. Beside the summary
+// sit two lines from its labels: the kind of thing it is and where it runs, then the most useful of what it replaces,
+// what it plugs into, or what it is about. Stars shrink to one column: the count, and today's gain beneath it.
+// the row's own short names for the forms: the filter's full names ("Library or framework") don't fit two to a line
+const KIND_SHORT = { "self-hosted": "Self-hosted", cli: "Command line", library: "Library", "agent-skill": "Agent skill", extension: "Extension", model: "Model", template: "Template", reference: "Guide" }
+function facts(r) {
+  const pl = (r.pl ?? []).filter((p) => p !== "docker").map((p) => PLAT.get(p)).filter(Boolean), all = ["macos", "windows", "linux"].every((p) => r.pl?.includes(p))
+  const where = all && pl.length === 3 ? "Mac, Windows, Linux" : pl.slice(0, 3).join(", ")
+  const kind = [(r.fo ?? []).map((f) => KIND_SHORT[f] ?? FORM.get(f)).filter(Boolean).join(", "), where].filter(Boolean).join(" · ")
+  const more = r.alt?.length ? `<b>Replaces</b> ${esc(r.alt.slice(0, 2).join(", "))}`
+    : r.ww?.length ? `<b>Works with</b> ${esc(r.ww.slice(0, 2).map((w) => WITH.get(w)).filter(Boolean).join(", "))}`
+    : r.tg?.length ? r.tg.slice(0, 3).map((t) => `<i class="tag">${esc(t.replace(/-/g, " "))}</i>`).join("") : r.g ? `<i class="tag">${esc(r.g)}</i>` : ""
+  return `<div class="facts"><span>${esc(kind)}</span>${more ? `<small>${more}</small>` : ""}</div>`
+}
 function row(r, i) {
   const [owner, name] = r.r.split("/"), d = day(r), today = r.hs?.at(-1)?.[0] === TODAY
   return `<div class="repo wrow${i < 3 ? " top" : ""}" role="button" tabindex="0" data-r="${esc(r.r)}" aria-label="${esc(name)} details">
@@ -254,15 +269,14 @@ function row(r, i) {
   <img src="${esc(avatar(owner, 56))}" alt="" loading="lazy" decoding="async" width="28" height="28">
   <div class="name"><strong>${esc(name)}</strong><span>${esc(owner)}${pills(r) ? ` ${pills(r)}` : ""}</span></div>
   <p class="line">${esc(lineOf(r))}</p>
-  <span class="lang">${r.g ? `<span class="dot" style="--c:${esc(r.gc ?? "")}">${esc(r.g)}</span>` : ""}</span>
-  ${spark(r.hs ?? [])}
-  <div class="gain">${d != null ? `<b>${dayText(r)}</b><small>${today ? "today" : "a day"}</small>` : `<b class="flat">${STAR}${num(r.s)}</b>`}</div>
-  <div class="tot"><span class="stars">${STAR}${num(r.s)}</span><small title="${esc(gainTitle(r))}">${r.h > 0 ? esc(gain(r)) : ""}</small></div>
+  ${facts(r)}
+  <div class="tot"><span class="stars">${STAR}${num(r.s)}</span>${d != null && Math.round(d) ? `<small class="up">${dayText(r)} ${today ? "today" : "a day"}</small>` : r.h > 0 ? `<small title="${esc(gainTitle(r))}">${esc(gain(r))}</small>` : ""}</div>
   ${saveBtn(r.r)}<a class="jump" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener" aria-label="Open ${esc(name)} on GitHub" title="Open on GitHub">${GH}</a>
 </div>`
 }
 const DATE = new Date(now).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" })
-// above the list: the day's biggest mover on the plain views, the area's top three of the week inside an area
+// above the list: its first repo on the plain views, named for the order in use; the area's top three of the week inside an area
+const LEAD_TITLE = { worth: `Most worth a look on ${DATE}`, today: `Biggest mover on ${DATE}`, trending: "Trending hardest this week", picked: "Picked by the most sources", stars: "Most stars on starwire", new: "Newest pick", active: "Most recently updated", saved: "Your latest save" }
 function lead(list) {
   const el = $("#lead")
   if (state.q || state.form || state.plat || state.with || state.tag || state.lic || state.setup || state.lang || ["saved", "shared"].includes(state.f)) return (el.hidden = true)
@@ -273,22 +287,24 @@ function lead(list) {
     el.innerHTML = `<h2>Rising fastest in ${esc(state.sa ? SUB.get(`${state.a}/${state.sa}`) : AREA.get(state.a).name)} this week</h2><div class="mv-row">${top.map((r, i) => { const [o, n] = r.r.split("/"); return `<a class="mv-tile" href="?page=${esc(r.r)}"><span class="n">${i + 1}</span><img src="${esc(avatar(o, 56))}" alt="" width="28" height="28" loading="lazy"><span class="who"><b>${esc(n)}</b><small>${esc(r.l)}</small></span>${spark(r.hs ?? [], 96, 28)}<span class="g"><b>+${num(r.w)}</b><small>${/ a week$/.test(gain(r)) ? "this week" : esc(gain(r).replace(/^~?\+\S+ /, ""))}</small></span></a>` }).join("")}</div>`
     return (el.hidden = false)
   }
-  const r = list.filter((x) => day(x) != null).sort((a, b) => day(b) - day(a))[0]
+  const r = list[0] // the list is already in the chosen order, so the hero is always its first row
   if (!r) return (el.hidden = true)
   const [owner, name] = r.r.split("/"), hs = r.hs ?? []
   el.className = "lead spot"
   el.innerHTML = `<div class="spot-text">
-    <h2>Biggest mover on ${DATE}</h2>
-    <a class="spot-name" href="?page=${esc(r.r)}"><img src="${esc(avatar(owner, 96))}" alt="" width="44" height="44"><span><b>${esc(name)}</b><small>${esc(owner)}</small></span></a>
+    <h2><b class="spot-no">1</b>${LEAD_TITLE[state.sort] ?? "First on the list"}${moves ? moves(r) : ""}</h2>
+    <a class="spot-name" href="?page=${esc(r.r)}"><img src="${esc(avatar(owner, 96))}" alt="" width="44" height="44"><span><b>${esc(name)}</b><small>${esc(owner)}${pills(r) ? ` ${pills(r)}` : ""}</small></span></a>
     <p>${esc(r.l)}</p>
-    <ul class="spot-stats"><li><b>${dayText(r)}</b> stars today</li>${r.h > 0 ? `<li><b>${esc(gain(r).replace(/ a week$/, ""))}</b> ${/ a week$/.test(gain(r)) ? "this week" : ""}</li>` : ""}<li><b>${num(r.s)}</b> stars in all</li></ul>
+    ${facts(r)}
+    <p class="spot-meta"><span class="stars" title="${r.s.toLocaleString("en-US")} stars">${STAR}${num(r.s)}</span>${day(r) != null && Math.round(day(r)) ? `<span>${dayText(r)} today</span>` : ""}${r.h > 0 ? `<span title="${esc(gainTitle(r))}">${esc(gain(r))}</span>` : ""}</p>
     <p class="spot-vitals" hidden></p>
-    <a class="btn" href="?page=${esc(r.r)}">See the repo</a>
+    <div class="spot-acts"><a class="btn" href="?page=${esc(r.r)}">Read more</a>${saveBtn(r.r)}<a class="jump" href="https://github.com/${esc(r.r)}" target="_blank" rel="noopener" aria-label="Open ${esc(name)} on GitHub" title="Open on GitHub">${GH}</a></div>
   </div>
   <figure class="spot-chart">${spark(hs, 480, 150, "bigspark")}<figcaption><span>${num(hs[0]?.[1] ?? r.s)} stars, ${esc(hs[0]?.[0] ?? "")}</span><span>${num(r.s)} stars, ${esc(hs.at(-1)?.[0] ?? "")}</span></figcaption></figure>`
   el.hidden = false
   vitals ??= fetch("data/vitals.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
   vitals.then((v) => { const p = el.querySelector(".spot-vitals"); if (v[r.r] && p && el.contains(p)) { p.textContent = `${summary(signs(v[r.r], TODAY))}.`; p.hidden = false } })
+  return "spot" // tells the list its first repo is shown here, so it starts at number two
 }
 
 const promo = `<a class="promo" href="https://github.com/boffti/stardash" target="_blank" rel="noopener">
@@ -296,8 +312,69 @@ const promo = `<a class="promo" href="https://github.com/boffti/stardash" target
   <span>Try StarDash for free</span>
 </a>`
 
+// Doorways: most visits are the home list and nothing else, so the plain "All repos" list carries three full-width
+// cards into the parts of the site a sidebar link doesn't sell: alternatives, a collection and a hidden gem. The
+// collection and the gem change with the day's data. Placed after rows 2, 5 and 8 of cards (items 6, 16 and 28 of a
+// list), so the top of the list stays repos. ponytail: fixed spots and a daily rotation; make them smarter only if
+// the door/ events show which ones get used.
+const DOOR_ROWS = [2, 5, 8], DOOR_ITEMS = [6, 16, 28]
+const KNOWN = ["Notion", "Slack", "Figma", "ChatGPT", "Wispr Flow", "Jira", "Spotify", "Zapier", "Photoshop", "Trello", "Shopify", "Postman", "Linear", "Mailchimp", "Miro", "Loom",
+  "Salesforce", "Webflow", "Zendesk", "Midjourney", "Todoist", "HubSpot", "Datadog", "CapCut", "ElevenLabs", "Heroku", "Mixpanel", "Lightroom", "Auth0", "Semrush", "YNAB"]
+function doors() {
+  const n = Math.floor(Date.parse(TODAY) / 864e5), out = []
+  // products most people have heard of, with short names: five a day in turn, so the card changes daily. The product
+  // with the most alternatives isn't the one a visitor recognises. Any that lose their alternatives drop out by themselves.
+  const known = KNOWN.map((k) => ALTS.get(k.toLowerCase())).filter((g) => g && g.repos.length >= 3)
+  const top = known.length >= 8 ? Array.from({ length: 8 }, (_, i) => known[(n * 5 + i) % known.length]) : [...ALTS.values()].sort((a, b) => b.repos.length - a.repos.length).slice(0, 8)
+  if (top.length >= 4) out.push(`<section class="door" aria-label="Open source alternatives"><div class="door-text"><small><svg viewBox="0 0 24 24" aria-hidden="true">${I.alt}</svg>Alternatives</small><strong>Open source instead of&hellip;</strong><p>Pick a product you pay for and see what could replace it, ranked by how much of it each one covers.</p></div>
+    <div class="door-chips">${top.map((g) => `<a class="door-alt" href="?alt=${encodeURIComponent(g.name)}" data-door="alt"><span>${esc(g.name)}</span><span class="door-stack">${[...g.repos].sort((x, y) => y.s - x.s).slice(0, 3).map((r) => `<img src="${esc(avatar(r.r.split("/")[0], 40))}" alt="" title="${esc(r.r.split("/")[1])}" width="20" height="20" loading="lazy">`).join("")}</span><b>${g.repos.length}</b></a>`).join("")}<span class="door-links"><a class="door-all" href="?alt=all" data-door="alt">All ${ALTS.size} products</a></span></div></section>`)
+  const c = collections.length && collections[n % collections.length]
+  if (c) out.push(`<section class="door" aria-label="A collection"><div class="door-text"><small><svg viewBox="0 0 24 24" aria-hidden="true">${I.col}</svg>Collection of the day</small><strong>${esc(c.title)}</strong><p>${esc(c.intro)}</p></div>
+    <div class="door-chips"><span class="door-stack" data-stack="${esc(c.id)}"></span><span class="door-count">${c.needs.length} needs</span><span class="door-links"><a class="door-all" href="?col=${esc(c.id)}" data-door="col">See the stack</a><a class="door-all" href="?col=all" data-door="col">All ${collections.length} collections</a></span></div></section>`)
+  const gems = repos.filter((r) => r.h > 0 && r.s < GEM_STARS).sort((a, b) => b.h - a.h), g = gems[n % Math.min(gems.length, 10)]
+  if (g) { const [owner, name] = g.r.split("/")
+    // what it is, as chips: its kinds, where it runs, then what it replaces or plugs into. Not how its stars moved.
+    const what = [...(g.fo ?? []).map((f) => KIND_SHORT[f] ?? FORM.get(f)), (g.pl ?? []).filter((x) => x !== "docker").map((x) => PLAT.get(x)).filter(Boolean).slice(0, 3).join(", "),
+      g.alt?.length ? `Replaces ${g.alt[0]}` : g.ww?.length ? `Works with ${WITH.get(g.ww[0])}` : ""].filter(Boolean)
+    out.push(`<section class="door" aria-label="A hidden gem"><div class="door-text"><small><svg viewBox="0 0 24 24" aria-hidden="true">${I.gems}</svg>Hidden gem of the day</small><strong class="door-repo"><img src="${esc(avatar(owner, 64))}" alt="" width="32" height="32" loading="lazy">${esc(name)}<i>${esc(owner)}</i><span class="stars" title="${g.s.toLocaleString("en-US")} stars">${STAR}${num(g.s)}</span></strong><p>${esc(g.l ?? "")}</p></div>
+    <div class="door-chips">${what.length ? `<span class="door-what">${what.map((w) => `<i class="tag">${esc(w)}</i>`).join("")}</span>` : ""}<span class="door-links"><a class="door-all" href="?page=${esc(g.r)}" data-door="gem">See the repo</a><a class="door-all" href="?f=gems" data-door="gem">All ${gems.length} hidden gems</a></span></div></section>`) }
+  return out
+}
+
+// The collection card shows its picks as a stack of repo icons. Picks need the fit scores, a file the home list
+// doesn't otherwise load, so they are fetched once the page is idle and the icons arrive a moment after the card.
+let stacksLoading = null
+function doorStacks() {
+  const els = [...document.querySelectorAll("[data-stack]:empty")]
+  if (!els.length) return
+  if (!stacks) return void (stacksLoading ??= new Promise((go) => (window.requestIdleCallback ?? setTimeout)(go)).then(loadStacks).then(doorStacks))
+  for (const el of els) { const picks = stacks.get(el.dataset.stack)?.picks ?? []
+    if (!picks.length) continue
+    el.innerHTML = picks.slice(0, 6).map((p) => `<img src="${esc(avatar(p.repo.r.split("/")[0], 56))}" alt="" title="${esc(`${p.label}: ${p.repo.r.split("/")[1]}`)}" width="28" height="28" loading="lazy">`).join("") + (picks.length > 6 ? `<i>+${picks.length - 6}</i>` : "")
+    el.nextElementSibling.textContent = `${picks.length} picks for ${COL.get(el.dataset.stack).needs.length} needs` }
+}
+
+// On a wide window the list has room to spare, so the doorways move out of it into a bar on the right that stays in
+// view while the list scrolls. Narrower windows and phones keep them between the rows. The wrapper is made here, not
+// in index.html, so pages drawn before it existed (a cached page, a landing page not rebuilt yet) get it too.
+const RAIL_MIN = 1400 // px the list column and bar need between them
+const railWrap = document.createElement("div"), railEl = document.createElement("aside")
+railWrap.className = "with-rail"; railEl.id = "doorbar"; railEl.hidden = true; railEl.setAttribute("aria-label", "More on starwire")
+$("#results").before(railWrap)
+{ const main = document.createElement("div"); main.className = "rail-main"; main.append($("#results"), document.querySelector(".more-wrap")); railWrap.append(main, railEl) }
+const railFits = () => railWrap.clientWidth >= RAIL_MIN
+function rail(on) {
+  railWrap.classList.toggle("on", on); railEl.hidden = !on
+  if (on && !railEl.firstChild) { const d = doors(); railEl.innerHTML = [d.at(-1), ...d.slice(0, -1)].join("") } // the hidden gem, last in the list, leads the bar
+  return on
+}
+let railFit = null // draw again when the window crosses the width where the bar fits
+new ResizeObserver(() => { const fit = railFits(); if (railFit !== null && fit !== railFit && !state.page && !state.alt) render(); railFit = fit }).observe(railWrap)
+
 // Worth a look: stars per day, kept in full by a repo that passes every signal check and cut for each one it fails
-const worth = (r, back = 0) => { const d = day(r, back); return d == null ? null : d * (r.sg ??= weight(r, TODAY)) }
+// The gain is scaled by the repo's size, the way Trending's heat is (gain / sqrt(stars + 100)), so 300 stars a day on a
+// 2,000-star repo outranks 600 a day on one with 300,000: a find, not a fixture.
+const worth = (r, back = 0) => { const d = day(r, back); return d == null ? null : (d / Math.sqrt(r.s + 100)) * (r.sg ??= weight(r, TODAY)) }
 const sorters = {
   worth: (a, b) => (worth(b) ?? -1) - (worth(a) ?? -1) || b.h - a.h,
   saved: (a, b) => (savedAt.get(b.r) ?? -1) - (savedAt.get(a.r) ?? -1),
@@ -369,6 +446,7 @@ function showCollection(c) {
 }
 function render() {
   const onPage = !!(state.page || state.alt)
+  rail(false) // the list below turns it back on when this is the plain home list on a wide window
   $("#repo-page").hidden = !onPage
   for (const el of document.querySelectorAll(".page > :not(#repo-page)")) el.hidden = onPage
   document.querySelectorAll("[data-alt]").forEach((n) => n.setAttribute("aria-current", String(!!state.alt)))
@@ -397,19 +475,26 @@ function render() {
   const layout = PHONE.matches ? "list" : col ? "cards" : state.view // phones always get the list; cards add nothing on a narrow screen. A collection is cards, the layout with room for why each repo is in it
   el.className = layout
   moves = layout === "wire" && !col && MOVE_SCORES[state.sort] && !scores ? rankMoves(list, MOVE_SCORES[state.sort]) : null
-  if (state.view === "wire" && !col) lead(list); else $("#lead").hidden = true // phones get the list rows, but keep the lead
+  let heroed = false // the hero is number one: when it shows the list's first repo, the list itself starts at two
+  if (state.view === "wire" && !col) heroed = lead(list) === "spot"; else $("#lead").hidden = true // phones get the list rows, but keep the lead
+  const home = !col && !state.f && !state.q && !anyFacet() && !state.lang, railOn = rail(home && railFits()) // before the columns are counted: the bar narrows the list
   const cols = getComputedStyle(el).gridTemplateColumns.split(" ").length
   const spot = PROMO_ROW * cols + Math.floor(PROMO_COL * cols)
   // the StarDash card takes one repo's place, so a full page is 60 cells: whole rows at 3, 4, 5 or 6 columns
   const promoted = layout === "cards" && !state.q && !["saved", "shared"].includes(state.f) && Math.min(list.length, state.shown) > spot
   const shown = state.shown - (promoted ? 1 : 0)
   const page = list.slice(0, shown).map(layout === "wire" ? row : card)
+  if (heroed) page.shift()
   if (list.length <= shown) page.push(...gone.map((n) => `<div class="repo gone"><div class="head"><div class="name"><strong>${esc(n.split("/")[1])}</strong><span>${esc(n.split("/")[0])}</span></div>${saveBtn(n)}</div><p class="line">No longer on the list. <a href="https://github.com/${esc(n)}" target="_blank" rel="noopener">Open on GitHub</a></p></div>`))
   if (promoted) page.splice(spot, 0, promo)
+  // doorways on the plain home list only: in the bar when it is showing, else between the rows, last one first so each lands on a whole row
+  if (home && !railOn) { const at = layout === "cards" ? DOOR_ROWS.map((r) => r * cols) : DOOR_ITEMS
+    doors().map((d, i) => [at[i], d]).reverse().forEach(([i, d]) => { if (page.length > i) page.splice(i, 0, d) }) }
   const empty = state.f === "saved" && !saved.length
     ? `<div class="empty">Nothing saved yet. Use the bookmark on any repo to keep it here.<br>Saves stay in this browser.</div>`
     : `<div class="empty">No repos match that yet. Try fewer words or another filter.<br><button type="button" id="reset">Clear filters</button></div>`
   el.innerHTML = page.length ? page.join("") : empty
+  doorStacks()
   savedBar(list.length + gone.length)
   $("#title").textContent = col ? col.title : state.sa ? SUB.get(`${state.a}/${state.sa}`) : state.a ? AREA.get(state.a).name
     : prefs.sidebar === "form" && state.form ? FORM.get(state.form) : prefs.sidebar === "with" && state.with ? WITH.get(state.with) : view.label
@@ -584,10 +669,11 @@ $("#sidebar").addEventListener("click", (e) => {
   scrollTo({ top: 0 })
   closeMenu()
 })
-$("#filters-btn").addEventListener("click", (e) => {
-  const open = $("#filters").classList.toggle("open")
-  e.currentTarget.setAttribute("aria-expanded", String(open))
-})
+// the filters open as a panel over the page; it stays open while you set several, and closes on a click elsewhere or Escape
+const filtersOpen = (open) => { $("#filters").classList.toggle("open", open); $("#filters-btn").setAttribute("aria-expanded", String(open)) }
+$("#filters-btn").addEventListener("click", () => filtersOpen(!$("#filters").classList.contains("open")))
+document.addEventListener("click", (e) => { if ($("#filters").classList.contains("open") && !e.target.closest("#filters, #filters-btn")) filtersOpen(false) })
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && $("#filters").classList.contains("open")) { filtersOpen(false); $("#filters-btn").focus() } })
 $("#menu").addEventListener("click", () => $("#app").classList.add("open"))
 $("#scrim").addEventListener("click", closeMenu)
 document.querySelector(".view").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; prefs.layout = b.dataset.view; savePrefs(); set({ view: b.dataset.view, shown: state.shown }) }) // the layout you pick is remembered, like the setting
@@ -905,7 +991,12 @@ $("#results").addEventListener("click", (e) => {
   if (e.metaKey || e.ctrlKey) return void window.open(`https://github.com/${c.dataset.r}`, "_blank", "noopener")
   openPanel(c.dataset.r)
 })
-$("#results").addEventListener("click", (e) => { const a = e.target.closest(".col-card, .stack") && inApp(e); if (a) { e.preventDefault(); navigate(a.getAttribute("href")) } }) // a collection opens without a reload
+$("#lead").addEventListener("click", (e) => { // the hero's save button, and its links without a reload
+  const sv = e.target.closest("[data-save]"); if (sv) return toggleSave(sv.dataset.save)
+  const a = inApp(e); if (a) { e.preventDefault(); navigate(a.getAttribute("href")) }
+})
+railEl.addEventListener("click", (e) => { const a = inApp(e); if (a) { e.preventDefault(); if (a.dataset.door) count(`door/${a.dataset.door}`, "Doorway"); navigate(a.getAttribute("href")) } })
+$("#results").addEventListener("click", (e) => { const a = e.target.closest(".col-card, .stack, .door") && inApp(e); if (a) { e.preventDefault(); if (a.dataset.door) count(`door/${a.dataset.door}`, "Doorway"); navigate(a.getAttribute("href")) } }) // a collection opens without a reload
 $("#results").addEventListener("auxclick", (e) => { const c = e.target.closest(".repo[data-r]"); if (c && e.button === 1 && !e.target.closest(".jump, [data-save]")) window.open(`https://github.com/${c.dataset.r}`, "_blank", "noopener") })
 $("#results").addEventListener("keydown", (e) => { const c = e.target.closest(".repo[data-r]"); if (c && (e.key === "Enter" || e.key === " ") && e.target === c) { e.preventDefault(); openPanel(c.dataset.r) } })
 panel.addEventListener("click", async (e) => {
