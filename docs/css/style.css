@@ -169,7 +169,8 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 
 /* doorways in the home list: a full row each, into alternatives, a collection and a hidden gem */
 .door { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); align-items: center; gap: 12px 28px; padding: 18px 20px; border: 1px solid var(--line); border-radius: var(--radius); background: color-mix(in srgb, var(--raise) 45%, var(--panel)); }
-.door small { color: var(--accent); font-size: 12px; font-weight: 600; }
+.door small { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; font-weight: 600; }
+.door small svg { width: 14px; height: 14px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .door strong { display: block; margin-top: 2px; font-size: 18px; letter-spacing: -0.02em; }
 .door p { margin: 4px 0 0; color: var(--muted); font-size: 13.5px; line-height: 1.45; }
 .door-repo { display: flex !important; align-items: center; gap: 10px; }
@@ -187,11 +188,12 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .list .door + .repo, .wire .door + .wrow { border-top: 1px solid var(--line); }
 @media (max-width: 760px) { .door { grid-template-columns: 1fr; padding: 16px; } }
 /* wide windows: the doorways leave the list for a bar on the right that stays in view */
-.with-rail.on { display: grid; grid-template-columns: minmax(0, 1fr) 20rem; gap: 16px; align-items: start; }
+.with-rail.on { display: grid; grid-template-columns: minmax(0, 1fr) 17rem; gap: 16px; align-items: start; }
 #doorbar { position: sticky; top: 68px; display: flex; flex-direction: column; gap: 12px; max-height: calc(100vh - 80px); overflow-y: auto; }
 #doorbar[hidden] { display: none; }
 #doorbar .door { grid-template-columns: 1fr; gap: 12px; padding: 16px; background: var(--panel); }
 #doorbar .door strong { font-size: 16.5px; }
+#doorbar .door-chips span:nth-of-type(n+4) { display: none; } /* the narrow bar shows a collection's first three needs, so all three cards fit a laptop-height window */
 
 /* StarDash in the results */
 .promo {
