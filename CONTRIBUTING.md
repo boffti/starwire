@@ -24,7 +24,14 @@ A collection is the open source stack for one kind of reader, like "For solopren
 
 ## Please don't edit the list files by hand
 
-`README.md`, everything in `lists/`, `data/`, `assets/badges/`, `assets/banner.svg`, `docs/data/*.json` and `docs/feed.xml` are generated on every update. Edits to them in a pull request would be overwritten, so these pull requests are closed. Use the submission form instead.
+These are generated on every update. Edits to them in a pull request would be overwritten, so these pull requests are closed. Use the submission form instead.
+
+- `README.md` and everything in `lists/`
+- `data/repos.json`
+- `assets/badges/` and `assets/banner.svg`
+- In `docs/`: `data/*.json`, `alternatives/`, `open-source/`, `feed.xml`, `top.xml`, `sitemap.xml` and `robots.txt`
+
+The two `README.md` files in `data/` and `docs/data/` are written by hand, and fixes to them are welcome.
 
 ## Fix something on the site
 
