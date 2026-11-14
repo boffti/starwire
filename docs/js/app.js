@@ -74,7 +74,7 @@ function setSaved(list) {
 // ---- settings: per-browser preferences in localStorage. They pick the defaults; a link's own parameters still win,
 // so a shared link shows the same thing for everyone. Versioned so later settings can be added without breaking old ones.
 const PREFS_KEY = "starwire-prefs"
-const DEFAULT_PREFS = { v: 2, sort: "worth", layout: "wire", topics: true, gain: true, picked: true, stardash: true, listCard: true, sidebar: "area", hideAI: false }
+const DEFAULT_PREFS = { v: 2, sort: "worth", layout: "wire", topics: true, gain: true, picked: true, stardash: true, listCard: true, sidebar: "area", hideAI: false, doors: true }
 const SORTS = ["worth", "today", "picked", "trending", "stars", "new", "active"]
 function readPrefs() {
   let p = {}
@@ -83,7 +83,7 @@ function readPrefs() {
   // "today" saved under v1 was the default nobody chose, so it moves to the new default; picking it again sticks
   if (SORTS.includes(p.sort) && !(p.v === 1 && p.sort === "today")) out.sort = p.sort
   if (["wire", "cards", "list"].includes(p.layout)) out.layout = p.layout
-  for (const k of ["topics", "gain", "picked", "stardash", "listCard", "hideAI"]) if (typeof p[k] === "boolean") out[k] = p[k]
+  for (const k of ["topics", "gain", "picked", "stardash", "listCard", "hideAI", "doors"]) if (typeof p[k] === "boolean") out[k] = p[k]
   if (["area", "form", "with"].includes(p.sidebar)) out.sidebar = p.sidebar
   return out
 }
@@ -479,7 +479,7 @@ function render() {
   if (state.view === "wire" && !col) heroed = lead(list) === "spot"; else $("#lead").hidden = true // phones get the list rows, but keep the lead
   const home = !col && !state.f && !state.q && !anyFacet() && !state.lang
   // the bar sits beside every plain list: home, the other views and the area pages. Not search, other filters, Saved or a shared list
-  const barOk = !col && !state.q && !state.lang && ["", "trending", "gems", "new", "multi"].includes(state.f) && !(state.form || state.plat || state.with || state.tag || state.lic || state.setup)
+  const barOk = prefs.doors && !col && !state.q && !state.lang && ["", "trending", "gems", "new", "multi"].includes(state.f) && !(state.form || state.plat || state.with || state.tag || state.lic || state.setup)
   const railOn = rail(barOk && railFits()) // before the columns are counted: the bar narrows the list
   railEl.classList.toggle("no-gem", state.f === "gems") // the gem card would repeat the list beside it
   const cols = getComputedStyle(el).gridTemplateColumns.split(" ").length
@@ -492,7 +492,7 @@ function render() {
   if (list.length <= shown) page.push(...gone.map((n) => `<div class="repo gone"><div class="head"><div class="name"><strong>${esc(n.split("/")[1])}</strong><span>${esc(n.split("/")[0])}</span></div>${saveBtn(n)}</div><p class="line">No longer on the list. <a href="https://github.com/${esc(n)}" target="_blank" rel="noopener">Open on GitHub</a></p></div>`))
   if (promoted) page.splice(spot, 0, promo)
   // doorways on the plain home list only: in the bar when it is showing, else between the rows, last one first so each lands on a whole row
-  if (home && !railOn) { const at = layout === "cards" ? DOOR_ROWS.map((r) => r * cols) : DOOR_ITEMS
+  if (home && !railOn && prefs.doors) { const at = layout === "cards" ? DOOR_ROWS.map((r) => r * cols) : DOOR_ITEMS
     doors().map((d, i) => [at[i], d]).reverse().forEach(([i, d]) => { if (page.length > i) page.splice(i, 0, d) }) }
   const empty = state.f === "saved" && !saved.length
     ? `<div class="empty">Nothing saved yet. Use the bookmark on any repo to keep it here.<br>Saves stay in this browser.</div>`
@@ -782,6 +782,7 @@ function openSettings() {
     ${seg("theme", "Theme", themeNow(), [["system", "System"], ["light", "Light"], ["dark", "Dark"]])}
     <fieldset class="s-row"><legend>On each repo card</legend>${check("topics", "Topics")}${check("gain", "Stars gained")}${check("picked", "How many times it was picked")}</fieldset>
     <fieldset class="s-row"><legend>Sidebar</legend>${check("listCard", "Show the card linking to the list on GitHub")}</fieldset>
+    <fieldset class="s-row"><legend>Right bar</legend>${check("doors", "Show the hidden gem, alternatives and collection cards: a bar on wide screens, between the rows on smaller ones")}</fieldset>
     <fieldset class="s-row"><legend>StarDash</legend>${check("stardash", "Show suggestions for StarDash, our tool for organizing your own stars")}</fieldset>
     <div class="s-foot"><button class="btn" type="button" id="s-reset">Reset to defaults</button></div>
   </form>`
@@ -818,7 +819,7 @@ settings.addEventListener("change", (e) => {
   if (name === "sort" && !viewSort(state.f)) set({ sort: value }, true)
   if (name === "layout") set({ view: value, shown: state.shown })
   if (name === "sidebar") set({ a: "", sa: "", form: "", with: "" }, true)
-  if (name === "hideAI") set({}, true)
+  if (name === "hideAI" || name === "doors") set({}, true)
 })
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeSettings() })
 
