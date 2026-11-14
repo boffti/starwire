@@ -220,7 +220,8 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 /* wide windows: the doorways leave the list for a bar on the right that stays in view */
 #doorbar.no-gem .door[aria-label="A hidden gem"] { display: none; }
 .with-rail.on { display: grid; grid-template-columns: minmax(0, 1fr) 17rem; gap: 16px; align-items: start; }
-#doorbar { position: sticky; top: 68px; display: flex; flex-direction: column; gap: 12px; max-height: calc(100vh - 80px); overflow-y: auto; }
+/* no scroll of its own: a bar taller than the window moves with the page until its last card is in view, then stays put. --h is its height, kept by app.js */
+#doorbar { position: sticky; top: min(68px, calc(100vh - var(--h, 0px) - 12px)); display: flex; flex-direction: column; gap: 12px; }
 #doorbar[hidden] { display: none; }
 #doorbar .door { grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 16px; background: var(--panel); }
 #doorbar .door strong { font-size: 16.5px; }

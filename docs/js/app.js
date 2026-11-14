@@ -363,6 +363,8 @@ railWrap.className = "with-rail"; railEl.id = "doorbar"; railEl.hidden = true; r
 $("#results").before(railWrap)
 { const main = document.createElement("div"); main.className = "rail-main"; main.append($("#lead"), $("#results"), document.querySelector(".more-wrap")); railWrap.append(main, railEl) }
 const railFits = () => railWrap.clientWidth >= RAIL_MIN
+const railH = () => railEl.style.setProperty("--h", `${railEl.offsetHeight}px`) // for the sticky offset in style.css
+new ResizeObserver(railH).observe(railEl) // icons that arrive late change its height
 function rail(on) {
   railWrap.classList.toggle("on", on); railEl.hidden = !on
   if (on && !railEl.firstChild) { const d = doors(); railEl.innerHTML = [d.at(-1), ...d.slice(0, -1), promo].join("") } // the hidden gem, last in the list, leads the bar
@@ -499,6 +501,7 @@ function render() {
     : `<div class="empty">No repos match that yet. Try fewer words or another filter.<br><button type="button" id="reset">Clear filters</button></div>`
   el.innerHTML = page.length ? page.join("") : empty
   doorStacks()
+  railH()
   savedBar(list.length + gone.length)
   $("#title").textContent = col ? col.title : state.sa ? SUB.get(`${state.a}/${state.sa}`) : state.a ? AREA.get(state.a).name
     : prefs.sidebar === "form" && state.form ? FORM.get(state.form) : prefs.sidebar === "with" && state.with ? WITH.get(state.with) : view.label
