@@ -128,7 +128,6 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .page-head h1 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
 .page-head p { margin: 2px 0 0; font-size: 13.5px; color: var(--muted); }
 .controls { flex: 1 1 auto; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; align-items: center; } /* sort, filters and the layout toggle sit together at the right edge of the list */
-.page-head:has(~ .with-rail.on) { padding-right: calc(17rem + 16px); } /* beside the right bar, the list's right edge is the bar's left */
 .select { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
 .select select {
   max-width: 190px; height: 34px; font: inherit; font-size: 13.5px; color: var(--text); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 0 28px 0 10px;
