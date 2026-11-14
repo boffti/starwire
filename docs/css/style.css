@@ -444,6 +444,16 @@ html { scrollbar-gutter: stable; }
 .filters-btn .badge { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: var(--accent); color: oklch(0.13 0 0); font-size: 11.5px; font-weight: 600; display: inline-grid; place-items: center; }
 .filters-btn .badge[hidden] { display: none; }
 /* below the width where Sort, all six filters and the layout toggle fit one row, the filters fold behind a button */
+/* filters that are on, as chips left of the Filters button; wide screens show them in the dropdowns themselves, phones in the button's count */
+.applied { display: none; }
+.chip-x { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 6px 0 10px; font: inherit; font-size: 12.5px; color: var(--text); background: var(--green-soft); border: 1px solid transparent; border-radius: 999px; cursor: pointer; white-space: nowrap; }
+.chip-x span { font-size: 15px; line-height: 1; color: var(--muted); }
+.chip-x:hover { border-color: var(--accent); }
+.chip-x:hover span { color: var(--text); }
+@media (min-width: 761px) and (max-width: 1919px) {
+  .applied { display: contents; }
+  .filters-btn .badge { display: none; }
+}
 @media (max-width: 1919px) {
   .filters-btn { display: inline-flex; }
   .controls { position: relative; }

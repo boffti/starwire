@@ -522,8 +522,11 @@ function render() {
   hint.hidden = !g
   if (g) { hint.href = `?alt=${encodeURIComponent(g.name)}`; hint.textContent = `See all ${g.repos.length} open source ${g.repos.length === 1 ? "alternative" : "alternatives"} to ${g.name}` }
   // phones keep the filters behind one button; it shows how many are on
-  const on = ["form", "plat", "with", "tag", "lic", "setup", "lang"].filter((k) => state[k]).length
+  const applied = ["form", "plat", "with", "tag", "lic", "setup", "lang"].filter((k) => state[k]), on = applied.length
   $("#filters-n").hidden = !on; $("#filters-n").textContent = on
+  // each filter that is on sits beside the Filters button as a chip; a click takes it off. The option's own label, without its count
+  $("#applied").innerHTML = applied.map((k) => { const name = ([...$(k === "lang" ? "#lang" : `#f-${k}`).options].find((o) => o.value === state[k])?.text ?? state[k]).replace(/\s*\(\d+\)$/, "")
+    return `<button type="button" class="chip-x" data-off="${k}" aria-label="Remove filter: ${esc(name)}" title="Remove this filter">${esc(name)}<span aria-hidden="true">&times;</span></button>` }).join("")
   $("#more").hidden = list.length <= shown
   $("#more").textContent = `Show more (${(list.length - shown).toLocaleString("en-US")} left)`
   const group = prefs.sidebar === "form" ? state.form : prefs.sidebar === "with" ? state.with : state.a
@@ -621,6 +624,7 @@ let t
 $("#q").addEventListener("input", (e) => { clearTimeout(t); t = setTimeout(() => set({ q: e.target.value.trim() }), 120) })
 $("#sort").addEventListener("change", (e) => set({ sort: e.target.value }))
 $("#lang").addEventListener("change", (e) => set({ lang: e.target.value }))
+$("#applied").addEventListener("click", (e) => { const k = e.target.closest("[data-off]")?.dataset.off; if (k) set({ [k]: "" }, true) })
 // Form, Platform and Works with dropdowns next to Language, with counts
 for (const [k, label, map, has] of [["form", "Form", TX.forms, (r, id) => r.fo?.includes(id)], ["plat", "Platform", TX.platforms, (r, id) => r.pl?.includes(id)], ["with", "Works with", TX.worksWith, (r, id) => r.ww?.includes(id)]]) {
   const el = $(`#f-${k}`)
