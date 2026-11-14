@@ -178,6 +178,17 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .list .meta { margin: 0; flex: none; justify-content: flex-end; flex-wrap: nowrap; white-space: nowrap; } /* sized by its content, so a long gain label pushes the description instead of covering it */
 .list .promo { display: none; }
 
+/* first-visit overview above the list; hides with the page header on pages that have none */
+.welcome { margin-bottom: 16px; padding: 16px 18px; border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line)); border-radius: var(--radius); background: radial-gradient(120% 120% at 100% 0%, var(--green-soft), transparent 60%), var(--panel); }
+.page-head[hidden] + .welcome { display: none; }
+.welcome-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.welcome-head strong { font-size: 15.5px; letter-spacing: -0.01em; }
+.welcome-head .btn { height: 32px; font-size: 13.5px; flex: none; }
+.welcome ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 12px 24px; }
+.welcome li { display: flex; gap: 10px; }
+.welcome li svg { width: 16px; height: 16px; flex: none; margin-top: 2px; color: var(--accent); fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.welcome li b { display: block; font-size: 13.5px; font-weight: 600; }
+.welcome li span { display: block; margin-top: 2px; font-size: 13px; line-height: 1.45; color: var(--muted); }
 /* doorways in the home list: a full row each, into alternatives, a collection and a hidden gem */
 .door { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); align-items: center; gap: 12px 28px; padding: 18px 20px; border: 1px solid var(--line); border-radius: var(--radius); background: color-mix(in srgb, var(--raise) 45%, var(--panel)); }
 .door small { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; font-weight: 600; }

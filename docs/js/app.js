@@ -363,6 +363,23 @@ railWrap.className = "with-rail"; railEl.id = "doorbar"; railEl.hidden = true; r
 $("#results").before(railWrap)
 { const main = document.createElement("div"); main.className = "rail-main"; main.append(document.querySelector(".page-head"), $("#savedbar"), $("#lead"), $("#results"), document.querySelector(".more-wrap")); railWrap.append(main, railEl) }
 const railFits = () => railWrap.clientWidth >= RAIL_MIN
+// First visit: a short overview above the list. "Got it" removes it for good, remembered in this browser only.
+// ponytail: one card, no step-by-step tour; build the tour only if people still miss things.
+const WELCOME_KEY = "starwire-welcome"
+let welcomed = true // if storage is blocked we can't remember a dismissal, so don't show it at all
+try { welcomed = !!localStorage.getItem(WELCOME_KEY) } catch {}
+if (!welcomed) {
+  const tip = (icon, title, text) => `<li><svg viewBox="0 0 24 24" aria-hidden="true">${icon}</svg><div><b>${title}</b><span>${text}</span></div></li>`
+  const w = document.createElement("section"); w.className = "welcome"; w.setAttribute("aria-label", "New here?")
+  w.innerHTML = `<div class="welcome-head"><strong>New here? starwire in four lines</strong><button type="button" class="btn">Got it</button></div><ul>
+    ${tip(I.trending, "A ranked list, fresh every day", "Open source repos worth a look, ordered by the stars they gained for their size and five signs of a healthy project. Sort changes the order.")}
+    ${tip(I[""], "Browse your way", "The left sidebar has Trending, Hidden gems, New this week and every area. Filters narrow any list by kind, platform, license and more.")}
+    ${tip(I.alt, "Replace what you pay for", "Alternatives lists open source stand-ins for products like Notion or Slack. Collections are ready-made stacks for a job.")}
+    ${tip(I.saved, "Keep what you find", "The bookmark saves a repo in this browser. The weekly email sends the best of the week.")}</ul>`
+  document.querySelector(".page-head").after(w)
+  w.querySelector("button").addEventListener("click", () => { w.remove(); try { localStorage.setItem(WELCOME_KEY, "1") } catch {} })
+}
+
 const railH = () => railEl.style.setProperty("--h", `${railEl.offsetHeight}px`) // for the sticky offset in style.css
 new ResizeObserver(railH).observe(railEl) // icons that arrive late change its height
 function rail(on) {
