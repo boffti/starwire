@@ -785,7 +785,7 @@ function openSettings() {
     ${seg("theme", "Theme", themeNow(), [["system", "System"], ["light", "Light"], ["dark", "Dark"]])}
     <fieldset class="s-row"><legend>On each repo card</legend>${check("topics", "Topics")}${check("gain", "Stars gained")}${check("picked", "How many times it was picked")}</fieldset>
     <fieldset class="s-row"><legend>Sidebar</legend>${check("listCard", "Show the card linking to the list on GitHub")}</fieldset>
-    <fieldset class="s-row"><legend>Right bar</legend>${check("doors", "Show the hidden gem, alternatives and collection cards: a bar on wide screens, between the rows on smaller ones")}</fieldset>
+    <fieldset class="s-row"><legend>Right bar and in-list cards</legend>${check("doors", "Show the hidden gem, alternatives and collection cards. They sit in a bar on the right on wide screens and between the rows on smaller ones")}</fieldset>
     <fieldset class="s-row"><legend>StarDash</legend>${check("stardash", "Show suggestions for StarDash, our tool for organizing your own stars")}</fieldset>
     <div class="s-foot"><button class="btn" type="button" id="s-reset">Reset to defaults</button></div>
   </form>`
