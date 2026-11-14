@@ -106,6 +106,8 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .pill-link:hover { border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
 .icon-btn { width: 34px; height: 34px; display: grid; place-items: center; background: none; border: 0; border-radius: 8px; color: var(--muted); cursor: pointer; text-decoration: none; }
 .icon-btn:hover { background: var(--raise); color: var(--text); }
+.gh-n { display: inline-flex; align-items: center; gap: 3px; padding: 1px 7px; border-radius: 999px; background: var(--raise); font-size: 12px; font-variant-numeric: tabular-nums; }
+.gh-n::before { content: "\2605"; color: var(--amber); font-size: 11px; }
 .icon-btn.labeled { width: auto; padding: 0 10px; display: flex; gap: 6px; font-size: 13px; font-weight: 500; }
 @media (max-width: 640px) { .icon-btn.labeled { width: 34px; padding: 0; justify-content: center; } .icon-btn.labeled span { display: none; } }
 .gh { fill: currentColor; stroke: none; }
@@ -893,3 +895,4 @@ body[data-cols="one"] #savedbar { display: none; }
 .rp .sg-tiles .v small { font-size: 13px; }
 .rp .sg-tiles .k svg { color: var(--c); }
 .rp .sg-tiles .lvl-none .v { color: var(--muted); font-size: 18px; line-height: 1.5; }
+@media (max-width: 1100px) { .icon-btn.labeled .gh-n { display: none; } } /* the top bar has no room for it below this */
