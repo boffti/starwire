@@ -365,7 +365,7 @@ $("#results").before(railWrap)
 const railFits = () => railWrap.clientWidth >= RAIL_MIN
 function rail(on) {
   railWrap.classList.toggle("on", on); railEl.hidden = !on
-  if (on && !railEl.firstChild) { const d = doors(); railEl.innerHTML = [d.at(-1), ...d.slice(0, -1)].join("") } // the hidden gem, last in the list, leads the bar
+  if (on && !railEl.firstChild) { const d = doors(); railEl.innerHTML = [d.at(-1), ...d.slice(0, -1), promo].join("") } // the hidden gem, last in the list, leads the bar
   return on
 }
 let railFit = null // draw again when the window crosses the width where the bar fits
@@ -485,7 +485,7 @@ function render() {
   const cols = getComputedStyle(el).gridTemplateColumns.split(" ").length
   const spot = PROMO_ROW * cols + Math.floor(PROMO_COL * cols)
   // the StarDash card takes one repo's place, so a full page is 60 cells: whole rows at 3, 4, 5 or 6 columns
-  const promoted = layout === "cards" && !state.q && !["saved", "shared"].includes(state.f) && Math.min(list.length, state.shown) > spot
+  const promoted = layout === "cards" && !state.q && !["saved", "shared"].includes(state.f) && !railOn && Math.min(list.length, state.shown) > spot
   const shown = state.shown - (promoted ? 1 : 0)
   const page = list.slice(0, shown).map(layout === "wire" ? row : card)
   if (heroed) page.shift()
