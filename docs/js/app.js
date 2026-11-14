@@ -477,7 +477,11 @@ function render() {
   moves = layout === "wire" && !col && MOVE_SCORES[state.sort] && !scores ? rankMoves(list, MOVE_SCORES[state.sort]) : null
   let heroed = false // the hero is number one: when it shows the list's first repo, the list itself starts at two
   if (state.view === "wire" && !col) heroed = lead(list) === "spot"; else $("#lead").hidden = true // phones get the list rows, but keep the lead
-  const home = !col && !state.f && !state.q && !anyFacet() && !state.lang, railOn = rail(home && railFits()) // before the columns are counted: the bar narrows the list
+  const home = !col && !state.f && !state.q && !anyFacet() && !state.lang
+  // the bar sits beside every plain list: home, the other views and the area pages. Not search, other filters, Saved or a shared list
+  const barOk = !col && !state.q && !state.lang && ["", "trending", "gems", "new", "multi"].includes(state.f) && !(state.form || state.plat || state.with || state.tag || state.lic || state.setup)
+  const railOn = rail(barOk && railFits()) // before the columns are counted: the bar narrows the list
+  railEl.classList.toggle("no-gem", state.f === "gems") // the gem card would repeat the list beside it
   const cols = getComputedStyle(el).gridTemplateColumns.split(" ").length
   const spot = PROMO_ROW * cols + Math.floor(PROMO_COL * cols)
   // the StarDash card takes one repo's place, so a full page is 60 cells: whole rows at 3, 4, 5 or 6 columns
