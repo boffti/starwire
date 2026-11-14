@@ -497,7 +497,7 @@ html { scrollbar-gutter: stable; }
 .rp { width: 100%; padding: 0 0 48px; display: flex; flex-direction: column; gap: 36px; }
 .rp > * { width: 100%; max-width: 74rem; margin-inline: auto; }
 .rp > .rp-top { max-width: none; }
-.rp[hidden], .page > [hidden] { display: none !important; } /* the list and the repo page swap places; their own display rules would beat hidden */
+.rp[hidden], .page > [hidden], .rail-main > [hidden] { display: none !important; } /* the list and the repo page swap places; their own display rules would beat hidden */
 .rp h2 { margin: 0; font-size: 21px; font-weight: 600; letter-spacing: -0.01em; }
 .rp a:not(.btn) { color: var(--accent); text-decoration: none; }
 .rp a:not(.btn):hover { text-decoration: underline; }
