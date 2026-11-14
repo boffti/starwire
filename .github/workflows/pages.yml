@@ -25,6 +25,8 @@ jobs:
         with:
           node-version: 22
       - run: node .github/stamp.mjs docs _site
+        env:
+          GH_TOKEN: ${{ github.token }} # only to read this repo's star count without hitting the anonymous rate limit
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

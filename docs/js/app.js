@@ -74,7 +74,7 @@ function setSaved(list) {
 // ---- settings: per-browser preferences in localStorage. They pick the defaults; a link's own parameters still win,
 // so a shared link shows the same thing for everyone. Versioned so later settings can be added without breaking old ones.
 const PREFS_KEY = "starwire-prefs"
-const DEFAULT_PREFS = { v: 2, sort: "worth", layout: "wire", topics: true, gain: true, picked: true, stardash: true, listCard: true, sidebar: "area", hideAI: false }
+const DEFAULT_PREFS = { v: 2, sort: "worth", layout: "wire", topics: true, gain: true, picked: true, stardash: true, listCard: true, sidebar: "area", hideAI: false, doors: true }
 const SORTS = ["worth", "today", "picked", "trending", "stars", "new", "active"]
 function readPrefs() {
   let p = {}
@@ -83,7 +83,7 @@ function readPrefs() {
   // "today" saved under v1 was the default nobody chose, so it moves to the new default; picking it again sticks
   if (SORTS.includes(p.sort) && !(p.v === 1 && p.sort === "today")) out.sort = p.sort
   if (["wire", "cards", "list"].includes(p.layout)) out.layout = p.layout
-  for (const k of ["topics", "gain", "picked", "stardash", "listCard", "hideAI"]) if (typeof p[k] === "boolean") out[k] = p[k]
+  for (const k of ["topics", "gain", "picked", "stardash", "listCard", "hideAI", "doors"]) if (typeof p[k] === "boolean") out[k] = p[k]
   if (["area", "form", "with"].includes(p.sidebar)) out.sidebar = p.sidebar
   return out
 }
@@ -176,7 +176,7 @@ const item = (attr, key, label, count) =>
   `<button type="button" class="cat" data-${attr}="${esc(key)}" aria-current="false" title="${esc(label)}"><svg viewBox="0 0 24 24" aria-hidden="true">${I[key] ?? I[attr] ?? I[""]}</svg><span>${esc(label)}</span><span class="n">${count.toLocaleString("en-US")}</span></button>`
 I.alt = '<path d="M4 7h13l-3-3M20 17H7l3 3"/>'
 I.col = '<path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="m3 13 9 5 9-5M3 18l9 5 9-5" opacity=".55"/>'
-I.gems = '<path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M8 9l4 12 4-12M8 9l4-6 4 6"/>'
+I.gems = '<g class="gem"><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M8 9l4 12 4-12M8 9l4-6 4 6"/></g>'
 const ALTS = altGroups(repos)
 const visible = (r) => !(prefs.hideAI && r.ai > 0) // "Hide AI repos" in settings
 let collapsed = false // the selected area's subareas are folded away; the area itself stays selected
@@ -337,7 +337,7 @@ function doors() {
     const what = [...(g.fo ?? []).map((f) => KIND_SHORT[f] ?? FORM.get(f)), (g.pl ?? []).filter((x) => x !== "docker").map((x) => PLAT.get(x)).filter(Boolean).slice(0, 3).join(", "),
       g.alt?.length ? `Replaces ${g.alt[0]}` : g.ww?.length ? `Works with ${WITH.get(g.ww[0])}` : ""].filter(Boolean)
     out.push(`<section class="door" aria-label="A hidden gem"><div class="door-text"><small><svg viewBox="0 0 24 24" aria-hidden="true">${I.gems}</svg>Hidden gem of the day</small><strong class="door-repo"><img src="${esc(avatar(owner, 64))}" alt="" width="32" height="32" loading="lazy">${esc(name)}<i>${esc(owner)}</i><span class="stars" title="${g.s.toLocaleString("en-US")} stars">${STAR}${num(g.s)}</span></strong><p>${esc(g.l ?? "")}</p></div>
-    <div class="door-chips">${what.length ? `<span class="door-what">${what.map((w) => `<i class="tag">${esc(w)}</i>`).join("")}</span>` : ""}<span class="door-links"><a class="door-all" href="?page=${esc(g.r)}" data-door="gem">See the repo</a><a class="door-all" href="?f=gems" data-door="gem">All ${gems.length} hidden gems</a></span></div></section>`) }
+    <div class="door-chips">${what.length ? `<span class="door-what">${what.map((w) => `<i class="tag">${esc(w)}</i>`).join("")}</span>` : ""}<span class="door-links"><a class="door-all" href="?page=${esc(g.r)}" data-door="gem">Read more</a><a class="door-all" href="?f=gems" data-door="gem">All ${gems.length} hidden gems</a></span></div></section>`) }
   return out
 }
 
@@ -361,11 +361,36 @@ const RAIL_MIN = 1400 // px the list column and bar need between them
 const railWrap = document.createElement("div"), railEl = document.createElement("aside")
 railWrap.className = "with-rail"; railEl.id = "doorbar"; railEl.hidden = true; railEl.setAttribute("aria-label", "More on starwire")
 $("#results").before(railWrap)
-{ const main = document.createElement("div"); main.className = "rail-main"; main.append($("#results"), document.querySelector(".more-wrap")); railWrap.append(main, railEl) }
+{ const main = document.createElement("div"); main.className = "rail-main"; main.append(document.querySelector(".page-head"), $("#savedbar"), $("#lead"), $("#results"), document.querySelector(".more-wrap")); railWrap.append(main, railEl) }
 const railFits = () => railWrap.clientWidth >= RAIL_MIN
+// First visit: a short overview above the list. "Got it" removes it for good, remembered in this browser only.
+// ponytail: one card, no step-by-step tour; build the tour only if people still miss things.
+const WELCOME_KEY = "starwire-welcome"
+let welcomed = true // if storage is blocked we can't remember a dismissal, so don't show it at all
+try { welcomed = !!localStorage.getItem(WELCOME_KEY) } catch {}
+if (!welcomed) {
+  const tip = (icon, title, text) => `<li><svg viewBox="0 0 24 24" aria-hidden="true">${icon}</svg><div><b>${title}</b><span>${text}</span></div></li>`
+  const w = document.createElement("section"); w.className = "welcome"; w.setAttribute("aria-label", "New here?")
+  const MAIL = '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>', FIND = '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'
+  const KNOBS = '<path d="M4 6h10M18 6h2M4 12h2M10 12h10M4 18h10M18 18h2"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="16" cy="18" r="2"/>'
+  w.innerHTML = `<div class="welcome-head"><strong>New here? What you can do on starwire</strong><button type="button" class="btn">Got it</button></div><ul>
+    ${tip(I.trending, "A ranked list, fresh every day", "Open source repos worth a look, ordered by the stars they gained for their size and five signs of a healthy project. Sort changes the order.")}
+    ${tip(I[""], "Sidebar views and filters", "The left sidebar has Trending, Hidden gems, New this week and every area. Filters narrow any list by kind, platform, license and more.")}
+    ${tip(FIND, "Search, or jump with a key", "Search repos, topics and languages from the top bar; / puts you in the box. Ctrl/Cmd K jumps to a repo, area or language.")}
+    ${tip(I.alt, "Alternatives to paid tools", "Pick a product you pay for, like Notion or Slack, and see the open source projects that could replace it.")}
+    ${tip(I.col, "Collections: ready-made stacks", "Sets of tools for one job, such as running an online store, with an open source pick for each need.")}
+    ${tip(I.saved, "Save repos for later", "The bookmark on any repo keeps it under Saved. Saves stay in this browser, with no account.")}
+    ${tip(MAIL, "Newsletter and RSS", "The Newsletter button sends one short email a week. The RSS button has feeds for the day's best and for every new pick.")}
+    ${tip(KNOBS, "Settings: make it yours", "The gear sets the theme, default sort and layout, what each card shows, and can hide AI repos or the side cards.")}</ul>`
+  document.querySelector(".page-head").after(w)
+  w.querySelector("button").addEventListener("click", () => { w.remove(); try { localStorage.setItem(WELCOME_KEY, "1") } catch {} })
+}
+
+const railH = () => railEl.style.setProperty("--h", `${railEl.offsetHeight}px`) // for the sticky offset in style.css
+new ResizeObserver(railH).observe(railEl) // icons that arrive late change its height
 function rail(on) {
   railWrap.classList.toggle("on", on); railEl.hidden = !on
-  if (on && !railEl.firstChild) { const d = doors(); railEl.innerHTML = [d.at(-1), ...d.slice(0, -1)].join("") } // the hidden gem, last in the list, leads the bar
+  if (on && !railEl.firstChild) { const d = doors(); railEl.innerHTML = [d.at(-1), ...d.slice(0, -1), promo].join("") } // the hidden gem, last in the list, leads the bar
   return on
 }
 let railFit = null // draw again when the window crosses the width where the bar fits
@@ -477,24 +502,29 @@ function render() {
   moves = layout === "wire" && !col && MOVE_SCORES[state.sort] && !scores ? rankMoves(list, MOVE_SCORES[state.sort]) : null
   let heroed = false // the hero is number one: when it shows the list's first repo, the list itself starts at two
   if (state.view === "wire" && !col) heroed = lead(list) === "spot"; else $("#lead").hidden = true // phones get the list rows, but keep the lead
-  const home = !col && !state.f && !state.q && !anyFacet() && !state.lang, railOn = rail(home && railFits()) // before the columns are counted: the bar narrows the list
+  const home = !col && !state.f && !state.q && !anyFacet() && !state.lang
+  // the bar sits beside every list and stays through filters and searches, so the page doesn't jump when one is applied. Not Saved or a shared list
+  const barOk = prefs.doors && !col && ["", "trending", "gems", "new", "multi"].includes(state.f)
+  const railOn = rail(barOk && railFits()) // before the columns are counted: the bar narrows the list
+  railEl.classList.toggle("no-gem", state.f === "gems") // the gem card would repeat the list beside it
   const cols = getComputedStyle(el).gridTemplateColumns.split(" ").length
   const spot = PROMO_ROW * cols + Math.floor(PROMO_COL * cols)
   // the StarDash card takes one repo's place, so a full page is 60 cells: whole rows at 3, 4, 5 or 6 columns
-  const promoted = layout === "cards" && !state.q && !["saved", "shared"].includes(state.f) && Math.min(list.length, state.shown) > spot
+  const promoted = layout === "cards" && !state.q && !["saved", "shared"].includes(state.f) && !railOn && Math.min(list.length, state.shown) > spot
   const shown = state.shown - (promoted ? 1 : 0)
   const page = list.slice(0, shown).map(layout === "wire" ? row : card)
   if (heroed) page.shift()
   if (list.length <= shown) page.push(...gone.map((n) => `<div class="repo gone"><div class="head"><div class="name"><strong>${esc(n.split("/")[1])}</strong><span>${esc(n.split("/")[0])}</span></div>${saveBtn(n)}</div><p class="line">No longer on the list. <a href="https://github.com/${esc(n)}" target="_blank" rel="noopener">Open on GitHub</a></p></div>`))
   if (promoted) page.splice(spot, 0, promo)
   // doorways on the plain home list only: in the bar when it is showing, else between the rows, last one first so each lands on a whole row
-  if (home && !railOn) { const at = layout === "cards" ? DOOR_ROWS.map((r) => r * cols) : DOOR_ITEMS
+  if (home && !railOn && prefs.doors) { const at = layout === "cards" ? DOOR_ROWS.map((r) => r * cols) : DOOR_ITEMS
     doors().map((d, i) => [at[i], d]).reverse().forEach(([i, d]) => { if (page.length > i) page.splice(i, 0, d) }) }
   const empty = state.f === "saved" && !saved.length
     ? `<div class="empty">Nothing saved yet. Use the bookmark on any repo to keep it here.<br>Saves stay in this browser.</div>`
     : `<div class="empty">No repos match that yet. Try fewer words or another filter.<br><button type="button" id="reset">Clear filters</button></div>`
   el.innerHTML = page.length ? page.join("") : empty
   doorStacks()
+  railH()
   savedBar(list.length + gone.length)
   $("#title").textContent = col ? col.title : state.sa ? SUB.get(`${state.a}/${state.sa}`) : state.a ? AREA.get(state.a).name
     : prefs.sidebar === "form" && state.form ? FORM.get(state.form) : prefs.sidebar === "with" && state.with ? WITH.get(state.with) : view.label
@@ -518,8 +548,11 @@ function render() {
   hint.hidden = !g
   if (g) { hint.href = `?alt=${encodeURIComponent(g.name)}`; hint.textContent = `See all ${g.repos.length} open source ${g.repos.length === 1 ? "alternative" : "alternatives"} to ${g.name}` }
   // phones keep the filters behind one button; it shows how many are on
-  const on = ["form", "plat", "with", "tag", "lic", "setup", "lang"].filter((k) => state[k]).length
+  const applied = ["form", "plat", "with", "tag", "lic", "setup", "lang"].filter((k) => state[k]), on = applied.length
   $("#filters-n").hidden = !on; $("#filters-n").textContent = on
+  // each filter that is on sits beside the Filters button as a chip; a click takes it off. The option's own label, without its count
+  $("#applied").innerHTML = applied.map((k) => { const name = ([...$(k === "lang" ? "#lang" : `#f-${k}`).options].find((o) => o.value === state[k])?.text ?? state[k]).replace(/\s*\(\d+\)$/, "")
+    return `<button type="button" class="chip-x" data-off="${k}" aria-label="Remove filter: ${esc(name)}" title="Remove this filter">${esc(name)}<span aria-hidden="true">&times;</span></button>` }).join("")
   $("#more").hidden = list.length <= shown
   $("#more").textContent = `Show more (${(list.length - shown).toLocaleString("en-US")} left)`
   const group = prefs.sidebar === "form" ? state.form : prefs.sidebar === "with" ? state.with : state.a
@@ -617,6 +650,7 @@ let t
 $("#q").addEventListener("input", (e) => { clearTimeout(t); t = setTimeout(() => set({ q: e.target.value.trim() }), 120) })
 $("#sort").addEventListener("change", (e) => set({ sort: e.target.value }))
 $("#lang").addEventListener("change", (e) => set({ lang: e.target.value }))
+$("#applied").addEventListener("click", (e) => { const k = e.target.closest("[data-off]")?.dataset.off; if (k) set({ [k]: "" }, true) })
 // Form, Platform and Works with dropdowns next to Language, with counts
 for (const [k, label, map, has] of [["form", "Form", TX.forms, (r, id) => r.fo?.includes(id)], ["plat", "Platform", TX.platforms, (r, id) => r.pl?.includes(id)], ["with", "Works with", TX.worksWith, (r, id) => r.ww?.includes(id)]]) {
   const el = $(`#f-${k}`)
@@ -774,6 +808,7 @@ function openSettings() {
     ${seg("theme", "Theme", themeNow(), [["system", "System"], ["light", "Light"], ["dark", "Dark"]])}
     <fieldset class="s-row"><legend>On each repo card</legend>${check("topics", "Topics")}${check("gain", "Stars gained")}${check("picked", "How many times it was picked")}</fieldset>
     <fieldset class="s-row"><legend>Sidebar</legend>${check("listCard", "Show the card linking to the list on GitHub")}</fieldset>
+    <fieldset class="s-row"><legend>Right bar and in-list cards</legend>${check("doors", "Show the hidden gem, alternatives and collection cards. They sit in a bar on the right on wide screens and between the rows on smaller ones")}</fieldset>
     <fieldset class="s-row"><legend>StarDash</legend>${check("stardash", "Show suggestions for StarDash, our tool for organizing your own stars")}</fieldset>
     <div class="s-foot"><button class="btn" type="button" id="s-reset">Reset to defaults</button></div>
   </form>`
@@ -810,7 +845,7 @@ settings.addEventListener("change", (e) => {
   if (name === "sort" && !viewSort(state.f)) set({ sort: value }, true)
   if (name === "layout") set({ view: value, shown: state.shown })
   if (name === "sidebar") set({ a: "", sa: "", form: "", with: "" }, true)
-  if (name === "hideAI") set({}, true)
+  if (name === "hideAI" || name === "doors") set({}, true)
 })
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeSettings() })
 

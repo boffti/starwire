@@ -8,6 +8,8 @@
   --muted: oklch(0.65 0 0);
   --accent: oklch(0.7 0.15 145);
   --amber: #e3b341;
+  --gem: oklch(0.56 0.23 338);
+  --on-l: 0.72;
   --amber-soft: rgba(227, 179, 65, 0.12);
   --green: oklch(0.7 0.15 145);
   --green-soft: oklch(0.7 0.15 145 / 0.14);
@@ -17,13 +19,13 @@
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
     --ink: oklch(0.98 0 0); --panel: oklch(1 0 0); --raise: oklch(0.94 0 0); --line: oklch(0.88 0 0); --text: oklch(0.15 0 0); --muted: oklch(0.45 0 0);
-    --accent: oklch(0.55 0.18 145); --amber: #a87a06; --amber-soft: rgba(168, 122, 6, 0.1); --green: oklch(0.55 0.18 145); --green-soft: oklch(0.55 0.18 145 / 0.1);
+    --accent: oklch(0.55 0.18 145); --amber: #a87a06; --gem: oklch(0.4 0.19 338); --on-l: 0.5; --amber-soft: rgba(168, 122, 6, 0.1); --green: oklch(0.55 0.18 145); --green-soft: oklch(0.55 0.18 145 / 0.1);
     color-scheme: light;
   }
 }
 :root[data-theme="light"] {
   --ink: oklch(0.98 0 0); --panel: oklch(1 0 0); --raise: oklch(0.94 0 0); --line: oklch(0.88 0 0); --text: oklch(0.15 0 0); --muted: oklch(0.45 0 0);
-    --accent: oklch(0.55 0.18 145); --amber: #a87a06; --amber-soft: rgba(168, 122, 6, 0.1); --green: oklch(0.55 0.18 145); --green-soft: oklch(0.55 0.18 145 / 0.1);
+    --accent: oklch(0.55 0.18 145); --amber: #a87a06; --gem: oklch(0.4 0.19 338); --on-l: 0.5; --amber-soft: rgba(168, 122, 6, 0.1); --green: oklch(0.55 0.18 145); --green-soft: oklch(0.55 0.18 145 / 0.1);
     color-scheme: light;
 }
 
@@ -62,8 +64,16 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .cat .n { margin-left: auto; font-size: 12px; color: var(--muted); padding-left: 8px; }
 .cat:hover { background: var(--raise); color: var(--text); }
 .cat[aria-current="true"] { background: var(--raise); color: var(--text); font-weight: 500; }
-.cat[aria-current="true"] svg { color: var(--accent); }
-.cat[aria-current="true"] .n { color: var(--accent); background: var(--green-soft); border-radius: 999px; padding: 0 7px; }
+.cat[aria-current="true"] svg { color: var(--on, var(--accent)); }
+.cat[aria-current="true"] .n { color: var(--on, var(--accent)); background: color-mix(in oklch, var(--on, var(--accent)) 14%, transparent); border-radius: 999px; padding: 0 7px; }
+/* each Browse view lights up in its own colour; All repos and the areas keep the green */
+[data-f="trending"] { --on: oklch(var(--on-l) 0.17 55); }
+[data-f="gems"] { --on: oklch(var(--on-l) 0.2 338); }
+[data-f="new"] { --on: oklch(var(--on-l) 0.15 240); }
+[data-f="multi"] { --on: oklch(var(--on-l) 0.17 295); }
+.cat[data-alt] { --on: oklch(var(--on-l) 0.12 195); }
+.cat[data-col] { --on: oklch(var(--on-l) 0.19 15); }
+[data-f="saved"] { --on: var(--amber); }
 .side-foot { padding: 10px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; }
 /* StarDash card: a one-line, closed-by-default disclosure, so it never takes over the sidebar */
 .mini-promo { border-radius: 8px; border: 1px solid var(--line); background: radial-gradient(120% 120% at 100% 0%, var(--green-soft), transparent 65%), var(--panel); }
@@ -106,6 +116,8 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .pill-link:hover { border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
 .icon-btn { width: 34px; height: 34px; display: grid; place-items: center; background: none; border: 0; border-radius: 8px; color: var(--muted); cursor: pointer; text-decoration: none; }
 .icon-btn:hover { background: var(--raise); color: var(--text); }
+.gh-n { display: inline-flex; align-items: center; gap: 3px; padding: 1px 7px; border-radius: 999px; background: var(--raise); font-size: 12px; font-variant-numeric: tabular-nums; }
+.gh-n::before { content: "\2605"; color: var(--amber); font-size: 11px; }
 .icon-btn.labeled { width: auto; padding: 0 10px; display: flex; gap: 6px; font-size: 13px; font-weight: 500; }
 @media (max-width: 640px) { .icon-btn.labeled { width: 34px; padding: 0; justify-content: center; } .icon-btn.labeled span { display: none; } }
 .gh { fill: currentColor; stroke: none; }
@@ -115,8 +127,7 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .page-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; margin-bottom: 16px; }
 .page-head h1 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
 .page-head p { margin: 2px 0 0; font-size: 13.5px; color: var(--muted); }
-.controls { flex: 1 1 auto; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-.controls .view { margin-left: auto; } /* the layout toggle sits at the right edge, the sort and filters on the left */
+.controls { flex: 1 1 auto; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; align-items: center; } /* sort, filters and the layout toggle sit together at the right edge of the list */
 .select { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
 .select select {
   max-width: 190px; height: 34px; font: inherit; font-size: 13.5px; color: var(--text); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 0 28px 0 10px;
@@ -167,9 +178,23 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .list .meta { margin: 0; flex: none; justify-content: flex-end; flex-wrap: nowrap; white-space: nowrap; } /* sized by its content, so a long gain label pushes the description instead of covering it */
 .list .promo { display: none; }
 
+/* first-visit overview above the list; hides with the page header on pages that have none */
+.welcome { margin-bottom: 16px; padding: 16px 18px; border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line)); border-radius: var(--radius); background: radial-gradient(120% 120% at 100% 0%, var(--green-soft), transparent 60%), var(--panel); }
+.page-head[hidden] + .welcome { display: none; }
+.welcome-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.welcome-head strong { font-size: 15.5px; letter-spacing: -0.01em; }
+.welcome-head .btn { height: 32px; font-size: 13.5px; flex: none; }
+.welcome ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 12px 24px; }
+.welcome li { display: flex; gap: 10px; }
+.welcome li svg { width: 16px; height: 16px; flex: none; margin-top: 2px; color: var(--accent); fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.welcome li b { display: block; font-size: 13.5px; font-weight: 600; }
+.welcome li span { display: block; margin-top: 2px; font-size: 13px; line-height: 1.45; color: var(--muted); }
+/* phones get the eight titles as a two-column map; the explanations would fill two screens */
+@media (max-width: 760px) { .welcome ul { grid-template-columns: 1fr 1fr; gap: 10px 12px; } .welcome li span { display: none; } .welcome li b { font-weight: 500; } }
 /* doorways in the home list: a full row each, into alternatives, a collection and a hidden gem */
 .door { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); align-items: center; gap: 12px 28px; padding: 18px 20px; border: 1px solid var(--line); border-radius: var(--radius); background: color-mix(in srgb, var(--raise) 45%, var(--panel)); }
 .door small { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; font-weight: 600; }
+.door .gem { stroke: var(--gem); }
 .door small svg { width: 14px; height: 14px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .door strong { display: block; margin-top: 2px; font-size: 18px; letter-spacing: -0.02em; }
 .door p { margin: 4px 0 0; color: var(--muted); font-size: 13.5px; line-height: 1.45; }
@@ -205,8 +230,10 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .list .door + .repo, .wire .door + .wrow { border-top: 1px solid var(--line); }
 @media (max-width: 760px) { .door { grid-template-columns: 1fr; padding: 16px; } }
 /* wide windows: the doorways leave the list for a bar on the right that stays in view */
+#doorbar.no-gem .door[aria-label="A hidden gem"] { display: none; }
 .with-rail.on { display: grid; grid-template-columns: minmax(0, 1fr) 17rem; gap: 16px; align-items: start; }
-#doorbar { position: sticky; top: 68px; display: flex; flex-direction: column; gap: 12px; max-height: calc(100vh - 80px); overflow-y: auto; }
+/* no scroll of its own: a bar taller than the window moves with the page until its last card is in view, then stays put. --h is its height, kept by app.js */
+#doorbar { position: sticky; top: min(68px, calc(100vh - var(--h, 0px) - 12px)); display: flex; flex-direction: column; gap: 12px; }
 #doorbar[hidden] { display: none; }
 #doorbar .door { grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 16px; background: var(--panel); }
 #doorbar .door strong { font-size: 16.5px; }
@@ -241,6 +268,8 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 .everywhere:hover { text-decoration: underline; }
 
 .more-wrap { display: flex; justify-content: center; padding: 16px 0 40px; }
+/* Show more adds rows above the button: without this the browser keeps the button (or the footer, or the bar) where it was and the page jumps past the new rows */
+.more-wrap, .foot, #doorbar { overflow-anchor: none; }
 .more, .cta, .empty button {
   font: inherit; font-weight: 600; font-size: 14px; color: var(--text); background: var(--panel);
   border: 1px solid var(--line); border-radius: 8px; padding: 9px 18px; cursor: pointer; text-decoration: none;
@@ -422,23 +451,31 @@ html { scrollbar-gutter: stable; }
 .lab:hover { border-color: var(--accent); }
 .p-alt { margin: 0; font-size: 13px; color: var(--muted); }
 
-/* filters: inline on wide screens; below that, one "Filters" button opens them as a panel over the page, so nothing below moves */
+/* filters: one "Filters" button opens them as a panel over the page, so nothing below moves */
 .filters { display: contents; }
 .filters-btn { display: none; align-items: center; gap: 8px; height: 34px; padding: 0 12px; font: inherit; font-size: 13.5px; color: var(--text); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; cursor: pointer; }
 .filters-btn svg { width: 15px; height: 15px; }
 .filters-btn[aria-expanded="true"] { background: var(--raise); }
 .filters-btn .badge { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: var(--accent); color: oklch(0.13 0 0); font-size: 11.5px; font-weight: 600; display: inline-grid; place-items: center; }
 .filters-btn .badge[hidden] { display: none; }
-/* below the width where Sort, all six filters and the layout toggle fit one row, the filters fold behind a button */
-@media (max-width: 1919px) {
-  .filters-btn { display: inline-flex; }
-  .controls { position: relative; }
-  .filters { display: none; position: absolute; z-index: 30; top: calc(100% + 8px); left: 0; right: 0; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); gap: 10px 12px; padding: 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); box-shadow: 0 18px 40px -12px rgb(0 0 0 / 0.55); }
-  .filters.open { display: grid; }
-  .filters .select { flex-direction: column; align-items: stretch; gap: 4px; min-width: 0; }
-  .filters .select span { font-size: 12px; }
-  .filters .select select { max-width: none; width: 100%; }
+/* the filters always sit behind the Filters button: with the right bar there is no width where all seven fit one row beside Sort and the layout toggle */
+/* filters that are on, as chips left of Sort, so the controls stay put; phones show them in the button's count */
+.applied { display: none; }
+.chip-x { order: -1; display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px; font: inherit; font-size: 13.5px; color: var(--text); background: var(--green-soft); border: 1px solid transparent; border-radius: 6px; cursor: pointer; white-space: nowrap; }
+.chip-x span { font-size: 15px; line-height: 1; color: var(--muted); }
+.chip-x:hover { border-color: var(--accent); }
+.chip-x:hover span { color: var(--text); }
+@media (min-width: 761px) {
+  .applied { display: contents; }
+  .filters-btn .badge { display: none; }
 }
+.filters-btn { display: inline-flex; }
+.controls { position: relative; }
+.filters { display: none; position: absolute; z-index: 30; top: calc(100% + 8px); left: 0; right: 0; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); gap: 10px 12px; padding: 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); box-shadow: 0 18px 40px -12px rgb(0 0 0 / 0.55); }
+.filters.open { display: grid; }
+.filters .select { flex-direction: column; align-items: stretch; gap: 4px; min-width: 0; }
+.filters .select span { font-size: 12px; }
+.filters .select select { max-width: none; width: 100%; }
 @media (max-width: 760px) {
   .controls { width: 100%; }
   .controls > .select:first-child { flex: 1; min-width: 0; }
@@ -473,7 +510,7 @@ html { scrollbar-gutter: stable; }
 .rp { width: 100%; padding: 0 0 48px; display: flex; flex-direction: column; gap: 36px; }
 .rp > * { width: 100%; max-width: 74rem; margin-inline: auto; }
 .rp > .rp-top { max-width: none; }
-.rp[hidden], .page > [hidden] { display: none !important; } /* the list and the repo page swap places; their own display rules would beat hidden */
+.rp[hidden], .page > [hidden], .rail-main > [hidden] { display: none !important; } /* the list and the repo page swap places; their own display rules would beat hidden */
 .rp h2 { margin: 0; font-size: 21px; font-weight: 600; letter-spacing: -0.01em; }
 .rp a:not(.btn) { color: var(--accent); text-decoration: none; }
 .rp a:not(.btn):hover { text-decoration: underline; }
@@ -893,3 +930,4 @@ body[data-cols="one"] #savedbar { display: none; }
 .rp .sg-tiles .v small { font-size: 13px; }
 .rp .sg-tiles .k svg { color: var(--c); }
 .rp .sg-tiles .lvl-none .v { color: var(--muted); font-size: 18px; line-height: 1.5; }
+@media (max-width: 1100px) { .icon-btn.labeled .gh-n { display: none; } } /* the top bar has no room for it below this */
