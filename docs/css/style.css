@@ -8,6 +8,7 @@
   --muted: oklch(0.65 0 0);
   --accent: oklch(0.7 0.15 145);
   --amber: #e3b341;
+  --gem: oklch(0.66 0.22 335);
   --amber-soft: rgba(227, 179, 65, 0.12);
   --green: oklch(0.7 0.15 145);
   --green-soft: oklch(0.7 0.15 145 / 0.14);
@@ -17,13 +18,13 @@
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
     --ink: oklch(0.98 0 0); --panel: oklch(1 0 0); --raise: oklch(0.94 0 0); --line: oklch(0.88 0 0); --text: oklch(0.15 0 0); --muted: oklch(0.45 0 0);
-    --accent: oklch(0.55 0.18 145); --amber: #a87a06; --amber-soft: rgba(168, 122, 6, 0.1); --green: oklch(0.55 0.18 145); --green-soft: oklch(0.55 0.18 145 / 0.1);
+    --accent: oklch(0.55 0.18 145); --amber: #a87a06; --gem: oklch(0.47 0.2 335); --amber-soft: rgba(168, 122, 6, 0.1); --green: oklch(0.55 0.18 145); --green-soft: oklch(0.55 0.18 145 / 0.1);
     color-scheme: light;
   }
 }
 :root[data-theme="light"] {
   --ink: oklch(0.98 0 0); --panel: oklch(1 0 0); --raise: oklch(0.94 0 0); --line: oklch(0.88 0 0); --text: oklch(0.15 0 0); --muted: oklch(0.45 0 0);
-    --accent: oklch(0.55 0.18 145); --amber: #a87a06; --amber-soft: rgba(168, 122, 6, 0.1); --green: oklch(0.55 0.18 145); --green-soft: oklch(0.55 0.18 145 / 0.1);
+    --accent: oklch(0.55 0.18 145); --amber: #a87a06; --gem: oklch(0.47 0.2 335); --amber-soft: rgba(168, 122, 6, 0.1); --green: oklch(0.55 0.18 145); --green-soft: oklch(0.55 0.18 145 / 0.1);
     color-scheme: light;
 }
 
@@ -172,6 +173,7 @@ svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width:
 /* doorways in the home list: a full row each, into alternatives, a collection and a hidden gem */
 .door { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); align-items: center; gap: 12px 28px; padding: 18px 20px; border: 1px solid var(--line); border-radius: var(--radius); background: color-mix(in srgb, var(--raise) 45%, var(--panel)); }
 .door small { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; font-weight: 600; }
+.gem { stroke: var(--gem); }
 .door small svg { width: 14px; height: 14px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .door strong { display: block; margin-top: 2px; font-size: 18px; letter-spacing: -0.02em; }
 .door p { margin: 4px 0 0; color: var(--muted); font-size: 13.5px; line-height: 1.45; }

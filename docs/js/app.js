@@ -176,7 +176,7 @@ const item = (attr, key, label, count) =>
   `<button type="button" class="cat" data-${attr}="${esc(key)}" aria-current="false" title="${esc(label)}"><svg viewBox="0 0 24 24" aria-hidden="true">${I[key] ?? I[attr] ?? I[""]}</svg><span>${esc(label)}</span><span class="n">${count.toLocaleString("en-US")}</span></button>`
 I.alt = '<path d="M4 7h13l-3-3M20 17H7l3 3"/>'
 I.col = '<path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="m3 13 9 5 9-5M3 18l9 5 9-5" opacity=".55"/>'
-I.gems = '<path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M8 9l4 12 4-12M8 9l4-6 4 6"/>'
+I.gems = '<g class="gem"><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M8 9l4 12 4-12M8 9l4-6 4 6"/></g>'
 const ALTS = altGroups(repos)
 const visible = (r) => !(prefs.hideAI && r.ai > 0) // "Hide AI repos" in settings
 let collapsed = false // the selected area's subareas are folded away; the area itself stays selected
