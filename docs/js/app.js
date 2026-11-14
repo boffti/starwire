@@ -362,6 +362,8 @@ const railWrap = document.createElement("div"), railEl = document.createElement(
 railWrap.className = "with-rail"; railEl.id = "doorbar"; railEl.hidden = true; railEl.setAttribute("aria-label", "More on starwire")
 $("#results").before(railWrap)
 { const main = document.createElement("div"); main.className = "rail-main"; main.append(document.querySelector(".page-head"), $("#savedbar"), $("#lead"), $("#results"), document.querySelector(".more-wrap")); railWrap.append(main, railEl) }
+// the pre-drawn landing pages are written by the build and can be a version behind index.html: make the chips' holder if the page lacks it
+if (!$("#applied")) $("#filters-btn").insertAdjacentHTML("afterend", '<span class="applied" id="applied" aria-label="Filters applied"></span>')
 const railFits = () => railWrap.clientWidth >= RAIL_MIN
 // First visit: a short overview above the list. "Got it" removes it for good, remembered in this browser only.
 // ponytail: one card, no step-by-step tour; build the tour only if people still miss things.
