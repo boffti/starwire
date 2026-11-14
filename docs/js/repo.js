@@ -31,11 +31,11 @@ const I = {
 }
 const GH = '<svg viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;stroke:none"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.4-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>'
 
-let r, repos, vitals, today, AREA, SUB, FORM, PLAT, fit = {}
+let r, repos, vitals, today, AREA, SUB, FORM, PLAT, fit = {}, mentions = []
 
 // repo + { repos, vitals, fit, today, TX, saved } -> the page's HTML
 export function repoPage(repo, ctx) {
-  r = repo; ({ repos, vitals, today } = ctx); fit = ctx.fit ?? {}
+  r = repo; ({ repos, vitals, today } = ctx); fit = ctx.fit ?? {}; mentions = ctx.mentions ?? []
   AREA = new Map(ctx.TX.areas.map((a) => [a.id, a.name])); SUB = new Map(ctx.TX.areas.flatMap((a) => a.subs.map(([id, n]) => [`${a.id}/${id}`, n])))
   FORM = new Map(ctx.TX.forms); PLAT = new Map(ctx.TX.platforms)
   return render(ctx.saved)
@@ -81,6 +81,7 @@ function render(saved) {
   ${vitalsSection(s, m, v)}
   ${signalSection()}
   ${compareSection()}
+  ${mentionsSection()}
   <div class="pair">${swapCard()}${startCard(v)}</div>
   <div class="tail">
     <div class="topics">${r.t.map((t) => `<span>${esc(t)}</span>`).join("")}</div>
@@ -129,6 +130,26 @@ function vitalsSection(s, m, v) {
 }
 
 // repos that replace the same tools, else its neighbours in the same subarea; this one first
+// Posts that link to this repo, from the daily mentions file. The titles are other people's words, so they are
+// escaped, and a link is only drawn when it points at the site it claims to be from.
+// the sites' marks from Simple Icons (CC0), one colour each, set in style.css
+// the white shape behind shows through the cut-outs: the Y, and the alien's face
+const mark = (cls, label, back, d) => `<svg class="src ${cls}" viewBox="0 0 24 24" role="img" aria-label="${label}">${back}<path d="${d}"/></svg>`
+export const SITE_LOGO = {
+  hn: mark("hn", "Hacker News", '<rect x="1" y="1" width="22" height="22" fill="#fff"/>', "M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z"),
+  reddit: mark("reddit", "Reddit", '<circle cx="12" cy="12" r="11" fill="#fff"/>', "M12 0C5.373 0 0 5.373 0 12c0 3.314 1.343 6.314 3.515 8.485l-2.286 2.286C.775 23.225 1.097 24 1.738 24H12c6.627 0 12-5.373 12-12S18.627 0 12 0Zm4.388 3.199c1.104 0 1.999.895 1.999 1.999 0 1.105-.895 2-1.999 2-.946 0-1.739-.657-1.947-1.539v.002c-1.147.162-2.032 1.15-2.032 2.341v.007c1.776.067 3.4.567 4.686 1.363.473-.363 1.064-.58 1.707-.58 1.547 0 2.802 1.254 2.802 2.802 0 1.117-.655 2.081-1.601 2.531-.088 3.256-3.637 5.876-7.997 5.876-4.361 0-7.905-2.617-7.998-5.87-.954-.447-1.614-1.415-1.614-2.538 0-1.548 1.255-2.802 2.803-2.802.645 0 1.239.218 1.712.585 1.275-.79 2.881-1.291 4.64-1.365v-.01c0-1.663 1.263-3.034 2.88-3.207.188-.911.993-1.595 1.959-1.595Zm-8.085 8.376c-.784 0-1.459.78-1.506 1.797-.047 1.016.64 1.429 1.426 1.429.786 0 1.371-.369 1.418-1.385.047-1.017-.553-1.841-1.338-1.841Zm7.406 0c-.786 0-1.385.824-1.338 1.841.047 1.017.634 1.385 1.418 1.385.785 0 1.473-.413 1.426-1.429-.046-1.017-.721-1.797-1.506-1.797Zm-3.703 4.013c-.974 0-1.907.048-2.77.135-.147.015-.241.168-.183.305.483 1.154 1.622 1.964 2.953 1.964 1.33 0 2.47-.81 2.953-1.964.057-.137-.037-.29-.184-.305-.863-.087-1.795-.135-2.769-.135Z"),
+}
+const SITES = { hn: ["Hacker News", "https://news.ycombinator.com/"], reddit: ["Reddit", "https://www.reddit.com/"] }
+function mentionsSection() {
+  const posts = mentions.filter((p) => SITES[p.s] && String(p.u).startsWith(SITES[p.s][1]))
+  if (!posts.length) return ""
+  const when = (d) => new Date(`${d}T00:00:00Z`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" })
+  return `<section aria-labelledby="men"><h2 id="men">Discussed on</h2><ul class="men">${posts.map((p) => `<li><a href="${esc(p.u)}" target="_blank" rel="noopener nofollow">
+    <span class="men-site ${esc(p.s)}">${SITE_LOGO[p.s]}${SITES[p.s][0]}${p.in ? ` · ${esc(p.in)}` : ""}</span><span class="men-t">${esc(p.t)}</span>
+    <span class="men-n">${num(p.p)} points · ${num(p.c)} ${p.c === 1 ? "comment" : "comments"} · ${when(p.d)}</span></a></li>`).join("")}</ul>
+    <p class="foot-note">Posts that link to this repo, checked once a day. The most upvoted are shown.</p></section>`
+}
+
 function peers() {
   const alts = new Set((r.alt ?? []).map((a) => a.toLowerCase()))
   let p = repos.filter((x) => x !== r && (x.alt ?? []).some((a) => alts.has(a.toLowerCase())))
