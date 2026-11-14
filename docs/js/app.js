@@ -18,7 +18,7 @@ import { signs, summary } from "./vitals.js"
 import { weight } from "./signal.js"
 import { SETUP_KINDS, setupOf, setupMark } from "./setup.js"
 import { LICENSE_KINDS, licenseKind, licenseText } from "./license.js"
-import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups, replacesOf, stackFor, KIND } from "./repo.js"
+import { repoPage, missingPage, showReadme, copyClone, altPage, altIndex, altGroups, replacesOf, stackFor, KIND, SITE_LOGO } from "./repo.js"
 
 // collections.json is written by hand (see CONTRIBUTING.md); the site works the same without it
 const [data, collections] = await Promise.all([fetch("data/data.json").then((r) => r.json()), fetch("collections.json").then((r) => (r.ok ? r.json() : [])).catch(() => [])])
@@ -317,7 +317,7 @@ const promo = `<a class="promo" href="https://github.com/boffti/stardash" target
 // collection and the gem change with the day's data. Placed after rows 2, 5 and 8 of cards (items 6, 16 and 28 of a
 // list), so the top of the list stays repos. ponytail: fixed spots and a daily rotation; make them smarter only if
 // the door/ events show which ones get used.
-const DOOR_ROWS = [2, 5, 8], DOOR_ITEMS = [6, 16, 28]
+const DOOR_ROWS = [2, 5, 8, 11], DOOR_ITEMS = [6, 16, 28, 42]
 const KNOWN = ["Notion", "Slack", "Figma", "ChatGPT", "Wispr Flow", "Jira", "Spotify", "Zapier", "Photoshop", "Trello", "Shopify", "Postman", "Linear", "Mailchimp", "Miro", "Loom",
   "Salesforce", "Webflow", "Zendesk", "Midjourney", "Todoist", "HubSpot", "Datadog", "CapCut", "ElevenLabs", "Heroku", "Mixpanel", "Lightroom", "Auth0", "Semrush", "YNAB"]
 function doors() {
@@ -388,11 +388,45 @@ if (!welcomed) {
   w.querySelector("button").addEventListener("click", () => { w.remove(); try { localStorage.setItem(WELCOME_KEY, "1") } catch {} })
 }
 
+// Where the day's repos are being talked about: each repo's most upvoted recent post, second in the bar. Four show at
+// a time and the rest take turns, one row swapped every few seconds, so a visitor who lingers sees more of them.
+// A row opens the repo's page here, which lists the posts and links out to them. In the bar the posts stack; between
+// the list rows, where the card is wide, they sit two across.
+let mentions, talkPool = []
+const loadMentions = () => (mentions ??= fetch("data/mentions.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))) // a missing file means no card and no block
+const TALK_DAYS = 30, TALK_SHOW = 4, TALK_POOL = 12, TALK_EVERY = 5000
+const talkRow = ([r, p], cls = "") => `<a href="?page=${esc(r.r)}" data-door="talk"${cls && ` class="${cls}"`}><img src="${esc(avatar(r.r.split("/")[0], 56))}" alt="" width="28" height="28" loading="lazy"><span><b>${esc(r.r.split("/")[1])}</b><i>${esc(p.t)}</i><span class="talk-n">${SITE_LOGO[p.s]}${p.s === "hn" ? "Hacker News" : esc(p.in ?? "Reddit")} · ${num(p.p)} points</span></span></a>`
+function talkCard(m) {
+  const since = new Date(Date.parse(TODAY) - TALK_DAYS * 864e5).toISOString().slice(0, 10)
+  talkPool = Object.entries(m.repos ?? {}).map(([name, posts]) => [repos.find((r) => r.r === name), posts.filter((p) => p.d >= since && SITE_LOGO[p.s]).sort((a, b) => b.p - a.p)[0]])
+    .filter(([r, p]) => r && p).sort((a, b) => b[1].p - a[1].p).slice(0, TALK_POOL)
+  if (talkPool.length < 2) return ""
+  return `<section class="door" aria-label="Being discussed"><div class="door-text"><small><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Being discussed</small><strong>What people are talking about</strong></div>
+    <div class="talk">${talkPool.slice(0, TALK_SHOW).map((x) => talkRow(x)).join("")}</div></section>`
+}
+// one row out, the next post in, slot by slot; holds still under the pointer or keyboard focus, in a background tab,
+// and for anyone who asked their system for less motion. One timer serves whichever card is on screen, the bar's or
+// the one between the rows, and picks a post that isn't already showing, so a list drawn again mid-turn stays right.
+function talkSpin() {
+  if (talkPool.length <= TALK_SHOW || matchMedia("(prefers-reduced-motion: reduce)").matches) return
+  let at = TALK_SHOW - 1, slot = 0
+  setInterval(() => {
+    const box = [...document.querySelectorAll(".talk")].find((b) => b.offsetParent)
+    if (!box || document.hidden || box.matches(":hover, :focus-within")) return
+    const shown = new Set([...box.children].map((a) => a.getAttribute("href")))
+    for (let i = 1; i <= talkPool.length; i++) { const j = (at + i) % talkPool.length; if (!shown.has(`?page=${talkPool[j][0].r}`)) { at = j; break } }
+    const old = box.children[slot++ % box.children.length]; old.classList.add("out")
+    setTimeout(() => { if (old.isConnected) old.outerHTML = talkRow(talkPool[at], "in") }, 300)
+  }, TALK_EVERY)
+}
+let talkHtml = "", talkLoading
+const loadTalk = () => (talkLoading ??= loadMentions().then((m) => { talkHtml = talkCard(m); talkSpin(); return talkHtml }))
+
 const railH = () => railEl.style.setProperty("--h", `${railEl.offsetHeight}px`) // for the sticky offset in style.css
 new ResizeObserver(railH).observe(railEl) // icons that arrive late change its height
 function rail(on) {
   railWrap.classList.toggle("on", on); railEl.hidden = !on
-  if (on && !railEl.firstChild) { const d = doors(); railEl.innerHTML = [d.at(-1), ...d.slice(0, -1), promo].join("") } // the hidden gem, last in the list, leads the bar
+  if (on && !railEl.firstChild) { const d = doors(); railEl.innerHTML = [d.at(-1), ...d.slice(0, -1), promo].join(""); loadTalk().then((h) => railEl.querySelector(".door")?.insertAdjacentHTML("afterend", h)) } // the hidden gem, last in the list, leads the bar
   return on
 }
 let railFit = null // draw again when the window crosses the width where the bar fits
@@ -520,7 +554,9 @@ function render() {
   if (promoted) page.splice(spot, 0, promo)
   // doorways on the plain home list only: in the bar when it is showing, else between the rows, last one first so each lands on a whole row
   if (home && !railOn && prefs.doors) { const at = layout === "cards" ? DOOR_ROWS.map((r) => r * cols) : DOOR_ITEMS
-    doors().map((d, i) => [at[i], d]).reverse().forEach(([i, d]) => { if (page.length > i) page.splice(i, 0, d) }) }
+    if (!talkLoading) loadTalk().then((h) => { if (h && !state.page) render() }) // the posts arrive after the first draw; draw once more with their card
+    const d = doors(); if (talkHtml) d.splice(1, 0, talkHtml) // second, after the alternatives
+    d.map((d, i) => [at[i], d]).reverse().forEach(([i, d]) => { if (page.length > i) page.splice(i, 0, d) }) }
   const empty = state.f === "saved" && !saved.length
     ? `<div class="empty">Nothing saved yet. Use the bookmark on any repo to keep it here.<br>Saves stay in this browser.</div>`
     : `<div class="empty">No repos match that yet. Try fewer words or another filter.<br><button type="button" id="reset">Clear filters</button></div>`
@@ -607,9 +643,10 @@ async function showPage() {
   const r = byName.get(state.page.toLowerCase())
   if (!r) { el.innerHTML = missingPage(state.page); document.title = TITLE; return }
   if (r.alt?.length) fits ??= fetch("data/fit.json").then((x) => (x.ok ? x.json() : {})).catch(() => ({}))
-  const want = state.page, [v, f] = await Promise.all([vitals, r.alt?.length ? fits : {}])
+  loadMentions()
+  const want = state.page, [v, f, m] = await Promise.all([vitals, r.alt?.length ? fits : {}, mentions])
   if (state.page !== want) return // moved on while vitals loaded
-  el.innerHTML = repoPage(r, { repos, vitals: v, fit: f, today: data.updated.slice(0, 10), TX, saved: savedAt.has(r.r) })
+  el.innerHTML = repoPage(r, { repos, vitals: v, fit: f, today: data.updated.slice(0, 10), TX, saved: savedAt.has(r.r), mentions: m.repos?.[r.r] })
   document.title = `${r.r.split("/")[1]}: ${r.l || "open source repo"} | starwire`
   count(`page/${r.r}`, "Repo page")
 }
