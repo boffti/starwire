@@ -371,11 +371,17 @@ try { welcomed = !!localStorage.getItem(WELCOME_KEY) } catch {}
 if (!welcomed) {
   const tip = (icon, title, text) => `<li><svg viewBox="0 0 24 24" aria-hidden="true">${icon}</svg><div><b>${title}</b><span>${text}</span></div></li>`
   const w = document.createElement("section"); w.className = "welcome"; w.setAttribute("aria-label", "New here?")
-  w.innerHTML = `<div class="welcome-head"><strong>New here? starwire in four lines</strong><button type="button" class="btn">Got it</button></div><ul>
+  const MAIL = '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>', FIND = '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'
+  const KNOBS = '<path d="M4 6h10M18 6h2M4 12h2M10 12h10M4 18h10M18 18h2"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="16" cy="18" r="2"/>'
+  w.innerHTML = `<div class="welcome-head"><strong>New here? What you can do on starwire</strong><button type="button" class="btn">Got it</button></div><ul>
     ${tip(I.trending, "A ranked list, fresh every day", "Open source repos worth a look, ordered by the stars they gained for their size and five signs of a healthy project. Sort changes the order.")}
-    ${tip(I[""], "Browse your way", "The left sidebar has Trending, Hidden gems, New this week and every area. Filters narrow any list by kind, platform, license and more.")}
-    ${tip(I.alt, "Replace what you pay for", "Alternatives lists open source stand-ins for products like Notion or Slack. Collections are ready-made stacks for a job.")}
-    ${tip(I.saved, "Keep what you find", "The bookmark saves a repo in this browser. The weekly email sends the best of the week.")}</ul>`
+    ${tip(I[""], "Sidebar views and filters", "The left sidebar has Trending, Hidden gems, New this week and every area. Filters narrow any list by kind, platform, license and more.")}
+    ${tip(FIND, "Search, or jump with a key", "Search repos, topics and languages from the top bar; / puts you in the box. Ctrl/Cmd K jumps to a repo, area or language.")}
+    ${tip(I.alt, "Alternatives to paid tools", "Pick a product you pay for, like Notion or Slack, and see the open source projects that could replace it.")}
+    ${tip(I.col, "Collections: ready-made stacks", "Sets of tools for one job, such as running an online store, with an open source pick for each need.")}
+    ${tip(I.saved, "Save repos for later", "The bookmark on any repo keeps it under Saved. Saves stay in this browser, with no account.")}
+    ${tip(MAIL, "Newsletter and RSS", "The Newsletter button sends one short email a week. The RSS button has feeds for the day's best and for every new pick.")}
+    ${tip(KNOBS, "Settings: make it yours", "The gear sets the theme, default sort and layout, what each card shows, and can hide AI repos or the side cards.")}</ul>`
   document.querySelector(".page-head").after(w)
   w.querySelector("button").addEventListener("click", () => { w.remove(); try { localStorage.setItem(WELCOME_KEY, "1") } catch {} })
 }
