@@ -361,7 +361,7 @@ const RAIL_MIN = 1400 // px the list column and bar need between them
 const railWrap = document.createElement("div"), railEl = document.createElement("aside")
 railWrap.className = "with-rail"; railEl.id = "doorbar"; railEl.hidden = true; railEl.setAttribute("aria-label", "More on starwire")
 $("#results").before(railWrap)
-{ const main = document.createElement("div"); main.className = "rail-main"; main.append($("#results"), document.querySelector(".more-wrap")); railWrap.append(main, railEl) }
+{ const main = document.createElement("div"); main.className = "rail-main"; main.append($("#lead"), $("#results"), document.querySelector(".more-wrap")); railWrap.append(main, railEl) }
 const railFits = () => railWrap.clientWidth >= RAIL_MIN
 function rail(on) {
   railWrap.classList.toggle("on", on); railEl.hidden = !on
