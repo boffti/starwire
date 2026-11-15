@@ -314,32 +314,65 @@ const promo = `<a class="promo" href="https://github.com/boffti/stardash" target
 
 // Doorways: most visits are the home list and nothing else, so the plain "All repos" list carries three full-width
 // cards into the parts of the site a sidebar link doesn't sell: alternatives, a collection and a hidden gem. The
-// collection and the gem change with the day's data. Placed after rows 2, 5 and 8 of cards (items 6, 16 and 28 of a
+// gem changes with the day's data; the products and the collection start from the day's and then take turns while
+// the page is open (the timer below doors). Placed after rows 2, 5 and 8 of cards (items 6, 16 and 28 of a
 // list), so the top of the list stays repos. ponytail: fixed spots and a daily rotation; make them smarter only if
 // the door/ events show which ones get used.
 const DOOR_ROWS = [2, 5, 8, 11], DOOR_ITEMS = [6, 16, 28, 42]
 const KNOWN = ["Notion", "Slack", "Figma", "ChatGPT", "Wispr Flow", "Jira", "Spotify", "Zapier", "Photoshop", "Trello", "Shopify", "Postman", "Linear", "Mailchimp", "Miro", "Loom",
   "Salesforce", "Webflow", "Zendesk", "Midjourney", "Todoist", "HubSpot", "Datadog", "CapCut", "ElevenLabs", "Heroku", "Mixpanel", "Lightroom", "Auth0", "Semrush", "YNAB"]
+// what the turn-taking timer swaps in: one product chip, or the contents of the collection card
+let altPool = [], altAt = 0, colAt = null
+const altChip = (g, cls = "") => `<a class="door-alt${cls && ` ${cls}`}" href="?alt=${encodeURIComponent(g.name)}" data-door="alt"><span>${esc(g.name)}</span><span class="door-stack">${[...g.repos].sort((x, y) => y.s - x.s).slice(0, 3).map((r) => `<img src="${esc(avatar(r.r.split("/")[0], 40))}" alt="" title="${esc(r.r.split("/")[1])}" width="20" height="20" loading="lazy">`).join("")}</span><b>${g.repos.length}</b></a>`
+const colCard = (c) => `<section class="door" aria-label="A collection"><div class="door-text"><small><svg viewBox="0 0 24 24" aria-hidden="true">${I.col}</svg>Collection</small><strong>${esc(c.title)}</strong><p>${esc(c.intro)}</p></div>
+    <div class="door-chips"><span class="door-stack" data-stack="${esc(c.id)}"></span><span class="door-count">${c.needs.length} needs</span><span class="door-links"><a class="door-all" href="?col=${esc(c.id)}" data-door="col">See the stack</a><a class="door-all" href="?col=all" data-door="col">All ${collections.length} collections</a></span></div></section>`
 function doors() {
   const n = Math.floor(Date.parse(TODAY) / 864e5), out = []
   // products most people have heard of, with short names: five a day in turn, so the card changes daily. The product
   // with the most alternatives isn't the one a visitor recognises. Any that lose their alternatives drop out by themselves.
   const known = KNOWN.map((k) => ALTS.get(k.toLowerCase())).filter((g) => g && g.repos.length >= 3)
   const top = known.length >= 8 ? Array.from({ length: 8 }, (_, i) => known[(n * 5 + i) % known.length]) : [...ALTS.values()].sort((a, b) => b.repos.length - a.repos.length).slice(0, 8)
+  if (known.length > 8 && !altPool.length) { altPool = known; altAt = (n * 5 + 7) % known.length }
   if (top.length >= 4) out.push(`<section class="door" aria-label="Open source alternatives"><div class="door-text"><small><svg viewBox="0 0 24 24" aria-hidden="true">${I.alt}</svg>Alternatives</small><strong>Open source instead of&hellip;</strong><p>Pick a product you pay for and see what could replace it, ranked by how much of it each one covers.</p></div>
-    <div class="door-chips">${top.map((g) => `<a class="door-alt" href="?alt=${encodeURIComponent(g.name)}" data-door="alt"><span>${esc(g.name)}</span><span class="door-stack">${[...g.repos].sort((x, y) => y.s - x.s).slice(0, 3).map((r) => `<img src="${esc(avatar(r.r.split("/")[0], 40))}" alt="" title="${esc(r.r.split("/")[1])}" width="20" height="20" loading="lazy">`).join("")}</span><b>${g.repos.length}</b></a>`).join("")}<span class="door-links"><a class="door-all" href="?alt=all" data-door="alt">All ${ALTS.size} products</a></span></div></section>`)
-  const c = collections.length && collections[n % collections.length]
-  if (c) out.push(`<section class="door" aria-label="A collection"><div class="door-text"><small><svg viewBox="0 0 24 24" aria-hidden="true">${I.col}</svg>Collection of the day</small><strong>${esc(c.title)}</strong><p>${esc(c.intro)}</p></div>
-    <div class="door-chips"><span class="door-stack" data-stack="${esc(c.id)}"></span><span class="door-count">${c.needs.length} needs</span><span class="door-links"><a class="door-all" href="?col=${esc(c.id)}" data-door="col">See the stack</a><a class="door-all" href="?col=all" data-door="col">All ${collections.length} collections</a></span></div></section>`)
+    <div class="door-chips">${top.map((g) => altChip(g)).join("")}<span class="door-links"><a class="door-all" href="?alt=all" data-door="alt">All ${ALTS.size} products</a></span></div></section>`)
+  colAt ??= n % (collections.length || 1)
+  const c = collections[colAt]
+  if (c) out.push(colCard(c))
   const gems = repos.filter((r) => r.h > 0 && r.s < GEM_STARS).sort((a, b) => b.h - a.h), g = gems[n % Math.min(gems.length, 10)]
   if (g) { const [owner, name] = g.r.split("/")
     // what it is, as chips: its kinds, where it runs, then what it replaces or plugs into. Not how its stars moved.
     const what = [...(g.fo ?? []).map((f) => KIND_SHORT[f] ?? FORM.get(f)), (g.pl ?? []).filter((x) => x !== "docker").map((x) => PLAT.get(x)).filter(Boolean).slice(0, 3).join(", "),
       g.alt?.length ? `Replaces ${g.alt[0]}` : g.ww?.length ? `Works with ${WITH.get(g.ww[0])}` : ""].filter(Boolean)
-    out.push(`<section class="door" aria-label="A hidden gem"><div class="door-text"><small><svg viewBox="0 0 24 24" aria-hidden="true">${I.gems}</svg>Hidden gem of the day</small><strong class="door-repo"><img src="${esc(avatar(owner, 64))}" alt="" width="32" height="32" loading="lazy">${esc(name)}<i>${esc(owner)}</i><span class="stars" title="${g.s.toLocaleString("en-US")} stars">${STAR}${num(g.s)}</span></strong><p>${esc(g.l ?? "")}</p></div>
+    out.push(`<section class="door" aria-label="A hidden gem"><div class="door-text"><small><svg viewBox="0 0 24 24" aria-hidden="true">${I.gems}</svg>Hidden gem of the day</small><strong class="door-repo"><img src="${esc(avatar(owner, 64))}" alt="" width="32" height="32" loading="lazy"><b>${esc(name)}</b><i>${esc(owner)}</i><span class="stars" title="${g.s.toLocaleString("en-US")} stars">${STAR}${num(g.s)}</span></strong><p>${esc(g.l ?? "")}</p></div>
     <div class="door-chips">${what.length ? `<span class="door-what">${what.map((w) => `<i class="tag">${esc(w)}</i>`).join("")}</span>` : ""}<span class="door-links"><a class="door-all" href="?page=${esc(g.r)}" data-door="gem">Read more</a><a class="door-all" href="?f=gems" data-door="gem">All ${gems.length} hidden gems</a></span></div></section>`) }
   return out
 }
+
+// Every DOOR_EVERY one product chip gives way to the next well-known product, and every third turn the collection card
+// changes its contents to the next collection, so a visitor who lingers sees more of both. Like the posts card it holds still
+// under the pointer or keyboard focus, in a background tab, and for anyone who asked their system for less motion.
+// ponytail: a list drawn again shows the day's eight products once more; the collection keeps its place (colAt).
+const DOOR_EVERY = 7000
+let doorTurn = 0, altSlot = 0
+const doorOn = (label) => [...document.querySelectorAll(`.door[aria-label="${label}"]`)].find((b) => b.offsetParent && !b.matches(":hover, :focus-within"))
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches) setInterval(() => {
+  if (document.hidden) return
+  doorTurn++
+  const alt = altPool.length && doorOn("Open source alternatives")
+  if (alt) {
+    const all = [...alt.querySelectorAll(".door-alt")], seen = all.filter((a) => a.offsetParent), shown = new Set(all.map((a) => a.getAttribute("href")))
+    for (let i = 1; i <= altPool.length; i++) { const j = (altAt + i) % altPool.length; if (!shown.has(`?alt=${encodeURIComponent(altPool[j].name)}`)) { altAt = j; break } }
+    const old = seen[altSlot++ % seen.length], next = altPool[altAt]; old.classList.add("out")
+    setTimeout(() => { if (old.isConnected) old.outerHTML = altChip(next, "in") }, 300)
+  }
+  const col = doorTurn % 3 === 0 && collections.length > 1 && doorOn("A collection")
+  if (col) {
+    colAt = (colAt + 1) % collections.length; col.style.minHeight = `${col.offsetHeight}px`; col.classList.add("swap") // never shrinks, so it settles at the tallest collection; the card's frame stays put: only what is inside fades out and in
+    setTimeout(() => { if (!col.isConnected) return
+      const t = document.createElement("template"); t.innerHTML = colCard(collections[colAt])
+      col.innerHTML = t.content.firstElementChild.innerHTML; col.classList.remove("swap"); col.classList.add("turned"); doorStacks() }, 300)
+  }
+}, DOOR_EVERY)
 
 // The collection card shows its picks as a stack of repo icons. Picks need the fit scores, a file the home list
 // doesn't otherwise load, so they are fetched once the page is idle and the icons arrive a moment after the card.
