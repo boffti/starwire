@@ -979,10 +979,10 @@ body[data-cols="one"] #savedbar { display: none; }
 
 /* layout polish */
 @media (min-width: 901px) {
-  /* one 20px gap everywhere: the page gutters, under the heading and the hero, and between the list and the side cards */
-  .page { padding: 20px 20px 32px; }
-  .with-rail.on, .with-rail.on #doorbar { gap: 20px; }
-  .lead, .page-head, .saved-bar { margin-bottom: 20px; }
+  /* one 18px gap everywhere: the page gutters, under the heading and the hero, and between the list and the side cards */
+  .page { padding: 18px 18px 32px; }
+  .with-rail.on, .with-rail.on #doorbar { gap: 18px; }
+  .lead, .page-head, .saved-bar { margin-bottom: 18px; }
   /* title and count share a line; the search hints stay on their own lines below */
   .page-head { align-items: center; }
   .page-head h1, .page-head h1 + p { display: inline; }
