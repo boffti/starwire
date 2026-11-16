@@ -18,15 +18,22 @@ const day = data.updated.slice(0, 10)
 const weekAgo = new Date(Date.parse(data.updated) - 7 * 864e5).toISOString().slice(0, 10)
 const described = (r) => r.l && !/no description/i.test(r.l)
 const hot = data.repos.filter((r) => r.h > 0 && described(r)).sort((a, b) => b.h - a.h)
+// No repeats from one issue to the next: a repo in the previous issue's main sections sits this one out, except as the
+// repo of the week. The previous issue is read from the public archive feed, so nothing is stored and no key is needed;
+// if the feed can't be read the rule is skipped. An issue for today's date is this one sent already, not the previous.
+const before = new Set(((await fetch(`${LISTMONK}/archive.xml`).then((r) => (r.ok ? r.text() : "")).catch(() => ""))
+  .split("<item>").slice(1).find((it) => !it.includes(`/archive/weekly-${day}<`)) ?? "")
+  .split("INSTEAD OF ")[0].match(/(?<=\?page=)[\w.-]+\/[\w.-]+/g)?.map((r) => r.toLowerCase()))
+const repeat = (r) => before.has(r.r.toLowerCase())
 // the lead is the top trending repo; the list under it carries on from rank 2. A repo shows once per issue.
-const [lead, ...trending] = hot.slice(0, TOP + 1)
+const lead = hot[0], trending = hot.slice(1).filter((r) => !repeat(r)).slice(0, TOP)
 const shown = new Set([lead, ...trending])
 const fresh = data.repos
   .filter((r) => r.f > weekAgo && r.ca && Date.parse(data.updated) - Date.parse(r.ca) <= NEW_DAYS * 864e5 && described(r) && !shown.has(r))
   .sort((a, b) => b.s - a.s)
-const isNew = fresh.slice(0, TOP)
+const isNew = fresh.filter((r) => !repeat(r)).slice(0, TOP) // the count of new repos still includes them
 for (const r of isNew) shown.add(r)
-const gem = hot.find((r) => r.s < GEM_MAX && !shown.has(r)) // small and rising fast; some weeks there is none
+const gem = hot.find((r) => r.s < GEM_MAX && !shown.has(r) && !repeat(r)) // small and rising fast; some weeks there is none
 assert(lead && trending.length && isNew.length, "nothing to send: no trending or new repos in the data")
 
 // "Instead of X": the alternatives groups with at least 4 repos take turns, one a week
