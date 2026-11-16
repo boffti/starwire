@@ -43,6 +43,15 @@ To try it locally, serve the folder and open it:
 python3 -m http.server 8000 --directory docs
 ```
 
+There is no build step and there are no packages to install. Before you open a pull request:
+
+- Load the home page, a repo page, and one page each under `/alternatives/` and `/open-source/`, and check the
+  browser console for errors. Those last two are drawn ahead of time and load the same CSS and scripts.
+- Look at it at phone width and in both light and dark.
+- Leave `docs/data/`, `docs/alternatives/` and `docs/open-source/` alone: they are generated.
+
+[AGENTS.md](AGENTS.md) has the full map of the repo and the checks, for people and coding agents alike.
+
 ## Improve the weekly email
 
 The email's template, its wording and the instruction behind its short notes are in [`newsletter/`](newsletter/README.md).

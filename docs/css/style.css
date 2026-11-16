@@ -14,18 +14,21 @@
   --green: oklch(0.7 0.15 145);
   --green-soft: oklch(0.7 0.15 145 / 0.14);
   --radius: 0.5rem;
+  --thumb: oklch(0.32 0 0); --pop: 0 8px 24px rgb(0 0 0 / 0.45);
   color-scheme: dark;
 }
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
     --ink: oklch(0.98 0 0); --panel: oklch(1 0 0); --raise: oklch(0.94 0 0); --line: oklch(0.88 0 0); --text: oklch(0.15 0 0); --muted: oklch(0.45 0 0);
     --accent: oklch(0.55 0.18 145); --amber: #a87a06; --gem: oklch(0.4 0.19 338); --on-l: 0.5; --amber-soft: rgba(168, 122, 6, 0.1); --green: oklch(0.55 0.18 145); --green-soft: oklch(0.55 0.18 145 / 0.1);
+    --thumb: oklch(1 0 0); --pop: 0 4px 16px rgb(0 0 0 / 0.08), 0 1px 2px rgb(0 0 0 / 0.05);
     color-scheme: light;
   }
 }
 :root[data-theme="light"] {
   --ink: oklch(0.98 0 0); --panel: oklch(1 0 0); --raise: oklch(0.94 0 0); --line: oklch(0.88 0 0); --text: oklch(0.15 0 0); --muted: oklch(0.45 0 0);
     --accent: oklch(0.55 0.18 145); --amber: #a87a06; --gem: oklch(0.4 0.19 338); --on-l: 0.5; --amber-soft: rgba(168, 122, 6, 0.1); --green: oklch(0.55 0.18 145); --green-soft: oklch(0.55 0.18 145 / 0.1);
+    --thumb: oklch(1 0 0); --pop: 0 4px 16px rgb(0 0 0 / 0.08), 0 1px 2px rgb(0 0 0 / 0.05);
     color-scheme: light;
 }
 
@@ -973,3 +976,29 @@ body[data-cols="one"] #savedbar { display: none; }
 .rp .sg-tiles .k svg { color: var(--c); }
 .rp .sg-tiles .lvl-none .v { color: var(--muted); font-size: 18px; line-height: 1.5; }
 @media (max-width: 1100px) { .icon-btn.labeled .gh-n { display: none; } } /* the top bar has no room for it below this */
+
+/* layout polish */
+@media (min-width: 901px) {
+  /* one 18px gap everywhere: the page gutters, under the heading and the hero, and between the list and the side cards */
+  .page { padding: 18px 18px 32px; }
+  .with-rail.on, .with-rail.on #doorbar { gap: 18px; }
+  .lead, .page-head, .saved-bar { margin-bottom: 18px; }
+  /* title and count share a line; the search hints stay on their own lines below */
+  .page-head { align-items: center; }
+  .page-head h1, .page-head h1 + p { display: inline; }
+  .page-head h1 + p { margin: 0 0 0 12px; }
+  .page-head :is(.alt-hint, .everywhere):not([hidden]) { display: block; width: fit-content; margin-top: 6px; }
+  /* the side cards follow the list as it scrolls but end level with its last row: the bar is capped at the list's height
+     and kept clear of the space under it (--list and --tail, set in app.js), and a card that does not fit whole wraps
+     into a second column that is clipped away. ponytail: on a list shorter than the first card, that card is cut */
+  .with-rail.on #doorbar { max-height: var(--list, none); margin-bottom: var(--tail, 0px); flex-wrap: wrap; align-content: flex-start; overflow: hidden; }
+  .with-rail.on #doorbar > * { width: 100%; }
+}
+/* toggles: a track with the chosen option raised on it */
+.view, .seg { padding: 2px; gap: 2px; border: 0; background: var(--raise); overflow: visible; height: auto; }
+.view button { height: 30px; }
+.view button, .seg span { background: none; border-radius: 4px; }
+.view button + button, .seg label + label span { border-left: 0; }
+.view button[aria-pressed="true"], .seg input:checked + span { background: var(--thumb); box-shadow: 0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); }
+/* popups: one soft shadow in place of the heavy drop shadows */
+.news[popover], .filters, .cmdk, .rail-tip { box-shadow: var(--pop); }

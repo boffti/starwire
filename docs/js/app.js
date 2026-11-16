@@ -394,7 +394,10 @@ const RAIL_MIN = 1400 // px the list column and bar need between them
 const railWrap = document.createElement("div"), railEl = document.createElement("aside")
 railWrap.className = "with-rail"; railEl.id = "doorbar"; railEl.hidden = true; railEl.setAttribute("aria-label", "More on starwire")
 $("#results").before(railWrap)
-{ const main = document.createElement("div"); main.className = "rail-main"; main.append(document.querySelector(".page-head"), $("#savedbar"), $("#lead"), $("#results"), document.querySelector(".more-wrap")); railWrap.append(main, railEl) }
+{ const main = document.createElement("div"); main.className = "rail-main"; main.append(document.querySelector(".page-head"), $("#savedbar"), $("#lead"), $("#results"), document.querySelector(".more-wrap")); railWrap.append(main, railEl)
+  // the bar ends level with the last repo row, not with the space the Show more button keeps below it (style.css)
+  new ResizeObserver(() => { const m = main.getBoundingClientRect(), end = $("#results").getBoundingClientRect().bottom
+    railEl.style.setProperty("--list", `${end - m.top}px`); railEl.style.setProperty("--tail", `${m.bottom - end}px`) }).observe(main) }
 // the pre-drawn landing pages are written by the build and can be a version behind index.html: make the chips' holder if the page lacks it
 if (!$("#applied")) $("#filters-btn").insertAdjacentHTML("afterend", '<span class="applied" id="applied" aria-label="Filters applied"></span>')
 const railFits = () => railWrap.clientWidth >= RAIL_MIN
