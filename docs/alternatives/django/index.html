@@ -6,12 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Open source alternatives to Django: cot | starwire</title>
 <link rel="canonical" href="https://starwire.foo/alternatives/django/">
-<meta name="description" content="1 open source project does the same job as Django. Free, and many you can self-host.">
+<meta name="description" content="1 open source project does the same job as Django, ranked by how much of what Django does each one covers. Free, and many you can self-host.">
 <meta name="theme-color" content="#141414">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://starwire.foo/alternatives/django/">
 <meta property="og:title" content="Open source alternatives to Django: cot | starwire">
-<meta property="og:description" content="1 open source project does the same job as Django. Free, and many you can self-host.">
+<meta property="og:description" content="1 open source project does the same job as Django, ranked by how much of what Django does each one covers. Free, and many you can self-host.">
 <meta property="og:image" content="https://r.starwire.foo/instead-of/django/card.png?v=2026-11-15">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -82,19 +82,20 @@
       <section class="rp" id="repo-page" aria-live="polite"><div class="rp-top"><button type="button" class="rp-back" data-back><svg style="fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Back to the list</button><nav class="rp-crumbs" aria-label="Where it sits"><a href="?alt=all">Alternatives</a></nav></div>
   <section class="hero alt-hero"><div class="who">
     <h1>Open source alternatives to Django</h1>
-    <p class="line">One project on starwire does the same job. The most active come first: steady commits, recent releases and issues getting closed.</p>
+    <p class="line">One project on starwire does the same job. Ranked by how much of what Django does each one covers, read from its README and website. Ties go to the most active.</p>
   </div>
     <div class="acts"><button type="button" class="btn" data-share="instead-of/django" aria-label="Copy a share link"><svg style="fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 3v13M7 8l5-5 5 5"/></svg><span>Share</span></button></div></section>
-  
+  <section class="jobs" aria-labelledby="jobs"><h2 id="jobs">What Django does</h2><ol class="job-list"><li class="core">Request routing and views<small>core</small></li><li class="core">ORM with migrations<small>core</small></li><li class="core">Automatic admin interface<small>core</small></li><li class="">HTML templating</li><li class="">Authentication and permissions</li><li class="">Form handling and validation</li><li class="">Security protections such as CSRF</li></ol><p class="foot-note">Each dot in the table is one job, in this order. Square dots are core jobs and count double. Full means yes, half means partly. "See the evidence" under a project shows the line behind each one. Coverage is what a project documents, not how well it works or how hard it is to move to. <a href="how.html#fit">How we score this</a></p></section>
   <section aria-label="Alternatives to Django"><div class="cmp alt-table"><table>
-    <thead><tr><th scope="col">Project</th><th scope="col">Stars</th><th scope="col" class="c-commits">Commits, 12 weeks</th><th scope="col" class="c-rel">Last release</th><th scope="col" class="c-iss">Closed vs opened</th><th scope="col">Setup</th><th scope="col" class="c-lic">License</th></tr></thead>
+    <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" class="c-commits">Commits, 12 weeks</th><th scope="col" class="c-rel">Last release</th><th scope="col" class="c-iss">Closed vs opened</th><th scope="col">Setup</th><th scope="col" class="c-lic">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=cot-rs%2Fcot"><img src="https://avatars.githubusercontent.com/u/172197856?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>cot</b><small>Batteries-included Rust web framework with ORM and admin</small></span></a></th>
-      <td data-k="Stars"><span class="s">1.1k</span><small class="w">+1</small></td>
+      <td data-k="Covers"><span class="fit"><b>Same job, different way</b></span><span class="fit-row"><span class="fit-dots"><i class="m-y core" title="Request routing and views: yes. &quot;Route :: with_api_handler_and_name ( /add/ , api_post ( add )&quot;"></i><i class="m-y core" title="ORM with migrations: yes. &quot;as well as creating the migrations automatically.&quot;"></i><i class="m-y core" title="Automatic admin interface: yes. &quot;Cot comes with an admin panel out of the box&quot;"></i><i class="m-y" title="HTML templating: yes. &quot;but also the ORM, the admin panel, and even the templates&quot;"></i><i class="m-p" title="Authentication and permissions: partly. &quot;DatabaseUser :: create_user&quot;"></i><i class="m-y" title="Form handling and validation: yes. &quot;turns a struct into a fully validated HTML form&quot;"></i><i class="m-y" title="Security protections such as CSRF: yes. &quot;defending it against common modern web vulnerabilities&quot;"></i></span><small>95%</small></span></td><td data-k="Stars"><span class="s">1.1k</span><small class="w">+1</small></td>
       <td data-k="Commits, 12 weeks" class="c-commits"><div class="bar"><span style="width:5rem"></span>55</div></td>
       <td data-k="Last release" class="c-rel">6 days ago</td><td data-k="Issues closed vs opened" class="c-iss"><span class="lvl-good"><i class="dot"></i>88%</span></td>
       <td data-k="Setup" title="Library or framework. A building block for people who write code."><span class="su lv-3"><span class="su-bars" role="img" aria-label="Setup effort 3 of 3"><i></i><i></i><i></i></span><b>For developers</b></span></td>
-      <td data-k="License" class="c-lic">Apache-2.0</td></tr></tbody></table></div>
+      <td data-k="License" class="c-lic">Apache-2.0</td></tr><tr class="ev"><td colspan="8"><details><summary><span><b>Covers all 3 core jobs.</b> Partly: Authentication and permissions.</span><u>See the evidence</u></summary>
+      <ul class="ev-list"><li class="m-y"><i class="core"></i><div><b>Request routing and views</b><small>core</small><em>Yes</em><q>Route :: with_api_handler_and_name ( /add/ , api_post ( add )</q></div></li><li class="m-y"><i class="core"></i><div><b>ORM with migrations</b><small>core</small><em>Yes</em><q>as well as creating the migrations automatically.</q></div></li><li class="m-y"><i class="core"></i><div><b>Automatic admin interface</b><small>core</small><em>Yes</em><q>Cot comes with an admin panel out of the box</q></div></li><li class="m-y"><i class=""></i><div><b>HTML templating</b><em>Yes</em><q>but also the ORM, the admin panel, and even the templates</q></div></li><li class="m-p"><i class=""></i><div><b>Authentication and permissions</b><em>Partly</em><q>DatabaseUser :: create_user</q></div></li><li class="m-y"><i class=""></i><div><b>Form handling and validation</b><em>Yes</em><q>turns a struct into a fully validated HTML form</q></div></li><li class="m-y"><i class=""></i><div><b>Security protections such as CSRF</b><em>Yes</em><q>defending it against common modern web vulnerabilities</q></div></li></ul></details></td></tr></tbody></table></div>
     <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a> &middot; <a href="how.html#setup">How setup is read</a></p></section>
   
   </section>
