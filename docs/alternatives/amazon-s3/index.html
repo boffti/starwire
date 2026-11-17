@@ -4,20 +4,20 @@
 <meta charset="utf-8">
 <base href="/">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Open source alternatives to Amazon S3: rustfs | starwire</title>
+<title>Open source alternatives to Amazon S3: rustfs and seaweedfs | starwire</title>
 <link rel="canonical" href="https://starwire.foo/alternatives/amazon-s3/">
-<meta name="description" content="1 open source project does the same job as Amazon S3, ranked by how much of what Amazon S3 does each one covers. Free, and many you can self-host.">
+<meta name="description" content="2 open source projects do the same job as Amazon S3, ranked by how much of what Amazon S3 does each one covers. Free, and many you can self-host.">
 <meta name="theme-color" content="#141414">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://starwire.foo/alternatives/amazon-s3/">
-<meta property="og:title" content="Open source alternatives to Amazon S3: rustfs | starwire">
-<meta property="og:description" content="1 open source project does the same job as Amazon S3, ranked by how much of what Amazon S3 does each one covers. Free, and many you can self-host.">
-<meta property="og:image" content="https://r.starwire.foo/instead-of/amazon-s3/card.png?v=2026-11-15">
+<meta property="og:title" content="Open source alternatives to Amazon S3: rustfs and seaweedfs | starwire">
+<meta property="og:description" content="2 open source projects do the same job as Amazon S3, ranked by how much of what Amazon S3 does each one covers. Free, and many you can self-host.">
+<meta property="og:image" content="https://r.starwire.foo/instead-of/amazon-s3/card.png?v=2026-11-17">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://r.starwire.foo/instead-of/amazon-s3/card.png?v=2026-11-15">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Open source alternatives to Amazon S3","numberOfItems":1,"itemListElement":[{"@type":"ListItem","position":1,"name":"rustfs","url":"https://github.com/rustfs/rustfs"}]}</script>
+<meta name="twitter:image" content="https://r.starwire.foo/instead-of/amazon-s3/card.png?v=2026-11-17">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Open source alternatives to Amazon S3","numberOfItems":2,"itemListElement":[{"@type":"ListItem","position":1,"name":"rustfs","url":"https://github.com/rustfs/rustfs"},{"@type":"ListItem","position":2,"name":"seaweedfs","url":"https://github.com/seaweedfs/seaweedfs"}]}</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23e3b341' d='M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 20.9l1.6-7L2 9.2l7.1-.6z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -82,7 +82,7 @@
       <section class="rp" id="repo-page" aria-live="polite"><div class="rp-top"><button type="button" class="rp-back" data-back><svg style="fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Back to the list</button><nav class="rp-crumbs" aria-label="Where it sits"><a href="?alt=all">Alternatives</a></nav></div>
   <section class="hero alt-hero"><div class="who">
     <h1>Open source alternatives to Amazon S3</h1>
-    <p class="line">One project on starwire does the same job. Ranked by how much of what Amazon S3 does each one covers, read from its README and website. Ties go to the most active.</p>
+    <p class="line">2 projects on starwire do the same job. Ranked by how much of what Amazon S3 does each one covers, read from its README and website. Ties go to the most active.</p>
   </div>
     <div class="acts"><button type="button" class="btn" data-share="instead-of/amazon-s3" aria-label="Copy a share link"><svg style="fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 3v13M7 8l5-5 5 5"/></svg><span>Share</span></button></div></section>
   <section class="jobs" aria-labelledby="jobs"><h2 id="jobs">What Amazon S3 does</h2><ol class="job-list"><li class="core">Object storage through an API<small>core</small></li><li class="core">High durability at any scale<small>core</small></li><li class="">Bucket versioning</li><li class="">Lifecycle rules and storage tiers</li><li class="">Access policies</li><li class="">Event notifications</li><li class="">Replication across regions</li></ol><p class="foot-note">Each dot in the table is one job, in this order. Square dots are core jobs and count double. Full means yes, half means partly. "See the evidence" under a project shows the line behind each one. Coverage is what a project documents, not how well it works or how hard it is to move to. <a href="how.html#fit">How we score this</a></p></section>
@@ -90,15 +90,21 @@
     <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" class="c-commits">Commits, 12 weeks</th><th scope="col" class="c-rel">Last release</th><th scope="col" class="c-iss">Closed vs opened</th><th scope="col">Setup</th><th scope="col" class="c-lic">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=rustfs%2Frustfs"><img src="https://avatars.githubusercontent.com/u/151849438?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>rustfs</b><small>S3-compatible object storage written in Rust</small></span></a></th>
-      <td data-k="Covers"><span class="fit"><b>Replaces it</b></span><span class="fit-row"><span class="fit-dots"><i class="m-y core" title="Object storage through an API: yes. &quot;It offers broad S3 API compatibility for supported features&quot;"></i><i class="m-p core" title="High durability at any scale: partly. &quot;Scalable and fault-tolerant design suitable for large-scale deployments.&quot;"></i><i class="m-y" title="Bucket versioning: yes. &quot;Versioning&quot;"></i><i class="m-y" title="Lifecycle rules and storage tiers: yes. &quot;ILM Tiering (Remote S3)&quot;"></i><i class="m-y" title="Access policies: yes. &quot;IAM / Policies&quot;"></i><i class="m-y" title="Event notifications: yes. &quot;Event Notifications&quot;"></i><i class="m-y" title="Replication across regions: yes. &quot;Site Replication&quot;"></i></span><small>89%</small></span></td><td data-k="Stars"><span class="s">36k</span><small class="w">+137</small></td>
+      <td data-k="Covers"><span class="fit"><b>Replaces it</b></span><span class="fit-row"><span class="fit-dots"><i class="m-y core" title="Object storage through an API: yes. &quot;It offers broad S3 API compatibility for supported features&quot;"></i><i class="m-p core" title="High durability at any scale: partly. &quot;Scalable and fault-tolerant design suitable for large-scale deployments.&quot;"></i><i class="m-y" title="Bucket versioning: yes. &quot;Versioning&quot;"></i><i class="m-y" title="Lifecycle rules and storage tiers: yes. &quot;ILM Tiering (Remote S3)&quot;"></i><i class="m-y" title="Access policies: yes. &quot;IAM / Policies&quot;"></i><i class="m-y" title="Event notifications: yes. &quot;Event Notifications&quot;"></i><i class="m-y" title="Replication across regions: yes. &quot;Site Replication&quot;"></i></span><small>89%</small></span></td><td data-k="Stars"><span class="s">36k</span><small class="w">+152</small></td>
       <td data-k="Commits, 12 weeks" class="c-commits"><div class="bar"><span style="width:5rem"></span>2,070</div></td>
-      <td data-k="Last release" class="c-rel">5 days ago</td><td data-k="Issues closed vs opened" class="c-iss"><span class="lvl-good"><i class="dot"></i>100%</span></td>
+      <td data-k="Last release" class="c-rel">7 days ago</td><td data-k="Issues closed vs opened" class="c-iss"><span class="lvl-good"><i class="dot"></i>100%</span></td>
       <td data-k="Setup" title="Self-hostable service. Someone technical sets it up on a server, usually with Docker."><span class="su lv-3"><span class="su-bars" role="img" aria-label="Setup effort 3 of 3"><i></i><i></i><i></i></span><b>Needs a server</b></span></td>
       <td data-k="License" class="c-lic">Apache-2.0</td></tr><tr class="ev"><td colspan="8"><details><summary><span><b>Covers 1 of 2 core jobs.</b> Partly: High durability at any scale.</span><u>See the evidence</u></summary>
-      <ul class="ev-list"><li class="m-y"><i class="core"></i><div><b>Object storage through an API</b><small>core</small><em>Yes</em><q>It offers broad S3 API compatibility for supported features</q></div></li><li class="m-p"><i class="core"></i><div><b>High durability at any scale</b><small>core</small><em>Partly</em><q>Scalable and fault-tolerant design suitable for large-scale deployments.</q></div></li><li class="m-y"><i class=""></i><div><b>Bucket versioning</b><em>Yes</em><q>Versioning</q></div></li><li class="m-y"><i class=""></i><div><b>Lifecycle rules and storage tiers</b><em>Yes</em><q>ILM Tiering (Remote S3)</q></div></li><li class="m-y"><i class=""></i><div><b>Access policies</b><em>Yes</em><q>IAM / Policies</q></div></li><li class="m-y"><i class=""></i><div><b>Event notifications</b><em>Yes</em><q>Event Notifications</q></div></li><li class="m-y"><i class=""></i><div><b>Replication across regions</b><em>Yes</em><q>Site Replication</q></div></li></ul></details></td></tr></tbody></table></div>
+      <ul class="ev-list"><li class="m-y"><i class="core"></i><div><b>Object storage through an API</b><small>core</small><em>Yes</em><q>It offers broad S3 API compatibility for supported features</q></div></li><li class="m-p"><i class="core"></i><div><b>High durability at any scale</b><small>core</small><em>Partly</em><q>Scalable and fault-tolerant design suitable for large-scale deployments.</q></div></li><li class="m-y"><i class=""></i><div><b>Bucket versioning</b><em>Yes</em><q>Versioning</q></div></li><li class="m-y"><i class=""></i><div><b>Lifecycle rules and storage tiers</b><em>Yes</em><q>ILM Tiering (Remote S3)</q></div></li><li class="m-y"><i class=""></i><div><b>Access policies</b><em>Yes</em><q>IAM / Policies</q></div></li><li class="m-y"><i class=""></i><div><b>Event notifications</b><em>Yes</em><q>Event Notifications</q></div></li><li class="m-y"><i class=""></i><div><b>Replication across regions</b><em>Yes</em><q>Site Replication</q></div></li></ul></details></td></tr><tr>
+      <th scope="row"><a class="alt-name" href="?page=seaweedfs%2Fseaweedfs"><img src="https://avatars.githubusercontent.com/u/11985425?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>seaweedfs</b><small>Distributed object and file storage with an S3 API</small></span></a></th>
+      <td data-k="Covers"><span class="muted">Not checked yet</span></td><td data-k="Stars"><span class="s">36k</span></td>
+      <td data-k="Commits, 12 weeks" class="c-commits">Not measured</td>
+      <td data-k="Last release" class="c-rel">Not measured</td><td data-k="Issues closed vs opened" class="c-iss">Not measured</td>
+      <td data-k="Setup" title="Self-hostable service. Someone technical sets it up on a server, usually with Docker."><span class="su lv-3"><span class="su-bars" role="img" aria-label="Setup effort 3 of 3"><i></i><i></i><i></i></span><b>Needs a server</b></span></td>
+      <td data-k="License" class="c-lic">Apache-2.0</td></tr></tbody></table></div>
     <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a> &middot; <a href="how.html#setup">How setup is read</a></p></section>
   
-  <section aria-labelledby="also"><h2 id="also">These also replace</h2><div class="alt-chips"><a href="?alt=MinIO">MinIO<span>1</span></a></div></section></section>
+  <section aria-labelledby="also"><h2 id="also">These also replace</h2><div class="alt-chips"><a href="?alt=MinIO">MinIO<span>2</span></a></div></section></section>
       <div class="page-head">
         <div>
           <h1 id="title">All repos</h1>
