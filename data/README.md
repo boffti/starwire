@@ -25,6 +25,8 @@ const rust = repos.filter((r) => r.language === "Rust").sort((a, b) => b.starsTh
 ```json
 {
   "repo": "owner/name",
+  "id": 1098765432,
+  "ownerId": 12345678,
   "url": "https://github.com/owner/name",
   "page": "https://starwire.foo/?page=owner/name",
   "line": "Our one-line summary of what it is",
@@ -60,6 +62,8 @@ Every entry has every field. A list with nothing in it is `[]`, and a fact that 
 | Field | What it holds |
 |---|---|
 | `repo`, `url`, `page` | The `owner/name`, its GitHub address and its page on starwire |
+| `id` | GitHub's own number for the repo (`id` in its REST API, `databaseId` in GraphQL). It stays the same when a repo is renamed or moved, so key on it instead of the name |
+| `ownerId` | GitHub's number for the owner, or `null`. The owner's picture is at `https://avatars.githubusercontent.com/u/<ownerId>` |
 | `line` | Our one-line summary |
 | `description` | The repo's own description, or `null` when it has none |
 | `area`, `subarea` | Where it sits in the list, as ids such as `ai` and `agents` |
