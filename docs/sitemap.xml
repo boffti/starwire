@@ -209,6 +209,7 @@
 <url><loc>https://starwire.foo/alternatives/chargebee/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/warp/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/github/</loc><lastmod>2026-11-23</lastmod></url>
+<url><loc>https://starwire.foo/alternatives/git/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/servicenow/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/gitlab/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/okta/</loc><lastmod>2026-11-23</lastmod></url>
@@ -233,9 +234,11 @@
 <url><loc>https://starwire.foo/alternatives/google-home/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/insomnia/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/hazel/</loc><lastmod>2026-11-23</lastmod></url>
+<url><loc>https://starwire.foo/alternatives/everything/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/ifttt/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/labelbox/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/blue-iris/</loc><lastmod>2026-11-23</lastmod></url>
+<url><loc>https://starwire.foo/alternatives/opus-clip/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/superwhisper/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/moment-js/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/google-play/</loc><lastmod>2026-11-23</lastmod></url>
@@ -352,7 +355,6 @@
 <url><loc>https://starwire.foo/alternatives/fiddler/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/vlc/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/umami/</loc><lastmod>2026-11-23</lastmod></url>
-<url><loc>https://starwire.foo/alternatives/opus-clip/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/xcode/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/openai-operator/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/myfitnesspal/</loc><lastmod>2026-11-23</lastmod></url>
@@ -492,6 +494,7 @@
 <url><loc>https://starwire.foo/alternatives/utorrent/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/playwright-mcp/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/appcleaner/</loc><lastmod>2026-11-23</lastmod></url>
+<url><loc>https://starwire.foo/alternatives/pok-mon/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/algolia/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/aws/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/topaz-gigapixel/</loc><lastmod>2026-11-23</lastmod></url>
@@ -513,9 +516,9 @@
 <url><loc>https://starwire.foo/alternatives/iterm2/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/dragon/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/hide-my-email/</loc><lastmod>2026-11-23</lastmod></url>
-<url><loc>https://starwire.foo/alternatives/git/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/civilization-v/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/world-anvil/</loc><lastmod>2026-11-23</lastmod></url>
+<url><loc>https://starwire.foo/alternatives/appflowy/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/stripe/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/windows-recall/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://starwire.foo/alternatives/otter/</loc><lastmod>2026-11-23</lastmod></url>
