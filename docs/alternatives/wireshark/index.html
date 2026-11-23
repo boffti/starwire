@@ -6,12 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Open source alternatives to Wireshark: PcapAnalyzer | starwire</title>
 <link rel="canonical" href="https://starwire.foo/alternatives/wireshark/">
-<meta name="description" content="1 open source project does the same job as Wireshark. Free, and many you can self-host.">
+<meta name="description" content="1 open source project does the same job as Wireshark, ranked by how much of what Wireshark does each one covers. Free, and many you can self-host.">
 <meta name="theme-color" content="#141414">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://starwire.foo/alternatives/wireshark/">
 <meta property="og:title" content="Open source alternatives to Wireshark: PcapAnalyzer | starwire">
-<meta property="og:description" content="1 open source project does the same job as Wireshark. Free, and many you can self-host.">
+<meta property="og:description" content="1 open source project does the same job as Wireshark, ranked by how much of what Wireshark does each one covers. Free, and many you can self-host.">
 <meta property="og:image" content="https://r.starwire.foo/instead-of/wireshark/card.png?v=2026-11-23">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -82,19 +82,20 @@
       <section class="rp" id="repo-page" aria-live="polite"><div class="rp-top"><button type="button" class="rp-back" data-back><svg style="fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Back to the list</button><nav class="rp-crumbs" aria-label="Where it sits"><a href="?alt=all">Alternatives</a></nav></div>
   <section class="hero alt-hero"><div class="who">
     <h1>Open source alternatives to Wireshark</h1>
-    <p class="line">One project on starwire does the same job. The most active come first: steady commits, recent releases and issues getting closed.</p>
+    <p class="line">One project on starwire does the same job. Ranked by how much of what Wireshark does each one covers, read from its README and website. Ties go to the most active.</p>
   </div>
     <div class="acts"><button type="button" class="btn" data-share="instead-of/wireshark" aria-label="Copy a share link"><svg style="fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 3v13M7 8l5-5 5 5"/></svg><span>Share</span></button></div></section>
-  
+  <section class="jobs" aria-labelledby="jobs"><h2 id="jobs">What Wireshark does</h2><ol class="job-list"><li class="core">Packet capture<small>core</small></li><li class="core">Protocol dissection<small>core</small></li><li class="">Opening pcap files</li><li class="">Display filters</li><li class="">Stream following</li><li class="">Statistics and expert analysis</li></ol><p class="foot-note">Each dot in the table is one job, in this order. Square dots are core jobs and count double. Full means yes, half means partly. "See the evidence" under a project shows the line behind each one. Coverage is what a project documents, not how well it works or how hard it is to move to. <a href="how.html#fit">How we score this</a></p></section>
   <section aria-label="Alternatives to Wireshark"><div class="cmp alt-table"><table>
-    <thead><tr><th scope="col">Project</th><th scope="col">Stars</th><th scope="col" class="c-commits">Commits, 12 weeks</th><th scope="col" class="c-rel">Last release</th><th scope="col" class="c-iss">Closed vs opened</th><th scope="col">Setup</th><th scope="col" class="c-lic">License</th></tr></thead>
+    <thead><tr><th scope="col">Project</th><th scope="col">Covers</th><th scope="col">Stars</th><th scope="col" class="c-commits">Commits, 12 weeks</th><th scope="col" class="c-rel">Last release</th><th scope="col" class="c-iss">Closed vs opened</th><th scope="col">Setup</th><th scope="col" class="c-lic">License</th></tr></thead>
     <tbody><tr>
       <th scope="row"><a class="alt-name" href="?page=sebaandrada-cell%2FPcapAnalyzer"><img src="https://avatars.githubusercontent.com/u/255527829?s=56" alt="" width="28" height="28" loading="lazy" decoding="async"><span><b>PcapAnalyzer</b><small>Self-hosted pcap analyzer with problem detectors and AI investigation</small></span></a></th>
-      <td data-k="Stars"><span class="s">220</span></td>
+      <td data-k="Covers"><span class="fit"><b>Same job, different way</b></span><span class="fit-row"><span class="fit-dots"><i class="m-n core" title="Packet capture: not shown"></i><i class="m-p core" title="Protocol dissection: partly. &quot;HTTP / DNS / DHCP / TLS tables&quot;"></i><i class="m-y" title="Opening pcap files: yes. &quot;Upload a `.pcap` / `.pcapng` capture&quot;"></i><i class="m-y" title="Display filters: yes. &quot;real Wireshark display filters&quot;"></i><i class="m-p" title="Stream following: partly. &quot;a flow diagram per conversation&quot;"></i><i class="m-y" title="Statistics and expert analysis: yes. &quot;expert info&quot;"></i></span><small>49%</small></span></td><td data-k="Stars"><span class="s">220</span></td>
       <td data-k="Commits, 12 weeks" class="c-commits"><div class="bar"><span style="width:5rem"></span>117</div></td>
       <td data-k="Last release" class="c-rel">None</td><td data-k="Issues closed vs opened" class="c-iss">Too few</td>
       <td data-k="Setup" title="Self-hostable service. Someone technical sets it up on a server, usually with Docker."><span class="su lv-3"><span class="su-bars" role="img" aria-label="Setup effort 3 of 3"><i></i><i></i><i></i></span><b>Needs a server</b></span></td>
-      <td data-k="License" class="c-lic">Apache-2.0</td></tr></tbody></table></div>
+      <td data-k="License" class="c-lic">Apache-2.0</td></tr><tr class="ev"><td colspan="8"><details><summary><span><b>Covers 0 of 2 core jobs.</b> Partly: Protocol dissection; Stream following. Not shown: Packet capture.</span><u>See the evidence</u></summary>
+      <ul class="ev-list"><li class="m-n"><i class="core"></i><div><b>Packet capture</b><small>core</small><em>Not shown</em><span>Neither the README nor the website mentions it.</span></div></li><li class="m-p"><i class="core"></i><div><b>Protocol dissection</b><small>core</small><em>Partly</em><q>HTTP / DNS / DHCP / TLS tables</q></div></li><li class="m-y"><i class=""></i><div><b>Opening pcap files</b><em>Yes</em><q>Upload a `.pcap` / `.pcapng` capture</q></div></li><li class="m-y"><i class=""></i><div><b>Display filters</b><em>Yes</em><q>real Wireshark display filters</q></div></li><li class="m-p"><i class=""></i><div><b>Stream following</b><em>Partly</em><q>a flow diagram per conversation</q></div></li><li class="m-y"><i class=""></i><div><b>Statistics and expert analysis</b><em>Yes</em><q>expert info</q></div></li></ul></details></td></tr></tbody></table></div>
     <p class="foot-note">Vital signs from GitHub, checked weekly. <a href="how.html#vitals">How we read these</a> &middot; <a href="how.html#setup">How setup is read</a></p></section>
   
   </section>
